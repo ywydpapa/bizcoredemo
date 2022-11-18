@@ -1,0 +1,9 @@
+/.idea/
+/.metadata/
+/.settings/
+/target/
+.classpath
+.project
+.springBeans
+corErp.exerd
+sderp.iml

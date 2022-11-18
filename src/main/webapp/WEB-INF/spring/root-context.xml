@@ -19,10 +19,10 @@
        	<!-- <property name="url" value="jdbc:log4jdbc:mysql://61.39.104.28:13306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property> -->
        	
        	<!-- 내부서버 -->
-       	<property name="url" value="jdbc:log4jdbc:mysql://192.168.1.72:3306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>
+       	<property name="url" value="jdbc:log4jdbc:mysql://192.168.1.79:3306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>
        	
-        <property name="username" value="ljh0113"></property>
-        <property name="password" value="vTek17!*"></property>
+        <property name="username" value="swcore"></property>
+        <property name="password" value="core2020"></property>
         
         <!-- 데모 -->
 		<!-- <property name="url" value="jdbc:log4jdbc:mysql://demo.biz-core.co.kr:15157/demo?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>

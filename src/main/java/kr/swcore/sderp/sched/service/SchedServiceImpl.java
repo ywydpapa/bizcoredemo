@@ -45,8 +45,6 @@ public class SchedServiceImpl implements SchedService {
 		Integer contNo = contNostr.equals("") == true ? null : Integer.valueOf(contNostr);	// 怨꾩빟
 		String custNostr = request.getParameter("custNo");
 		Integer custNo = custNostr.equals("") == true ? null : Integer.valueOf(custNostr);	// 嫄곕옒泥�
-		String endCustNostr =  request.getParameter("endCustNo");
-		Integer endCustNo = endCustNostr.equals("") == true ? null : Integer.valueOf(endCustNostr);	// �뿏�뱶�쑀��
 		String schedType = request.getParameter("schedType") != null ? (String) request.getParameter("schedType") : "";			// �솢�룞�삎�깭
 		String schedCat = request.getParameter("schedCat") != null ? (String) request.getParameter("schedCat") : "";			// �솢�룞�삎�깭
 		String schedFrom = request.getParameter("schedFrom") != null ? (String) request.getParameter("schedFrom") : "";			// �떆�옉�씪
@@ -59,7 +57,6 @@ public class SchedServiceImpl implements SchedService {
 		if(soppNo != null) dto.setSoppNo(soppNo);
 		if(contNo != null) dto.setContNo(contNo);
 		if(custNo != null) dto.setCustNo(custNo);
-		if(endCustNo != null) dto.setEndCustNo(endCustNo);
 		dto.setSchedType(schedType);
 		dto.setSchedCat(schedCat);
 		dto.setSchedFrom(schedFrom);

@@ -137,39 +137,13 @@
 									<th scope="row" class="requiredTextCss">담당사원</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="userName"
-												id="userName" value="${sessionScope.userName}" readonly /> <input type="hidden"
-												name="userNo" id="userNo" value="${sessionScope.userNo}" /> <span
-												class="input-group-btn">
-												<button class="btn btn-primary sch-company"
-													data-remote="${path}/modal/popup.do?popId=user"
-													type="button" data-toggle="modal" data-target="#userModal">
-													<i class="icofont icofont-search"></i>
-												</button>
-											</span>
-											<div class="modal fade " id="userModal" tabindex="-1"
-												role="dialog">
-												<div class="modal-dialog modal-80size" role="document">
-													<div class="modal-content modal-80size">
-														<div class="modal-header">
-															<h4 class="modal-title"></h4>
-															<button type="button" class="close" onclick="$('#userModal').modal('hide');"
-																aria-label="Close">
-																<span aria-hidden="true">&times;</span>
-															</button>
-														</div>
-														<div class="modal-body">
-															<h5>사용자목록</h5>
-															<p>Loading!!!</p>
-														</div>
-														<div class="modal-footer">
-															<button type="button"
-																class="btn btn-default waves-effect "
-																onclick="$('#userModal').modal('hide');">Close</button>
-														</div>
-													</div>
-												</div>
-											</div>
+											<input type="text" class="form-control" name="userName" id="userName" value="${sessionScope.userName}" list="userName_list" onchange="dataListChange(this);" autocomplete="off" readonly /> 
+											<datalist id="userName_list">
+												<c:forEach var="list" items="${sessionScope.listUser}">
+													<option data-value="${list.userNo}" value="${list.userName}">${list.userName}</option>
+												</c:forEach>
+											</datalist>
+											<input type="hidden" name="userNo" id="userNo" value="${sessionScope.userNo}" /> 
 										</div>
 									</td>
 								</tr>

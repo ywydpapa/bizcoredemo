@@ -340,8 +340,8 @@
 									<div class="input-group input-group-sm mb-0">
 										<input type="text" class="form-control" name="userName" id="userName" list="userName_list" onchange="dataListChange(this);" autocomplete="off"> 
 										<datalist id="userName_list">
-											<c:forEach var="listUser" items="${listUser}">
-												<option data-value="${listUser.userNo}" value="${listUser.userName}">${listUser.userName}</option>
+											<c:forEach var="list" items="${sessionScope.listUser}">
+												<option data-value="${list.userNo}" value="${list.userName}">${list.userName}</option>
 											</c:forEach>
 										</datalist>
 										<input type="hidden" name="userNo" id="userNo" value="" /> 
@@ -385,8 +385,8 @@
 									<div class="input-group input-group-sm">
 										<input type="text" class="form-control" name="custName" id="custName" list="custName_list" onchange="dataListChange(this);" autocomplete="off">
 										<datalist id="custName_list">
-											<c:forEach var="listCust" items="${listCust}">
-												<option data-value="${listCust.custNo}" value="${listCust.custName}">${listCust.custName}</option>
+											<c:forEach var="list" items="${sessionScope.listCust}">
+												<option data-value="${list.custNo}" value="${list.custName}">${list.custName}</option>
 											</c:forEach>
 										</datalist>
 										<input type="hidden" name="custNo" id="custNo" value="" />
@@ -430,8 +430,8 @@
 									<div class="input-group input-group-sm mb-0">
 										<input type="text" class="form-control" name="buyrName" id="buyrName" list="buyrName_list" onchange="dataListChange(this);" autocomplete="off">
 										<datalist id="buyrName_list">
-											<c:forEach var="listCust" items="${listCust}">
-												<option data-value="${listCust.custNo}" value="${listCust.custName}">${listCust.custName}</option>
+											<c:forEach var="list" items="${sessionScope.listCust}">
+												<option data-value="${list.custNo}" value="${list.custName}">${list.custName}</option>
 											</c:forEach>
 										</datalist>
 										<input type="hidden" name="custmemberNo" id="buyrNo" value="" />

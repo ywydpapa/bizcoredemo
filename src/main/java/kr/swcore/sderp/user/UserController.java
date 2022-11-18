@@ -2,8 +2,12 @@ package kr.swcore.sderp.user;
 
 import kr.swcore.sderp.code.dto.CodeDTO;
 import kr.swcore.sderp.code.service.CodeService;
+import kr.swcore.sderp.cont.dto.ContDTO;
+import kr.swcore.sderp.cont.service.ContService;
+import kr.swcore.sderp.cust.service.CustService;
 import kr.swcore.sderp.organiz.Service.OrganizService;
 import kr.swcore.sderp.organiz.dto.OrganizDTO;
+import kr.swcore.sderp.sopp.service.SoppService;
 import kr.swcore.sderp.user.dto.UserDTO;
 import kr.swcore.sderp.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +37,15 @@ public class UserController {
 	
 	@Inject
 	OrganizService organizService;
+	
+	@Inject
+	CustService custService;
+	
+	@Inject
+	SoppService soppService;
+	
+	@Inject
+	ContService contService;
 	
 	@RequestMapping("login.do")
 	public String login() {
@@ -136,6 +149,11 @@ public class UserController {
 			session.setAttribute("compNo", userInfo.getCompNo()); // ȸ���ڵ�
 			session.setAttribute("userNo", Integer.toString(userInfo.getUserNo())); // ���� �Ϸù�ȣ
 			session.setAttribute("orgId", userInfo.getOrg_id()); // �μ� ��ȣ
+			session.setAttribute("listUser", userService.userList(session));
+			session.setAttribute("listCust", custService.listCust(session));
+			session.setAttribute("listSopp", soppService.listSopp(session, null));
+			ContDTO contDto = new ContDTO();
+			session.setAttribute("listCont", contService.listCont(session, null, contDto));
 			session.setAttribute("listDateFrom", userInfo.getListDateFrom());
 		}else{
 			mav.setViewName("user/login");
