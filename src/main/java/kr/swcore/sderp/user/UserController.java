@@ -103,7 +103,7 @@ public class UserController {
         return ResponseEntity.ok(param);
 	}
 
-	//사용자 정보등록 컨트롤러
+
 	@RequestMapping("insert.do")
 	public ResponseEntity<?> userInsert(@ModelAttribute UserDTO dto) {
 		Map<String, Object> param = new HashMap<>();
@@ -111,8 +111,8 @@ public class UserController {
 		int userdataInsert =userService.insertUserdata(dto);
 		if(userInsert > 0) {
        	param.put("code","10001");
-		}
-		else {
+      }
+       else {
         	param.put("code","20001");
         }
         return ResponseEntity.ok(param);
@@ -130,13 +130,10 @@ public class UserController {
 			session.setAttribute("userId", userInfo.getUserId());
 			session.setAttribute("userName", userInfo.getUserName());
 			session.setAttribute("userRole", userInfo.getUserRole()); // �����ڵ�
-			session.setAttribute("docRole", userInfo.getDocRole());
 			session.setAttribute("userOtp", userInfo.getUserOtp()); // OTP - 1ȸ��
-			session.setAttribute("userKey", userInfo.getUserKey());
 			session.setAttribute("compNo", userInfo.getCompNo()); // ȸ���ڵ�
 			session.setAttribute("userNo", Integer.toString(userInfo.getUserNo())); // ���� �Ϸù�ȣ
 			session.setAttribute("orgId", userInfo.getOrg_id()); // �μ� ��ȣ
-			session.setAttribute("listDateFrom", userInfo.getListDateFrom());
 		}else{
 			mav.setViewName("user/login");
 			mav.addObject("msg", "Fail");

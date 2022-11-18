@@ -29,13 +29,8 @@ public interface SoppService {
 		int insertSopp(SoppDTO dto);
 		int insertSopp(HttpSession session, SoppDTO dto);
 		int update2Sopp(HttpSession session, SoppDTO dto);
-		int updateSoppStatus(SoppDTO dto);
 		Map<String, Object> updateAprvOrReject(HttpSession session, SoppDTO dto);
 		int uploadFile(HttpSession session, int soppNo, MultipartHttpServletRequest fileList) throws IOException;
 		Integer deleteFile(HttpSession session, SoppFileDataDTO dto);
 		SoppFileDataDTO downloadFile(SoppFileDataDTO dto);
-		int soppListApp(SoppDTO dto);
-		int beforeAppUpdate(int soppNo);
-		int assignPps(SoppDTO dto);
-		List<SoppDTO> selectSoppdetail(HttpSession session, SoppDTO dto);
 }

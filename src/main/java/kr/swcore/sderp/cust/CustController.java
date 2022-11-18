@@ -11,9 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kr.swcore.sderp.cont.service.ContService;
-import kr.swcore.sderp.sales.service.SalesService;
-import kr.swcore.sderp.techd.service.TechdService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,15 +32,6 @@ public class CustController {
 	
 	@Inject
 	CodeService codeService;
-
-	@Inject
-	ContService contService;
-
-	@Inject
-	TechdService techdService;
-
-	@Inject
-	SalesService salesService;
 	
 	@RequestMapping("list.do")
 	public String custList(HttpSession session, Model model) {
@@ -61,9 +49,6 @@ public class CustController {
 		mav.addObject("saletype", codeService.listSaletype());
 		mav.addObject("comptype", codeService.listComptype(session));
 		mav.addObject("memberlist", custService.listCustmember(custNo));
-		mav.addObject("contlist",contService.listContbycust(custNo));
-		mav.addObject("techdlist",techdService.listTechdbycust(custNo));
-		mav.addObject("saleslist",salesService.listSalesbycust(custNo));
 		mav.setViewName("cust/detail");
 		return mav;
 	}
@@ -176,18 +161,6 @@ public class CustController {
 	public ResponseEntity<?> delete(@ModelAttribute CustDTO dto) {
 		Map<String, Object> param = new HashMap<>();
 		int custUpdate = custService.deleteCust(dto.getCustNo());
-		if (custUpdate >0) {
-			param.put("code","10001"); 
-		}
-		else {param.put("code","20001");
-		}
-		return ResponseEntity.ok(param);
-	}
-	
-	@RequestMapping("tempSelectCustInsert.do")
-	public ResponseEntity<?> tempSelectCustInsert(@ModelAttribute CustDTO dto) {
-		Map<String, Object> param = new HashMap<>();
-		int custUpdate = custService.tempSelectCustInsert(dto);
 		if (custUpdate >0) {
 			param.put("code","10001"); 
 		}

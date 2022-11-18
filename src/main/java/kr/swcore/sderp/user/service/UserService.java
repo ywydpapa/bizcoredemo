@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import kr.swcore.sderp.common.dto.DeptToPlanTblDTO;
 import kr.swcore.sderp.user.dto.UserDTO;
 
 
@@ -34,8 +33,4 @@ public interface UserService {
 		public int updateUserPass(UserDTO dto);
 		
 		public int updateUser(UserDTO dto);
-
-		public List<UserDTO> allList();
-
-		public List<UserDTO> listuser_data(String userName);
 }

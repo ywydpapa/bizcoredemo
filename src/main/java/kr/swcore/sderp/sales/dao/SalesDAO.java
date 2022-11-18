@@ -8,7 +8,6 @@ import kr.swcore.sderp.sopp.dto.SoppDTO;
 public interface SalesDAO {
 
 	List<SalesDTO> listSales();
-	List<SalesDTO> listSalesbycust(int custNo);
 	List<SalesDTO> listSales(SoppDTO soppDto);
 	List<SalesDTO> listSales(SalesDTO dto);
 	int listSalesCnt(SalesDTO dto);

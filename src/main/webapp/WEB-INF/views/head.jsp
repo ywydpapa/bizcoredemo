@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value ="${pageContext.request.contextPath}"/>
 <head>
-<title>BizCore</title>
+<title>SDERP</title>
 <meta name="format-detection" 		content="telephone=no" />
 <meta http-equiv="X-UA-Compatible" 	content="IE=edge" />
 <meta http-equiv="Content-Type" 	content="text/html; charset=utf-8"/>
@@ -49,11 +49,6 @@
             overflow-x: scroll;
         }
     }
-    
-    modal{
-    	width:100px;
-    	height:100px;
-    }
 </style>
 
     
@@ -68,7 +63,7 @@
 
 <!-- jquery slimscroll js -->
 <script type="text/javascript" src="${path}/js/jquery.slimscroll.js"></script>
-    <script type="text/javascript" src="${path}/assets/js/common-pages.js"></script>
+
 <!-- modernizr js -->
 <script type="text/javascript" src="${path}/js/modernizr.js"></script>
 <script type="text/javascript" src="${path}/js/css-scrollbars.js"></script>
@@ -84,7 +79,6 @@
 <script src="${path}/js/dataTables.bootstrap4.min.js"></script>
 <script src="${path}/js/dataTables.responsive.min.js"></script>
 <script src="${path}/js/responsive.bootstrap4.min.js"></script>
-<script src="${path}/js/html2pdf.bundle.min.js"></script>
 
 <!-- i18next.min.js -->
 <script type="text/javascript" src="${path}/js/i18next.min.js"></script>
@@ -101,31 +95,8 @@
 <script src="${path}/assets/js/demo-12.js"></script>
 <script src="${path}/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="${path}/assets/js/script.js"></script>
-<%-- <script type="text/javascript" src="${path}/js/print.min.js"></script> --%>
-<script src="https://cdn.tiny.cloud/1/kh4eirod6bgv8u2sxlaeikxy5hxfogh0edhzloljxh6zf046/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-<script src="${path}/js/allim.js"></script>
-    <div class="theme-loader">
-        <div class="ball-scale">
-            <div class='contain'>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-                <div class="ring"><div class="frame"></div></div>
-            </div>
-        </div>
-    </div>
+
 <script>
-	var timer;
-    const DEFAULT_NUM = 15;
-	const CLICK_PAGE_NUM = 10;
-	
 	$(function(){
 		$("#topMenu a").click(function(evt){
 			var url = this.href;
@@ -143,16 +114,6 @@
 				setTimeout(function(){
 					<!--$.LoadingOverlay("hide", true);-->
 				}, 500);
-		});
-	}
-	
-	function fnSetSideMenu(url, data){
-		<!-- $.LoadingOverlay("show", true); -->
-		$("#sideMenu").empty();
-		$("#sideMenu").load(url, data, function(){
-		setTimeout(function(){
-			    <!--$.LoadingOverlay("hide", true);-->
-			}, 50);
 		});
 	}
 	
@@ -217,10 +178,9 @@
 		var currentPassword = $("#userPasswd").val();
 		var changePassword = $("#userChangePasswd").val();
 		var checkedChangePassword = $("#checkedUserChangePasswd").val();
-		var listDateFrom = $("#listDateFrom").val();
 		
-		if(fnIsNullOrEmpty(currentPassword)) {
-			alert("현재 비밀번호는 필수입니다.");
+		if(fnIsNullOrEmpty(currentPassword) || fnIsNullOrEmpty(changePassword) || fnIsNullOrEmpty(checkedChangePassword)) {
+			alert("정보를 올바르게 입력하여 주십시오.");
 			return;
 		}
 		if(changePassword != checkedChangePassword) {
@@ -232,18 +192,15 @@
 		userData.userId = userId;
 		userData.userPasswd = currentPassword;
 		userData.userChangePasswd = changePassword;
-		userData.listDateFrom = listDateFrom;
 		
 		$.ajax({
-			url : "${path}/user/updatePass.do",
+			url : "${path}/user/update.do",
 			data : userData,
 			method : "POST",
 			dataType : "json"
 		}).done(function(data){
 			if(data.code == 10001){
-				alert("개인정보가 수정되었습니다.");
-				location.href = "${path}/user/logout.do";
-				alert("다시 로그인해주십시오.")
+				alert("개인정보가 수정되었습니다.")
 			}else{
 				alert("유저 정보를 찾을 수 없습니다.");
 			}
@@ -285,244 +242,6 @@
 			return null;
 		}
 	}
-	
-	function setTiny(){
-		var plugins = [
-		    "advlist", "autolink", "lists", "link", "image", "charmap", "print", "preview", "anchor",
-		    "searchreplace", "visualblocks", "code", "fullscreen", "insertdatetime", "media", "table",
-		    "paste", "code", "help", "wordcount", "save"
-		];
-		
-		var edit_toolbar = 'formatselect fontselect fontsizeselect |'
-		       + ' forecolor backcolor |'
-		       + ' bold italic underline strikethrough |'
-		       + ' alignjustify alignleft aligncenter alignright |'
-		       + ' bullist numlist |'
-		       + ' table tabledelete |'
-		       + ' link image';
-		
-		tinymce.init({
-			language: "ko_KR",
-		    height: 500,
-		    menubar: false,
-		    plugins: plugins,
-		    toolbar: edit_toolbar,
-		  	selector: 'textarea',
-		  	height : "200",
-		});
-	}
-	
-	function selectAllimClick(e){
-		var updateData = {};
-		var allimSpan = $("#headerAllim span");
-		var allimMainUl = $("#headerAllim #headerAllimUl");
-		updateData.allimNo = $(e).attr("data-id");
-		updateData.readCheck = 1;
-		
-		$.ajax({
-			url: "${path}/allim/allimReadUpdate.do",
-			method: "post",
-			data: updateData,
-			async: false,
-			dataType: "json",
-			success:function(){
-				/* location.href = "${path}" + $(e).attr("data-path"); */
-				$(e).parent().remove();
-				allimSpan.html(parseInt(allimSpan.html()) - 1); 
-				
-				if(parseInt(allimSpan.html()) < 1){
-					allimSpan.html("0");
-					allimMainUl.html("<li style='text-align:center;'><h6>새로운 알림이 없습니다.</h6></li>");
-				}
-			}
-		});
-	}
-
-	function timeAllimUpdate(){
-		var allimData = {};
-		var userNo = "${sessionScope.userNo}";
-		var compNo = "${sessionScope.compNo}";
-		var allimRole = "${sessionScope.docRole}";
-		var allimSpan = $("#headerAllim span");
-		var allimMainUl = $("#headerAllim #headerAllimUl");
-		
-		allimData.userNo = userNo;
-		allimData.compNo = compNo;
-		allimData.allimRole = allimRole;
-		
-		$.ajax({
-			url: "${path}/allim/timeAllimSelect.do",
-			method: "post",
-			data: allimData,
-			async: false,
-			dataType: "json",
-			success:function(data){
-				allimSpan.html("");	
-				allimMainUl.html("");
-				
-				if(data.length > 0 && data.length < 99){
-					allimSpan.html(data.length);
-				
-					for(var i = 0; i < data.length; i++){
-						allimMainUl.append("<li class='list-group-item' style='font-weight:600; padding:10px 20px;'><a href='#' data-path='" + data[i].allimPath + "' data-id='" + data[i].allimNo + "' onClick='selectAllimClick(this);'>" + data[i].allimContents + "<br>" + data[i].regDateTime + "</a></li>");												
-					}
-				}else if(data.length > 99){
-					allimSpan.html("99+");
-					
-					for(var i = 0; i < data.length; i++){
-						allimMainUl.append("<li><a href=''>" + data[i].allimContents + "<br>" + data[i].regDateTime + "</a></li>");												
-					}
-				}else{
-					allimSpan.html("0");
-					allimMainUl.html("<li style='text-align:center;'><h6>새로운 알림이 없습니다.</h6></li>");
-				}
-			}
-		});
-		
-		timer = setTimeout("timeAllimUpdate()", 180000);
-	}
-	
-	/* function pageClick(e){
-		var page = $(e).attr("data-number");
-		var setFirstPage = $(e).parents("ul").find("li:first").next().children().attr("data-number");
-		
-		localStorage.setItem("activePage", page);
-		localStorage.setItem("setFirstPage", setFirstPage);
-		pageNation(page, DEFAULT_NUM, null);
-	} */
-	
-	function pageHtml(start, last){
-		var pageHtml = "";
-		
-		$("#pageDiv").empty();
-		
-		pageHtml += "<ul class='pagination'><li class='page-item'><a class='page-link' href='#' onClick='pagePrevious(this);'>Previous</a></li>";
-		
-		for(var i = start; i <= last; i++){
-			pageHtml += "<li class='page-item' id='page_"+ i +"'><a class='page-link' href='#' data-number='"+ i +"' onClick='pageClick(this);'>" + i + "</a></li>"
-		}
-		
-		pageHtml += "<li class='page-item'><a class='page-link' href='#' onClick='pageNext(this);'>Next</a></li></ul>";
-		
-		$("#pageDiv").html(pageHtml);
-	}
-	
-	function pagePrevious(e){
-		var preFirstNum = $(e).parent().next().children().attr("data-number");
-		var calFirstNum = parseInt(preFirstNum) - CLICK_PAGE_NUM;
-		var calLastNum = 0;
-		
-		if(calFirstNum < 1){
-			calFirstNum = 1;
-		}
-
-		calLastNum = calFirstNum + 9;
-		
-		if(calLastNum > localStorage.getItem("lastPageNum")){
-			calLastNum = localStorage.getItem("lastPageNum");
-		}
-			
-		pageHtml(calFirstNum, calLastNum);
-	}
-	
-	function pageNext(e){
-		var preFirstNum = $(e).parents("ul").find("li:first").next().children().attr("data-number");
-		var calFirstNum = parseInt(preFirstNum) + CLICK_PAGE_NUM;
-		var calLastNum = calFirstNum + 9;
-		
-		if(calFirstNum > localStorage.getItem("lastPageNum")){
-			calFirstNum = preFirstNum;
-		}
-		
-		if(calLastNum > localStorage.getItem("lastPageNum")){
-			calLastNum = localStorage.getItem("lastPageNum");	
-		}
-		
-		pageHtml(calFirstNum, calLastNum);
-	}
-	
-	function pageHtmlModal(start, last){
-		var pageHtml = "";
-		
-		$("#pageDiv_modal").empty();
-		
-		pageHtml += "<ul class='pagination'><li class='page-item'><a class='page-link' href='#' onClick='pagePreviousModal(this);'>Previous</a></li>";
-		
-		for(var i = start; i <= last; i++){
-			pageHtml += "<li class='page-item' id='page_"+ i +"'><a class='page-link' href='#' data-number='"+ i +"' onClick='pageClickModal(this);'>" + i + "</a></li>"
-		}
-		
-		pageHtml += "<li class='page-item'><a class='page-link' href='#' onClick='pageNextModal(this);'>Next</a></li></ul>";
-		
-		$("#pageDiv_modal").html(pageHtml);
-	}
-	
-	function pagePreviousModal(e){
-		var preFirstNum = $(e).parent().next().children().attr("data-number");
-		var calFirstNum = parseInt(preFirstNum) - CLICK_PAGE_NUM;
-		var calLastNum = 0;
-		
-		if(calFirstNum < 1){
-			calFirstNum = 1;
-		}
-
-		calLastNum = calFirstNum + 9;
-		
-		if(calLastNum > localStorage.getItem("lastPageNumModal")){
-			calLastNum = localStorage.getItem("lastPageNumModal");
-		}
-			
-		pageHtmlModal(calFirstNum, calLastNum);
-	}
-	
-	function pageNextModal(e){
-		var preFirstNum = $(e).parents("ul").find("li:first").next().children().attr("data-number");
-		var calFirstNum = parseInt(preFirstNum) + CLICK_PAGE_NUM;
-		var calLastNum = calFirstNum + 9;
-		
-		if(calFirstNum > localStorage.getItem("lastPageNumModal")){
-			calFirstNum = preFirstNum;
-		}
-		
-		if(calLastNum > localStorage.getItem("lastPageNumModal")){
-			calLastNum = localStorage.getItem("lastPageNumModal");	
-		}
-		
-		pageHtmlModal(calFirstNum, calLastNum);
-	}
-	
-	function moneyFormatHtml(){
-		$("table").find(".moneyTdHtml").each(function(index, item){
-			if(isNaN($(item).html()) === true || $(item).html() === ""){
-				$(item).html(0);
-			}else{
-				$(item).html(parseInt($(item).html()).toLocaleString("en-US"));
-			}
-		});
-	}
-	
-	function moneyFormatInput(e){
-		if(isNaN($(e).val().replaceAll(",", "")) === true || $(e).val().replaceAll(",", "") === ""){
-			$(e).val(0);
-		}else{
-			$(e).val(parseInt($(e).val().replaceAll(",", "").replace(/[^0-9]/g, "")).toLocaleString("en-US"));
-		}
-	
-	}
-	function dataListChange(e){
-		let thisList = $(e);
-		let dataValue = thisList.next().children().filter((index, item) => {
-			return $(item).val() === thisList.val();
-		}).data("value");
-		
-		thisList.next().next().val(dataValue);
-	}
-	
-	$(document).ready(function(){
-		timeAllimUpdate();
-		setTiny();
-		moneyFormatHtml();
-	});
 
 </script>
 <style>
@@ -534,12 +253,5 @@
 			margin-top: 0px;
 		}
 	}
-	.ex_reduce {
-			margin-left: -10px;
-		}
-	.form-control-sm {
-		height: 44%;		
-	}
 </style>
-
 </head>

@@ -166,7 +166,7 @@
 			var salesCustNo = Number($(tr).children().eq(1)[0].children[0].value);
 			$("#productSalesInOutCustName").val(salesCustNoN);
 			$("#productSalesInOutCustNo").val(salesCustNo);
-			
+
 			var data01Title = $(tr).children().eq(2)[0].innerText;
 			var productNo1 = Number($(tr).children().eq(2)[0].children[0].value);
 			$("#data01Title").val(data01Title);
@@ -250,7 +250,7 @@
 		$("#product01OutSum_table").html('₩'+product01OutSum.toLocaleString("en-US"));
 		$("#product01DiffSum").html('₩'+product01DiffSum.toLocaleString("en-US"));
 
-		product01Percent = product01DiffSum / product01OutSum * 100;
+		product01Percent = Math.floor(product01DiffSum / product01OutSum * 100).toFixed(2);
 		if(product01Percent == 'NaN'){
 			$("#product01Percent").html('0'+'%');
 		} else if (product01Percent == '-Infinity'){
@@ -258,9 +258,9 @@
 		} else if (product01Percent == 'Infinity'){
 			$("#product01Percent").html('0'+'%');
 		} else if(product01Percent >= 0){
-			$("#product01Percent").html('+'+product01Percent.toString().substring(0, 4) +'%');
+			$("#product01Percent").html('+'+product01Percent+'%');
 		} else if(product01Percent < 0){
-			$("#product01Percent").html(product01Percent.toString().substring(0, 4) +'%');
+			$("#product01Percent").html(product01Percent+'%');
 		}
 
 		var prduct01Cnt = product01In.length + product01Out.length;

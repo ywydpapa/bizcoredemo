@@ -31,30 +31,24 @@
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
-								<col width="5%"/>
-								<col width="15%"/>
-								<col width="5%"/>
-								<col width="15%"/>
-								<col width="5%"/>
-								<col width="15%"/>
-								<col width="5%"/>
-								<col width="15%"/>
+								<col width="15%" />
+								<col width="35%" />
+								<col width="15%" />
+								<col width="35%" />
 							</colgroup>
 							<tbody>
-							
 								<tr>
 									<th scope="row" class="requiredTextCss">일정일자</th>
 									<td colspan="3">
 										<div class="input-group input-group-sm mb-0 mr-1">
-										<input class="form-control col-xl-2" style="width:400px" type="date" max="9999-12-30" id="schedFrom" value="${dto.schedFrom}" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)">
+										<input class="form-control" type="date" id="schedFrom" value="${dto.schedFrom}" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)">
 										<select id="startTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)"></select>
-										<span style="line-height:30px;">&nbsp;~&nbsp;</span>
-										<input class="form-control col-xl-2" type="date" max="9999-12-31" id="schedTo" value="${dto.schedTo}" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)">
+										<span> ~ </span>
+										<input class="form-control " type="date" id="schedTo" value="${dto.schedTo}" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)">
 										<select id="endTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#schedFrom').val(), $('#startTime').val()), setDateHourMinute($('#schedTo').val(), $('#endTime').val()),this)"></select>
 										</div>
 									</td>
 								</tr>
-								
 								<tr>
 									<th scope="row">장소</th>
 									<td><input type="text"
@@ -98,6 +92,8 @@
 											</div>
 										</div>
 									</td>
+								</tr>
+								<tr>
 									<th scope="row">영업기회</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
@@ -138,7 +134,7 @@
 									<th scope="row" class="requiredTextCss">담당사원</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control " name="userName"
+											<input type="text" class="form-control" name="userName"
 												id="userName" value="${dto.userName}" readonly /> <input type="hidden"
 												name="userNo" id="userNo" value="${dto.userNo}" /> <span
 												class="input-group-btn">
@@ -174,12 +170,11 @@
 										</div>
 									</td>
 								</tr>
-								
 								<tr>
 									<th scope="row">매출처</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control " name="custName"
+											<input type="text" class="form-control" name="custName"
 												id="custName" value="${dto.custName}" readonly /> <input type="hidden"
 												name="custNo" id="custNo" value="${dto.custNo}" /> <span
 												class="input-group-btn">
@@ -245,17 +240,6 @@
 											</div>
 										</div>
 									</td>
-									<th scope="row">활동형태</th>
-									<td><select name="schedCat" id="schedCat" class="form-control form-control-sm ">
-										<c:forEach var="acttype" items="${acttype}">
-										<option value = "${acttype.codeNo}" <c:if test="${acttype.codeNo == dto.schedCat}">selected</c:if>>${acttype.desc03}</option>
-										</c:forEach>
-									</select>
-									</td>
-									<th scope="row" class="requiredTextCss">제목</th>
-									<td colspan="3"><input type="text" class="form-control form-control-sm " id="schedTitle" name="schedTitle" value="${dto.schedTitle}">
-									<input type="hidden" id="schedNo" name="schedNo" value="${dto.schedNo}">
-									</td>
 								</tr>
 								<tr>
 									<%-- <th scope="row">일정구분</th>
@@ -266,10 +250,23 @@
 										</c:forEach>
 									</select>
 									</td> --%>
+									<th scope="row">활동형태</th>
+									<td><select name="schedCat" id="schedCat" class="form-control form-control-sm">
+										<c:forEach var="acttype" items="${acttype}">
+										<option value = "${acttype.codeNo}" <c:if test="${acttype.codeNo == dto.schedCat}">selected</c:if>>${acttype.desc03}</option>
+										</c:forEach>
+									</select>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row" class="requiredTextCss">제목</th>
+									<td colspan="3"><input type="text" class="form-control form-control-sm" id="schedTitle" name="schedTitle" value="${dto.schedTitle}">
+									<input type="hidden" id="schedNo" name="schedNo" value="${dto.schedNo}">
+									</td>
 								</tr>
 								<tr>
 									<th scope="row">내용</th>
-									<td colspan="7"><textarea name="schedDesc" id="schedDesc"
+									<td colspan="3"><textarea name="schedDesc" id="schedDesc"
 											rows="8" class="form-control">${dto.schedDesc}</textarea></td>
 								</tr>
 							</tbody>
@@ -362,19 +359,10 @@
 			schedData.userNo 		= $("#userNo").val();
 			if($("#custName").val() != "") schedData.custNo 		= Number($("#custNo").val());
 			if($("#soppName").val() != "") schedData.soppNo 		= Number($("#soppNo").val());
-			if($("textarea").attr("style") === "display: none;"){
-				schedData.schedDesc 		= tinyMCE.get("schedDesc").getContent();
-			}else{
-				schedData.schedDesc 		= $("#schedDesc").val();
-			}
+			schedData.schedDesc 		= $("#schedDesc").val();
 			/* schedData.schedType 		= $("#schedType").val(); */
 			schedData.schedCat 		= $("#schedCat").val();
 			if($("#custName").val() != "") schedData.contNo		= Number($("#contNo").val());
-			
-			if(!schedData.schedTitle){
-				alert("제목을 입력하십시오.");
-				return;
-			}
 
 			$.ajax({
 				url: "${path}/sched/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
@@ -456,11 +444,3 @@
 </div>
 <jsp:include page="../body-bottom.jsp"/>
 </c:if>
-
-<style>
-	#startTime, #endTime {
-		border:1px solid #ccc;
-		margin-left: 5px;
-		width: 84px!important;
-	}
-</style>

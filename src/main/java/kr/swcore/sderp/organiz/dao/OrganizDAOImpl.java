@@ -22,14 +22,8 @@ public class OrganizDAOImpl implements OrganizDAO {
 	}
 
 	@Override
-	public List<OrganizDTO> listDept2(int compNo) {
-		return sqlSession.selectList("organiz.listDept2", compNo);
-	}
-
-	@Override
 	public List<OrganizDTO> listDeptChainExtend(OrganizDTO organizDTO) {
 		return sqlSession.selectList("organiz.listDeptChainExtend", organizDTO);
 	}
-
 
 }

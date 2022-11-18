@@ -60,8 +60,5 @@ public class SalesTargetDTO {
 	private String cnt06_SUM_Group;
 	private String org_id_Group;
 	private String org_title_Group;
-	
-	private int Num;
-	private double price;
 
 }

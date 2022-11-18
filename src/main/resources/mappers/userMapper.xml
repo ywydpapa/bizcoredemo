@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		select u.userName 
  		from swc_user u
  		    left join swc_company c on u.compNo = c.compNo
- 		where u.userId=#{userId} and u.userPasswd=PASSWORD(#{userPasswd}) and c.compId=#{compId} and u.attrib not like 'XXX%'
+ 		where u.userId=#{userId} and u.userPasswd=#{userPasswd} and c.compId=#{compId} and u.attrib not like 'XXX%'
 </select>
 
 <select id="userSessionCheck" resultType="userDto">
@@ -22,10 +22,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		left join swc_userData b on a.userNo=b.userNo and b.catNo='100003' and b.attrib not like 'XXX%'
  		left join swc_userData c on a.userNo=c.userNo and c.catNo='100002' and c.attrib not like 'XXX%'
 		left join swc_company d on a.compNo = d.compNo
- 		where d.compId = (select compId from swc_company where compId = #{compId})
+ 		where
 			<choose>
-				<when test="userId != null and userId != ''"> and a.userId = #{userId}</when>
-				<when test="userNo > 0"> and a.userNo = #{userNo}</when>
+				<when test="userId != null and userId != ''">a.userId = #{userId}</when>
+				<when test="userNo > 0">a.userNo = #{userNo}</when>
 			</choose>
  </select>
  
@@ -41,34 +41,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  <update id="updateUserpass">
  		update swc_user set 
  		<!-- userName=#{userName}, --> 
- 		<choose>
- 			<when test="userChangePasswd != '' and userChangePasswd != null">
- 				userPasswd=PASSWORD(#{userChangePasswd})
- 			</when>
- 			<otherwise>
- 				userPasswd=PASSWORD(#{userPasswd})
- 			</otherwise>
- 		</choose>
- 		<if test="listDateFrom != '' and listDateFrom != null">
- 			, listDateFrom = #{listDateFrom}
- 		</if>
+ 		userPasswd=#{userChangePasswd}
  		<!-- userRole=#{userRole} -->
  		where userId=#{userId}
- 		and userPasswd=PASSWORD(#{userPasswd})
+ 		and userPasswd=#{userPasswd}
  </update>
  
   <update id="updateUser">
  		update swc_user set 
  		userName = #{userName}, 
  		userRole = #{userRole},
- 		userEmail = #{userEmail},
- 		userTel = #{userTel},
- 		userOtp=#{userOtp},
  		org_id = #{org_id},
  		userKey = #{userKey},
-		<if test="userPasswd > 0"> 
-			userPasswd = PASSWORD('1234'), 
-		</if>
+		<choose>
+			<when test="userPass = 'init'"> userPasswd = '1234', </when>
+		</choose> 		
  		attrib = #{attrib}
  		where userNo=#{userNo}
   </update>
@@ -78,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	insert into swc_user 
  	(compNo,userId,userName,userPasswd,userRole,org_id,attrib) 
  	values 
- 	(#{compId},#{userId},#{userName},PASSWORD(#{userPasswd}),#{userRole},#{org_id},'10000');
+ 	(#{compId},#{userId},#{userName},#{userPasswd},#{userRole},#{org_id},'10000');
  </insert>
  
  <insert id="insertUserdata">
@@ -108,13 +95,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where userId=#{userId}
 </update>
 
-<select id="allList" resultType="userDto">
-	select * from swc_user
-	where attrib not like 'XXX' and compNo = #{compNo}
-</select>
-<select id="listuser_data" resultType="userDto">
-	SELECT b.attStart, b.attEnd, b.attDesc, b.attType FROM swc_user a
-	LEFT JOIN swc_userattend b ON a.userNo = b.userNo
-	WHERE a.userName = #{userName} AND b.attStatus = 5 AND b.attrib NOT LIKE "XXX%"
-</select>
 </mapper>

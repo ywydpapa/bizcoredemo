@@ -1,6 +1,7 @@
 package kr.swcore.sderp.techd.service;
 
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import kr.swcore.sderp.common.dto.PageDTO;
 import kr.swcore.sderp.common.dto.WrapperDTO;
+import kr.swcore.sderp.sched.dto.SchedDTO;
 import org.springframework.stereotype.Service;
 
 import kr.swcore.sderp.code.dao.CodeDAO;
@@ -32,18 +34,11 @@ public class TechdServiceImpl implements TechdService {
 		// TODO Auto-generated method stub
 		return techdDao.listTechd();
 	}
-
-	@Override
-	public List<TechdDTO> listTechdbycust(int custNo) {
-		return techdDao.listTechdbycust(custNo);
-	}
-
+	
 	@Override
 	public List<TechdDTO> listTechd(HttpSession session, PageDTO pageDTO) {
 		Integer compNo = SessionInfoGet.getCompNo(session);
-		String listDateFrom = SessionInfoGet.getlistDateFrom(session);
 		TechdDTO dto = new TechdDTO();
-		dto.setListDateFrom(listDateFrom);
 		dto.setCompNo(compNo);
 
 		if(pageDTO != null) {
@@ -63,13 +58,12 @@ public class TechdServiceImpl implements TechdService {
 	public Object listTechd(HttpSession session, String param, HttpServletRequest request, HttpServletResponse response) {
 		TechdDTO dto = new TechdDTO();
 		Integer compNo = SessionInfoGet.getCompNo(session);						// 로그인 회사 구분 코드
-		String listDateFrom = SessionInfoGet.getlistDateFrom(session);
 		String userNostr = request.getParameter("userNo");
 		Integer userNo = userNostr.equals("") == true ? 0 : Integer.valueOf(userNostr);	// 담당사원
 		String custNostr =  request.getParameter("custNo");
 		Integer custNo = custNostr.equals("") == true ? 0 : Integer.valueOf(custNostr);	// 엔드유저
-//		String custmemberNostr = request.getParameter("custmemberNo");
-//		Integer custmemberNo = custmemberNostr.equals("") == true ? 0 : Integer.valueOf(custmemberNostr);	// 엔드유저 담당자
+		String custmemberNostr = request.getParameter("custmemberNo");
+		Integer custmemberNo = custmemberNostr.equals("") == true ? 0 : Integer.valueOf(custmemberNostr);	// 엔드유저 담당자
 		String techdSteps = request.getParameter("techdSteps") != null ? (String) request.getParameter("techdSteps") : "";				// 활동형태
 		String cntrctMth = request.getParameter("cntrctMth") != null ? (String) request.getParameter("cntrctMth") : "";					// 등록구분
 		String targetDatefrom = request.getParameter("targetDatefrom") != null ? (String) request.getParameter("targetDatefrom") : "";	// 기술 시작일
@@ -81,7 +75,7 @@ public class TechdServiceImpl implements TechdService {
 		dto.setCompNo(compNo);
 		dto.setUserNo(userNo);
 		dto.setCustNo(custNo);
-//		dto.setCustmemberNo(custmemberNo);
+		dto.setCustmemberNo(custmemberNo);
 		dto.setTechdSteps(techdSteps);
 		dto.setCntrctMth(cntrctMth);
 		dto.setTechdFrom(targetDatefrom);
@@ -89,7 +83,6 @@ public class TechdServiceImpl implements TechdService {
 		dto.setRegSDate(regSDate);
 		dto.setRegEDate(regEDate);
 		dto.setTechdDesc(techdDesc);
-		dto.setListDateFrom(listDateFrom);
 
 		String sEcho = request.getParameter("sEcho");
 		String limitstr = request.getParameter("iDisplayLength");
@@ -147,10 +140,9 @@ public class TechdServiceImpl implements TechdService {
 	}
 	
 	@Override
-	public List<SalesDTO> listTechdinsopp(HttpSession session, int soppNo, int contNo) {
+	public List<SalesDTO> listTechdinsopp(HttpSession session, int soppNo) {
 		SoppDTO soppdto = SessionInfoGet.getCompNoDto(session);
 		soppdto.setSoppNo(soppNo);
-		soppdto.setContNo(contNo);
 		
 		return techdDao.listTechdinsopp(soppdto);
 	}

@@ -8,7 +8,6 @@ import kr.swcore.sderp.techd.dto.TechdDTO;
 
 public interface TechdDAO {
 	List<TechdDTO> listTechd();
-	List<TechdDTO> listTechdbycust(int custNo);
 	List<TechdDTO> listTechd(TechdDTO dto);
 	int listTechdCnt(TechdDTO dto);
 	List<TechdDTO> listconTechd(TechdDTO dto);

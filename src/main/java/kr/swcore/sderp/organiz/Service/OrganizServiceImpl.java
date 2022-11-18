@@ -31,25 +31,19 @@ public class OrganizServiceImpl implements OrganizService {
 	}
 
 	@Override
-	public List<OrganizDTO> listDept2(HttpSession session) {
-		Integer compNo = Integer.valueOf((String) session.getAttribute("compNo"));
-		return organizDao.listDept2(compNo);
-	}
-
-	@Override
 	public String listDeptForCalendarJson(HttpSession session) {
 		String result = "";
 		Integer compNo = Integer.valueOf((String) session.getAttribute("compNo"));
 		JSONArray returnArray = new JSONArray();
 		List<OrganizDTO> rtn = organizDao.listDept(compNo);
 		if(rtn != null) {
-			HashMap<String, Object> first = new JSONObject();
+			JSONObject first = new JSONObject();
 			first.put("title", rtn.get(0).getParentTitle());
 			first.put("expanded", true);
 			first.put("folder", true);
 			JSONArray arr = new JSONArray();
 			for(OrganizDTO dto : rtn){
-				HashMap<String, Object> jsonObject = new JSONObject();
+				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("title", dto.getOrg_title());
 				jsonObject.put("expanded", false);
 				jsonObject.put("folder", true);
@@ -61,7 +55,7 @@ public class OrganizServiceImpl implements OrganizService {
 					obj.put("title", userDTO.getUserName());
 					obj.put("userNo", userDTO.getUserNo());
 
-					HashMap<String, Object> object = new JSONObject(obj);
+					JSONObject object = new JSONObject(obj);
 					array.add(object);
 				}
 				jsonObject.put("children", array);

@@ -123,9 +123,9 @@
 		<input type="button" onclick="fnSearchCalendar()" value="검색">
 	</div>
 	<div id='calendar'></div>
-	<!-- <div style="margin-top: 10px;">선택한 사람 : <br/>
+	<div style="margin-top: 10px;">선택한 사람 : <br/>
 		<div id="selectedPerson"></div>
-	</div> -->
+	</div>
 	<script>
 		var userNoSelected = {
 			<c:forEach var="i" begin="0" end="${fn:length(organizationArrList[0].children)-1}" varStatus="status" step="1">
@@ -154,17 +154,6 @@
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
 		});
-		
-		//계약 table의 soppNo 값이 0일 경우 
-		function fnSetContData1(a,b,c,d,e){
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			alert("영업기회에 연결되어있지 않은 계약압니다.");
-			return false;
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			/* $("#soppNo").val(e);
-			location.href = "${path}/cont/iowrite.do/" + e; */
-		}
-		
 		function fnSetSoppData(a, b, c, d) {
 			$("#soppNo").val(b);
 			$("#soppTitle").val(a);
@@ -209,7 +198,6 @@
 					fnSetCurrentDate();
 				});
 			}
-			
 		}
 		var calendar;
 		function setCalendar(event, userNoList) {

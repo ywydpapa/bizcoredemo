@@ -16,7 +16,7 @@
 			<c:forEach var="row" items="${list}">
 				<tr align="center">
 					<td>${row.userNo}</td>
-					<td data-id="${row.userNo}"><a
+					<td><a
 						href="javascript:fnSetUserData('${row.userNo}','${row.userName}');">${row.userName}</a></td>
 				</tr>
 			</c:forEach>

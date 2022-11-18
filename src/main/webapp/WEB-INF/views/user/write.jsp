@@ -11,75 +11,64 @@
 
 <div id="main_content">
 	<h2>회원등록</h2>
-		<form class="form-control" name="form1" method="post" onsubmit="return false;">
+		<form class="form-control" name="form1" method="post"
+			onsubmit="return false;">
 			<table class="table table-sm bst02">
 				<tr>
 					<td>아이디</td>
-					<td style="display:flex;">
-						<input class="form-control" style="width: 90%;" name="userId" id="userId" required>
-						<button onclick="fn_IdCheck();">중복확인</button>
-						<div id="idCheckText" style="line-height: 28px; margin-left : 5px;">ID 중복확인 필수체크</div>
-					</td>
+					<td><input class="form-control" name="userId" id="userId"
+						required>
+					<button onclick="fn_IdCheck();">중복확인</button>
+						<div id="idCheckText">ID 중복확인 필수체크</div></td>
 				</tr>
 				<tr>
 					<td>비밀번호</td>
-					<td>
-						<input class="form-control" type="password" name="userPasswd1" id="userPasswd1" value="" required placeholder="기본 비밀번호 입력" autocomplete="new-password">
-						<input class="form-control" style="display:none;" type="password" name="userPasswd" id="userPasswd" value="" required placeholder="기본 비밀번호 입력" autocomplete="new-password">
-					</td>
+					<td><input class="form-control" type="password"
+						name="userPasswd" id="userPasswd" value="" required placeholder="기본 비밀번호 입력" autocomplete="new-password"></td>
 				</tr>
 				<tr>
 					<td>이름</td>
-					<td>
-						<input class="form-control" name="userName" id="userName" value="" required placeholder="사용자 실명 입력" autocomplete="off">
-					</td>
+					<td><input class="form-control" name="userName" id="userName"
+						value="" required placeholder="사용자 실명 입력" autocomplete="off"></td>
 				</tr>
 				<tr>
 					<td>사용자 권한</td>
-					<td>
-						<select class="form-control" name="userRole" id="userRole">
+					<td><select class="form-control" name="userRole" id="userRole">
 							<option value="CUSER">일반사용자</option>
 							<option value="PUSER">부서관리자</option>
 							<option value="ADMIN">시스템관리자</option>
-						</select>
-					</td>
+					</select></td>
 				</tr>
 				<tr>
 					<td>회사코드</td>
-					<td>
-						<select class="form-control" name="compId" id="compId">
+					<td><select class="form-control" name="compId" id="compId">
 							<c:forEach var="listComp" items="${listComp}">
 								<c:if test="${listComp.compNo eq compNo}">
-									<option value="${listComp.compNo}">${listComp.compName}</option>
+								<option value="${listComp.compNo}">${listComp.compName}</option>
 								</c:if>
 							</c:forEach>
-						</select>
-					</td>
+					</select></td>
 				</tr>
 				<tr>
 					<td>직위</td>
-					<td>
-						<select class="form-control" name="userRank" id="userRank">
+					<td><select class="form-control" name="userRank" id="userRank">
 							<c:forEach var="listRank" items="${listRank}">
 								<option value="${listRank.code03}">${listRank.desc03}</option>
 							</c:forEach>
-						</select>
-					</td>
+					</select></td>
 				</tr>
 				<tr>
 					<td>부서</td>
-					<td>
-						<select class="form-control" name="userDept" id="userDept">
+					<td><select class="form-control" name="userDept" id="userDept">
 							<c:forEach var="listDept" items="${listDept}">
 								<option value="${listDept.org_id}">${listDept.org_title}</option>
 							</c:forEach>
-						</select>
-					</td>
+					</select></td>
 				</tr>
+
 				<tr>
-					<td colspan="2" align="center">
-						<input class="btn btn-md btn-primary f-right" type="submit" value="저장" id="btnSave" onclick="fn_userInsert();" disabled=false>
-					</td>
+					<td colspan="2" align="center"><input type="submit" value="저장"
+						id="btnSave" onclick="fn_userInsert();" disabled=false></td>
 				</tr>
 
 			</table>
@@ -116,8 +105,6 @@
 		}
 
 	function fn_userInsert() {
-		var test = $('#userPasswd1').val();
-		$("#userPasswd").attr('value', test);
 		var userData = {};
 		userData.userId 		= $("#userId").val();
 		userData.userPasswd 	= $("#userPasswd").val();

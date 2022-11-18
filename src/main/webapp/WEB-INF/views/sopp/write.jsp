@@ -42,26 +42,24 @@
 										<div class="table-responsive">
 											<table class="table table-sm bst02">
 												<colgroup>
-													<col width="5%"/>
-													<col width="15%"/>
-													<col width="5%"/>
-													<col width="15%"/>
-													<col width="5%"/>
-													<col width="15%"/>
-													<col width="5%"/>
-													<col width="15%"/>
+													<col width="15%" />
+													<col width="35%" />
+													<col width="15%" />
+													<col width="35%" />
 												</colgroup>
 												<tbody>
 													<tr>
 														<th scope="row" class="requiredTextCss">영업기회명</th>
-														<td>
+														<td colspan="3">
 															<input type="text" class="form-control form-control-sm" id="soppTitle" name="soppTitle" value="">
 															<input type="hidden" id="soppNo" name="soppNo" value="">
 														</td>
+													</tr>
+													<tr>
 														<th scope="row" class="requiredTextCss">담당사원</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" name="userName"	id="userName" value="${userInfo.userName}" readonly>
+																<input type="text" class="form-control" name="userName"	id="userName" value="${userInfo.userName}" />
 																<input type="hidden" name="userNo" id="userNo" value="${userInfo.userNo}" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-company"
@@ -95,10 +93,10 @@
 																</div>
 															</div>
 														</td>
-														<th class="requiredTextCss" scope="row">매출처</th>
+														<th scope="row">매출처</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" name="custName" id="custName" value="" readonly>
+																<input type="text" class="form-control" name="custName" id="custName" value="" />
 																<input type="hidden" name="custNo" id="custNo" value="" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-company" data-remote="${path}/modal/popup.do?popId=cust" type="button" data-toggle="modal" data-target="#custModal">
@@ -130,10 +128,12 @@
 																</div>
 															</div>
 														</td>
+													</tr>
+													<tr>
 														<th scope="row">매출처 담당자</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" name="custmemberName"  id="custmemberName" value="" readonly>
+																<input type="text" class="form-control" name="custmemberName"  id="custmemberName" value="" />
 																<input type="hidden" name="custmemberNo" id="custmemberNo" value="" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-partner"
@@ -165,13 +165,10 @@
 																</div>
 															</div>
 														</td>
-													</tr>
-													
-													<tr>
-														<th class="requiredTextCss" scope="row">엔드유저</th>
+														<th scope="row">엔드유저</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" id="endCustName" value="" readonly>
+																<input type="text" class="form-control" id="endCustName" value="" />
 																<input type="hidden" id="endCustNo" value="" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
@@ -182,7 +179,7 @@
 																	<div class="modal-dialog modal-80size" role="document">
 																		<div class="modal-content modal-80size">
 																			<div class="modal-header">
-																				<h4 class="modal-title">엔드유저검색</h4>
+																				<h4 class="modal-title"></h4>
 																				<button type="button" class="close" onclick="$('#endCustModal').modal('hide');" aria-label="Close">
 																					<span aria-hidden="true">&times;</span>
 																				</button>
@@ -199,43 +196,48 @@
 																</div>
 															</div>
 														</td>
+													</tr>
+													<tr>
 														<th scope="row" class="requiredTextCss">진행단계</th>
-														<td><select name="soppStatus" id="soppStatus" class="form-control form-control-sm">
+														<td><select name="soppStatus" id="soppStatus" class="form-control form-control-sm" onchange="javascript:changeProbability()">
 																<option value="10178">영업정보파악</option>
 																<option value="10179">초기접촉</option>
 																<option value="10180">제안서제출 및 PT</option>
 																<option value="10181">견적서제출</option>
-																<%--<option value="10182">계약요청</option>
+																<option value="10182">계약요청</option>
+																<option value="10183">수주</option>
+																<option value="10184">매출</option>
 																<option value="">수금완료</option>
 																<option value="">은행입금</option>
 																<option value="10187">계약실패</option>
 																<option value="10193">계약진행보류</option>
 																<option value="">발주서입수</option>
-																<option value="">협력사요청</option>--%>
+																<option value="">협력사요청</option>
 														</select></td>
 														<th scope="row">가능성</th>
-														<td class="text-right">
+														<td>
 															<span class="input_inline">
-																<input type="text" class="form-control form-control-sm" id="soppSrate" name="soppSrate"  style="text-align:right;" value="0">
+																<input type="text" class="form-control form-control-sm" id="soppSrate" name="soppSrate" value="0">
 															</span>
 															%
 														</td>
-														<th class="requiredTextCss" scope="row">계약구분</th>
+													</tr>
+													<tr>
+														<th scope="row">계약구분</th>
 														<td><select name="cntrctMth" id="cntrctMth"
-															class="form-control form-control-sm" onchange="test()">
+															class="form-control form-control-sm">
 																<option value="">선택</option>
 																<option value="10247">판매계약</option>
 																<option value="10248">유지보수</option>
 																<option value="10254">임대계약</option>
 														</select></td>
-													</tr>
-													
-													<tr>
 														<th scope="row">매출예정일</th>
 														<td>
-															<input class="form-control form-control-sm" name="soppTargetDate" id="soppTargetDate" type="date" max="9999-12-31" value="0">
+															<input class="form-control form-control-sm col-md-6" name="soppTargetDate" id="soppTargetDate" type="date"	value="0">
 														</td>
-														<th class="requiredTextCss" scope="row">판매방식</th>
+													</tr>
+													<tr>
+														<th scope="row">판매방식</th>
 														<td>
 														<!-- <select name="soppType" id="soppType"
 															class="form-control form-control-sm col-md-4">
@@ -256,19 +258,13 @@
 															</select>
 														</td>
 														<th scope="row">예상매출</th>
-														<td class="text-right"><span class="input_inline">
-															<input type="text" class="form-control form-control-sm" id="soppTargetAmt" name="soppTargetAmt" onkeyup="moneyFormatInput(this);" style="text-align:right;" value="0"></span>원
-														</td>
-														<th class="requiredTextCss" id="Maintenance_name" style="display: none;">유지보수 기간</th>
-														<td id="Maintenance_input" style="display: none; line-height: 30px;">
-															<div class="input-group input-group-sm mb-0">
-																<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30" id="maintenance_S"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31" id="maintenance_E">
-															</div>
-														</td>
+														<td><span class="input_inline">
+															<input type="text" class="form-control form-control-sm" id="soppTargetAmt" name="soppTargetAmt" value="0"></span>원</td>
 													</tr>
 													<tr>
 														<th scope="row">설명</th>
-														<td colspan="7"><textarea name="soppDesc" id="soppDesc" rows="8" class="form-control">${dto.soppDesc}</textarea></td>
+														<td colspan="3"><textarea name="soppDesc"
+																id="soppDesc" rows="8" class="form-control">${dto.soppDesc}</textarea></td>
 													</tr>
 												</tbody>
 											</table>
@@ -292,80 +288,6 @@
 	</div>
 		<!--영업기회등록-->
 	<script>
-			function test(){
-				if($('#cntrctMth').val() == '10248'){
-					$('#Maintenance_name').show();
-					$('#Maintenance_input').show();
-				}else{
-					$('#Maintenance_name').hide();
-					$('#Maintenance_input').hide();
-				}
-			}
-		
-			$("#maintenance_S").change(function(){
-				var dateValue = $(this).val();
-				var dateValueArr = dateValue.split("-");
-				var dateValueCom = new Date(dateValueArr[0], parseInt(dateValueArr[1])-1, dateValueArr[2]);
-				var EdateValue = $("#maintenance_E").val();
-				var EdateDateArr = EdateValue.split("-");
-				var EdateDateCom = new Date(EdateDateArr[0], parseInt(EdateDateArr[1])-1, EdateDateArr[2]);
-				
-				if(EdateValue == ""){
-					dateValueCom.setDate(dateValueCom.getDate()+1);
-				}else if(dateValueCom.getTime() > EdateDateCom.getTime()){
-					alert("시작일이 종료일보다 클 수 없습니다.");
-					dateValueCom.setDate(dateValueCom.getDate()+1);
-				}else{
-					return null;
-				}
-				
-				var year = dateValueCom.getFullYear();
-				var month = dateValueCom.getMonth()+1;
-				var day = dateValueCom.getDate();
-				
-				if(month < 10){
-					month = "0" + month;
-				}
-				
-				if(day < 10){
-					day = "0" + day;
-				}
-				
-				$("#maintenance_E").val(year + "-" + month + "-" + day);
-			});
-			
-			$("#maintenance_E").change(function(){
-				var SdateValue = $("#maintenance_S").val();
-				var SdateValueArr = SdateValue.split("-");
-				var SdateValueCom = new Date(SdateValueArr[0], parseInt(SdateValueArr[1])-1, SdateValueArr[2]);
-				var thisDateValue = $(this).val();
-				var thisDateArr = thisDateValue.split("-");
-				var thisDateCom = new Date(thisDateArr[0], parseInt(thisDateArr[1])-1, thisDateArr[2]);
-				
-				if(SdateValue == ""){
-					thisDateCom.setDate(thisDateCom.getDate()-1);
-				}else if(SdateValueCom.getTime() > thisDateCom.getTime()){
-					alert("종료일이 시작일보다 작을 수 없습니다.");
-					thisDateCom.setDate(thisDateCom.getDate()-1);
-				}else{
-					return null;
-				}
-				
-				var year = thisDateCom.getFullYear();
-				var month = thisDateCom.getMonth()+1;
-				var day = thisDateCom.getDate();
-				
-				if(month < 10){
-					month = "0" + month;
-				}
-				
-				if(day < 10){
-					day = "0" + day;
-				}
-				
-				$("#maintenance_S").val(year + "-" + month + "-" + day);
-			});
-	
 			$('#custModal').on('show.bs.modal', function(e) {
 				var button = $(e.relatedTarget);
 				var modal = $(this);
@@ -452,43 +374,15 @@
 		if($("#soppStatus").val() != "") soppData.soppStatus 	= $("#soppStatus").val();
 		if($("#soppTargetDate").val() != "") soppData.soppTargetDate	= $("#soppTargetDate").val();
 		if($("#soppTargetAmt").val() != "") soppData.soppTargetAmt 	= $("#soppTargetAmt").val().replace(/[\D\s\._\-]+/g, "");
-		if(tinyMCE.get("soppDesc").getContent() != "") soppData.soppDesc 		= tinyMCE.get("soppDesc").getContent();
-		
-		if($("#cntrctMth").val() == '10248'){
-			if($('#maintenance_S').val() == ''){
-				alert("유지보수 시작일을 선택해주십시오.!!");
-				return;
-			}
-			if($('#maintenance_E').val() == ''){
-				alert("유지보수 마감일을 선택해주십시오.!!");
-				return;
-			}
-			soppData.maintenance_S = $('#maintenance_S').val();
-			soppData.maintenance_E = $('#maintenance_E').val();
-		}else {
-			soppData.maintenance_S = '0000-00-00';
-			soppData.maintenance_E = '0000-00-00';
-		}
-		
+		if($("#soppDesc").val() != "") soppData.soppDesc 		= $("#soppDesc").val();
+
 		console.dir(soppData);
 		// 필수값 체크
 		if (!soppData.soppTitle) {
 			alert("영업기회명을 입력하십시오.!!");
 			return;
-		} else if(!soppData.custNo){
-			alert("매출처를 선택해주십시오.");
-			return;
-		} else if(!soppData.buyrNo){
-			alert("엔드유저를 선택해주십시오.");
-			return;
-		} else if(!soppData.cntrctMth){
-			alert("계약구분을 선택해주십시오.");
-			return;
-		} else if(!soppData.soppType){
-			alert("판매방식을 선택해주십시오.");
-			return;
 		}
-		
+
 		console.dir(soppData);
 
 		$.ajax({ url: "${path}/sopp/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
@@ -527,7 +421,7 @@
 
 		// 이벤트 시작 ==========================================================================
 		// 이벤트시 동작
-		/* $("#soppTargetAmt").on("keyup", function (event) {
+		$("#soppTargetAmt").on("keyup", function (event) {
 			// 긁어와서 이벤트 체크
 			var selection = window.getSelection().toString();
 			if (selection !== '') return;
@@ -544,7 +438,7 @@
 			$this.val(function () {
 				return (input === 0) ? "0" : input.toLocaleString("en-US");
 			});
-		}); */
+		});
 	});
 	</script>
 </div>

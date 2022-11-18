@@ -34,7 +34,6 @@ public class SchedServiceImpl implements SchedService {
 	@Override
 	public Object listSched(HttpSession session, String param, HttpServletRequest request, HttpServletResponse response) {
 		SoppDTO soppdto = SessionInfoGet.getCompNoDto(session);
-		String listDateFrom = SessionInfoGet.getlistDateFrom(session);
 		SchedDTO dto = new SchedDTO();
 		Integer compNo = SessionInfoGet.getCompNo(session);						// 濡쒓렇�씤 �쉶�궗 援щ텇 肄붾뱶
 		String userNostr = request.getParameter("userNo");
@@ -66,7 +65,6 @@ public class SchedServiceImpl implements SchedService {
 		dto.setSchedTo(schedTo);
 		dto.setRegSDate(regSDate);
 		dto.setRegEDate(regEDate);
-		dto.setListDateFrom(listDateFrom);
 
 		String sEcho = request.getParameter("sEcho");
 		String limitstr = request.getParameter("iDisplayLength");
@@ -136,12 +134,7 @@ public class SchedServiceImpl implements SchedService {
 		// TODO Auto-generated method stub
 		return schedDao.insertSched(dto);
 	}
-
-	@Override
-	public int insertSchedauto(SchedDTO dto) {
-		return schedDao.insertSchedauto(dto);
-	}
-
+	
 	@Override
 	public int insertSched(HttpSession session, SchedDTO dto) {
 		Integer compNo = Integer.valueOf((String) session.getAttribute("compNo"));
@@ -230,44 +223,6 @@ public class SchedServiceImpl implements SchedService {
 		dto.setUserNo(userNo);
 		return schedDao.myAddtext(dto);
 	}
-	
-	@Override
-	public SchedDTO myAddtext2(HttpSession session3,SchedDTO dto) {
-		// TODO Auto-generated method stub
-		int userNo = SessionInfoGet.getUserNo(session3);
-		dto.setUserNo(userNo);
-		return schedDao.myAddtext2(dto);
-	}
 
-	@Override
-	public int updateSreport(SchedDTO dto) {
-		// TODO Auto-generated method stub
-		return schedDao.updateSreport(dto);
-	}
-	@Override
-	public int updateSreport1(SchedDTO dto) {
-		// TODO Auto-generated method stub
-		return schedDao.updateSreport1(dto);
-	}
-	@Override
-	public int updateSreport2(SchedDTO dto) {
-		// TODO Auto-generated method stub
-		return schedDao.updateSreport2(dto);
-	}
-	
-	@Override
-	public int insertSreport2(SchedDTO dto) {
-		// TODO Auto-generated method stub
-		return schedDao.insertSreport2(dto);
-	}
-
-	@Override
-	public List<SchedDTO> listMreport2(HttpSession session) {
-		// TODO Auto-generated method stub
-		int compNo = SessionInfoGet.getCompNo(session);
-		SchedDTO dto = new SchedDTO();
-		dto.setCompNo(compNo);
-		return schedDao.listMreport2(dto);
-	}
 
 }

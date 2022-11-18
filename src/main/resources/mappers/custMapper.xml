@@ -46,8 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		SELECT * from swc_custData03 where custNo=#{custNo} and attrib not like 'XXX%' order by custData03no DESC limit 1
  </select>
 
-<select id="detailCust04" resultType="custDto">
- 		SELECT * from swc_custData where custNo=#{custNo} and attrib not like 'XXX%' order by custdataNo DESC limit 1
+<select id="detailCust04"
+ 		resultType="custDto">
+ 		SELECT * from swc_custData04 where custNo=#{custNo} and attrib not like 'XXX%' order by custData04no DESC limit 1
  </select>
 
  <select id="detailsCust"
@@ -60,9 +61,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		select * from swc_custData03 where custNo=#{custNo} and attrib not like 'XXX%'
  </select>
  
- <select id="sessionSelectCust" resultType="custDto">
- 	select * from swc_cust where custCompNo = #{custCompNo} and attrib not like 'XXX%'
- </select>
  
  <insert id="insertCust">
  insert into swc_cust (compNo, custName,custVatno, custEmail, custVatemail, custBossname,attrib)
@@ -87,28 +85,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  </insert>
 
  <insert id="insertCust04">
- update swc_custdata set attrib = "XXXXX" where custNo=#{custNo};
- insert into swc_custdata (custNo, compNo, custByear, custCRbalance, custDRbalance, custVatno, custVatemail, custVattype, custVatbiz, custVatmemo, regDatetime, attrib)
+ update swc_custData04 set attrib = "XXXXX" where custNo=#{custNo};
+ insert into swc_custData04 (custNo,custVatno,custVatemail, custVattype,custVatbiz, custVatmemo,attrib)
  values
- (#{custNo}, #{compNo}, #{custByear}, #{custCRbalance}, #{custDRbalance}, #{custVatno}, #{custVatemail}, #{custVattype}, #{custVatbiz}, #{custVatmemo}, now(), '10000');
- </insert>
- 
- <insert id="tempSelectCustInsert">
- 		insert into swc_cust 
- 		(
- 		compNo, custName,custVatno, custBossname, attrib
- 		)
- 		values 
- 		(
- 		#{compNo},#{custName},#{custVatno}, #{custBossname},'10000'
- 		)
+ (#{custNo},#{custVatno},#{custVatemail}, #{custVattype},#{custVatbiz}, #{custVatmemo},'10000');
  </insert>
 
  <update id="updateCust">
 	update swc_cust 
 	set custName=#{custName}
 	,custBossname=#{custBossname}
-	,custVatno=#{custVatno}
 	,custEmail=#{custEmail}
 	,custVatemail=#{custVatemail}
 	where custNo=#{custNo}
@@ -118,7 +104,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	update swc_cust 
 	set custName=#{custName}
 	,custBossname=#{custBossname}
-	,custVatno=#{custVatno}
 	,custEmail=#{custEmail}
 	,custVatemail=#{custVatemail}
 	where custNo=#{custNo}

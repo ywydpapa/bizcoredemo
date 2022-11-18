@@ -1,6 +1,5 @@
 package kr.swcore.sderp.user.dao;
 
-import kr.swcore.sderp.common.dto.DeptToPlanTblDTO;
 import kr.swcore.sderp.sopp.dto.SoppDTO;
 import kr.swcore.sderp.user.dto.UserDTO;
 
@@ -21,6 +20,4 @@ public interface UserDAO {
 	public List<UserDTO> userListWithOrgId(int orgId);
 	public UserDTO userSessionCheck(UserDTO dto);
 	public int updateUserPass(UserDTO dto);
-	List<UserDTO> allList();
-	List<UserDTO> listuser_data(String userName);
 }

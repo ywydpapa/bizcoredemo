@@ -4,228 +4,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sopp">
 
-	<select id="listSopp" resultType="soppDto">
-		select subquery1.*
-		from
+<select id="listSopp"
+ 		resultType="soppDto">
+	select subquery1.*
+	from
 		(
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
+		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
 		from swc_sopp a
-		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		left join swc_code f on a.cntrctMth = f.codeNo
-		left join swc_cust g on a.buyrNo = g.custNo
-		where a.attrib not like 'XXX%'
-		and b.compNo = #{compNo}
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="custNo != null and custNo > 0">
-			and a.custNo = #{custNo}
-		</if>
-		<if test="custMemberNo != null and custMemberNo > 0">
-			and a.custMemberNo = #{custMemberNo}
-		</if>
-		<if test="ptncNo != null and ptncNo > 0">
-			and a.ptncNo = #{ptncNo}
-		</if>
-		<if test="ptncMemberNo != null and ptncMemberNo > 0">
-			and a.ptncMemberNo = #{ptncMemberNo}
-		</if>
-		<if test="buyrNo != null and buyrNo > 0">
-			and a.buyrNo = #{buyrNo}
-		</if>
-		<if test="buyrMemberNo != null and buyrMemberNo > 0">
-			and a.buyrMemberNo = #{buyrMemberNo}
-		</if>
-		<if test="cntrctMth != null and cntrctMth > 0">
-			and a.cntrctMth = #{cntrctMth}
-		</if>
-		<if test="soppTitle != null and soppTitle != ''">
-			and a.soppTitle like CONCAT('%', #{soppTitle}, '%')
-		</if>
-		<if test="soppDesc != null and soppDesc != ''">
-			and a.soppDesc = #{soppDesc}
-		</if>
-		<!-- 예상매출액 보다 큰경우만 일단 쿼리문 작성 추후 수정가능성 있음 -->
-		<if test="soppTargetAmt != null and soppTargetAmt > 0">
-			and a.soppTargetAmt = #{soppTargetAmt}
-		</if>
-		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
-		</if>
-		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
-		</if>
-		<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom2}
-		</if>
-		<if test="targetDateto2 != null and targetDateto2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto2}
-		</if>
-		<if test="soppType != null and soppType > 0">
-			and a.soppType = #{soppType}
-		</if>
-		<if test="soppStatus != null and soppStatus > 0">
-			and a.soppStatus = #{soppStatus}
-		</if>
-		<if test="soppSrate != null and soppSrate > 0">
-			and a.soppSrate = #{soppSrate}
-		</if>
-		<if
-			test="listDateFrom != null and listDateFrom != '' and targetDatefrom == null or targetDatefrom == '' and targetDateto == null or targetDateto == '' and targetDatefrom2 == null or targetDatefrom2 == '' and targetDateto2 == null or targetDateto2 == ''">
-			and a.regDatetime Between #{listDateFrom} and now()
-		</if>
-		) subquery1
-		<if test="sSearch != null and sSearch != ''">
-			where
-			subquery1.modDatetime like concat('%',#{sSearch},'%')
-			or subquery1.soppTypeN like concat('%',#{sSearch},'%')
-			or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
-			or subquery1.soppTitle like concat('%',#{sSearch},'%')
-			or subquery1.custName like concat('%',#{sSearch},'%')
-			or subquery1.buyrName like concat('%',#{sSearch},'%')
-			or subquery1.userName like concat('%',#{sSearch},'%')
-			or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
-			or subquery1.soppStatusN like concat('%',#{sSearch},'%')
-			or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
-		</if>
-
-		<if test="'desc' == orderOption">
-			order by ${orderColumn} desc
-		</if>
-		<if test="'asc' == orderOption">
-			order by ${orderColumn} asc
-		</if>
-		<if test="limit > 0">
-			limit #{limit} offset #{offset}
-		</if>
-	</select>
-
-	<select id="listSoppCnt" resultType="_integer">
-		select count(*)
-		from
-		(
-		select subquery1.*
-		from
-		(
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
-		from swc_sopp a
-		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		left join swc_code f on a.cntrctMth = f.codeNo
-		left join swc_cust g on a.buyrNo = g.custNo
-		where a.attrib not like 'XXX%'
-		and b.compNo = #{compNo}
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="custNo != null and custNo > 0">
-			and a.custNo = #{custNo}
-		</if>
-		<if test="custMemberNo != null and custMemberNo > 0">
-			and a.custMemberNo = #{custMemberNo}
-		</if>
-		<if test="ptncNo != null and ptncNo > 0">
-			and a.ptncNo = #{ptncNo}
-		</if>
-		<if test="ptncMemberNo != null and ptncMemberNo > 0">
-			and a.ptncMemberNo = #{ptncMemberNo}
-		</if>
-		<if test="buyrNo != null and buyrNo > 0">
-			and a.buyrNo = #{buyrNo}
-		</if>
-		<if test="buyrMemberNo != null and buyrMemberNo > 0">
-			and a.buyrMemberNo = #{buyrMemberNo}
-		</if>
-		<if test="cntrctMth != null and cntrctMth > 0">
-			and a.cntrctMth = #{cntrctMth}
-		</if>
-		<if test="soppTitle != null and soppTitle != ''">
-			and a.soppTitle like CONCAT('%', #{soppTitle}, '%')
-		</if>
-		<if test="soppDesc != null and soppDesc != ''">
-			and a.soppDesc = #{soppDesc}
-		</if>
-		<!-- 예상매출액 보다 큰경우만 일단 쿼리문 작성 추후 수정가능성 있음 -->
-		<if test="soppTargetAmt != null and soppTargetAmt > 0">
-			and a.soppTargetAmt = #{soppTargetAmt}
-		</if>
-		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
-		</if>
-		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
-		</if>
-		<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom2}
-		</if>
-		<if test="targetDateto2 != null and targetDateto2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto2}
-		</if>
-		<if test="soppType != null and soppType > 0">
-			and a.soppType = #{soppType}
-		</if>
-		<if test="soppStatus != null and soppStatus > 0">
-			and a.soppStatus = #{soppStatus}
-		</if>
-		<if test="soppSrate != null and soppSrate > 0">
-			and a.soppSrate = #{soppSrate}
-		</if>
-		<if
-			test="listDateFrom != null and listDateFrom != '' and targetDatefrom == null or targetDatefrom == '' and targetDateto == null or targetDateto == '' and targetDatefrom2 == null or targetDatefrom2 == '' and targetDateto2 == null or targetDateto2 == ''">
-			and a.regDatetime Between #{listDateFrom} and now()
-		</if>
-		) subquery1
-		<if test="sSearch != null and sSearch != ''">
-			where
-			subquery1.modDatetime like concat('%',#{sSearch},'%')
-			or subquery1.soppTypeN like concat('%',#{sSearch},'%')
-			or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
-			or subquery1.soppTitle like concat('%',#{sSearch},'%')
-			or subquery1.custName like concat('%',#{sSearch},'%')
-			or subquery1.buyrName like concat('%',#{sSearch},'%')
-			or subquery1.userName like concat('%',#{sSearch},'%')
-			or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
-			or subquery1.soppStatusN like concat('%',#{sSearch},'%')
-			or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
-		</if>
-
-		<if test="'desc' == orderOption">
-			order by ${orderColumn} desc
-		</if>
-		<if test="'asc' == orderOption">
-			order by ${orderColumn} asc
-		</if>
-		) t
-	</select>
-
-	<select id="listSopp2" resultType="soppDto">
-		select subquery1.*
-		from
-		(
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
-		from swc_sopp a
-		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		left join swc_code f on a.cntrctMth = f.codeNo
-		left join swc_cust g on a.buyrNo = g.custNo
+			left join swc_user b on a.userNo = b.userNo
+			left join swc_cust c on a.custNo = c.custNo
+			left join swc_code d on a.soppType = d.codeNo
+			left join swc_code e on a.soppStatus = e.codeNo
+			left join swc_code f on a.cntrctMth = f.codeNo
+			left join swc_cust g on a.buyrNo = g.custNo
 		where a.attrib not like 'XXX%' and b.compNo = #{compNo}
 		<if test="userNo != null and userNo != ''">
 			and a.userNo = #{userNo}
@@ -262,20 +53,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and a.soppTargetAmt = #{soppTargetAmt}
 		</if>
 		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
+			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
 		</if>
 		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
+			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
 		</if>
 		<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom2}
+			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom2}
 		</if>
 		<if test="targetDateto2 != null and targetDateto2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto2}
+			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto2}
 		</if>
 		<if test="soppType != null and soppType > 0">
 			and a.soppType = #{soppType}
@@ -283,66 +70,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="soppStatus != null and soppStatus > 0">
 			and a.soppStatus = #{soppStatus}
 		</if>
-		<if test="soppStatus == null">
-			and a.soppStatus = '10182'
-		</if>
 		<if test="soppSrate != null and soppSrate > 0">
 			and a.soppSrate = #{soppSrate}
 		</if>
 		) subquery1
-		where
-		subquery1.soppStatusN IN('계약요청', '수주', '매출', '계약실패', '계약진행보류')
-		<if test="sSearch != null and sSearch != ''">
-			and (
-			subquery1.modDatetime like concat('%',#{sSearch},'%')
-			or subquery1.soppTypeN like
-			concat('%',#{sSearch},'%')
-			or subquery1.cntrctMthN like
-			concat('%',#{sSearch},'%')
-			or subquery1.soppTitle like
-			concat('%',#{sSearch},'%')
-			or subquery1.custName like
-			concat('%',#{sSearch},'%')
-			or subquery1.buyrName like
-			concat('%',#{sSearch},'%')
-			or subquery1.userName like
-			concat('%',#{sSearch},'%')
-			or subquery1.soppTargetAmt like
-			concat('%',#{sSearch},'%')
-			or subquery1.soppStatusN like
-			concat('%',#{sSearch},'%')
-			or subquery1.soppTargetDate like
-			concat('%',#{sSearch},'%')
-			)
-		</if>
+	<if test="sSearch != null and sSearch != ''">
+	where
+		subquery1.modDatetime like concat('%',#{sSearch},'%')
+		or subquery1.soppTypeN like concat('%',#{sSearch},'%')
+		or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
+		or subquery1.soppTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.buyrName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
+		or subquery1.soppStatusN like concat('%',#{sSearch},'%')
+		or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
+	</if>
 
-		<if test="'desc' == orderOption">
-			order by field(soppStatusN, '계약요청') desc, ${orderColumn} desc
-		</if>
-		<if test="'asc' == orderOption">
-			order by field(soppStatusN, '계약요청') desc, ${orderColumn} asc
-		</if>
-		<if test="limit > 0">
-			limit #{limit} offset #{offset}
-		</if>
-	</select>
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+	limit #{limit} offset #{offset}
+	</if>
+</select>
 
-	<select id="listSoppCnt2" resultType="_integer">
-		select count(*)
-		from
+<select id="listSoppCnt"
+		resultType="_integer">
+select count(*)
+from
+(
+	select subquery1.*
+	from
 		(
-		select subquery1.*
-		from
-		(
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
+		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
 		from swc_sopp a
-		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		left join swc_code f on a.cntrctMth = f.codeNo
-		left join swc_cust g on a.buyrNo = g.custNo
+			left join swc_user b on a.userNo = b.userNo
+			left join swc_cust c on a.custNo = c.custNo
+			left join swc_code d on a.soppType = d.codeNo
+			left join swc_code e on a.soppStatus = e.codeNo
+			left join swc_code f on a.cntrctMth = f.codeNo
+			left join swc_cust g on a.buyrNo = g.custNo
 		where a.attrib not like 'XXX%' and b.compNo = #{compNo}
 		<if test="userNo != null and userNo != ''">
 			and a.userNo = #{userNo}
@@ -379,20 +151,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and a.soppTargetAmt = #{soppTargetAmt}
 		</if>
 		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
+			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
 		</if>
 		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
+			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
 		</if>
 		<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom2}
+			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom2}
 		</if>
 		<if test="targetDateto2 != null and targetDateto2 != ''">
-			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto2}
+			and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto2}
 		</if>
 		<if test="soppType != null and soppType > 0">
 			and a.soppType = #{soppType}
@@ -404,667 +172,525 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and a.soppSrate = #{soppSrate}
 		</if>
 		) subquery1
-		where
+	<if test="sSearch != null and sSearch != ''">
+	where
+		subquery1.modDatetime like concat('%',#{sSearch},'%')
+		or subquery1.soppTypeN like concat('%',#{sSearch},'%')
+		or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
+		or subquery1.soppTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.buyrName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
+		or subquery1.soppStatusN like concat('%',#{sSearch},'%')
+		or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+
+<select id="listSopp2"
+		resultType="soppDto">
+	select subquery1.*
+	from
+	(
+	select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
+	from swc_sopp a
+	left join swc_user b on a.userNo = b.userNo
+	left join swc_cust c on a.custNo = c.custNo
+	left join swc_code d on a.soppType = d.codeNo
+	left join swc_code e on a.soppStatus = e.codeNo
+	left join swc_code f on a.cntrctMth = f.codeNo
+	left join swc_cust g on a.buyrNo = g.custNo
+	where a.attrib not like 'XXX%' and b.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="custNo != null and custNo > 0">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="custMemberNo != null and custMemberNo > 0">
+		and a.custMemberNo = #{custMemberNo}
+	</if>
+	<if test="ptncNo != null and ptncNo > 0">
+		and a.ptncNo = #{ptncNo}
+	</if>
+	<if test="ptncMemberNo != null and ptncMemberNo > 0">
+		and a.ptncMemberNo = #{ptncMemberNo}
+	</if>
+	<if test="buyrNo != null and buyrNo > 0">
+		and a.buyrNo = #{buyrNo}
+	</if>
+	<if test="buyrMemberNo != null and buyrMemberNo > 0">
+		and a.buyrMemberNo = #{buyrMemberNo}
+	</if>
+	<if test="cntrctMth != null and cntrctMth > 0">
+		and a.cntrctMth = #{cntrctMth}
+	</if>
+	<if test="soppTitle != null and soppTitle != ''">
+		and a.soppTitle = #{soppTitle}
+	</if>
+	<if test="soppDesc != null and soppDesc != ''">
+		and a.soppDesc = #{soppDesc}
+	</if>
+	<!-- 예상매출액 보다 큰경우만 일단 쿼리문 작성 추후 수정가능성 있음 -->
+	<if test="soppTargetAmt != null and soppTargetAmt > 0">
+		and a.soppTargetAmt = #{soppTargetAmt}
+	</if>
+	<if test="targetDatefrom != null and targetDatefrom != ''">
+		and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
+	</if>
+	<if test="targetDateto != null and targetDateto != ''">
+		and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
+	</if>
+	<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
+		and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom2}
+	</if>
+	<if test="targetDateto2 != null and targetDateto2 != ''">
+		and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto2}
+	</if>
+	<if test="soppType != null and soppType > 0">
+		and a.soppType = #{soppType}
+	</if>
+	<if test="soppStatus != null and soppStatus > 0">
+		and a.soppStatus = #{soppStatus}
+	</if>
+	<if test="soppSrate != null and soppSrate > 0">
+		and a.soppSrate = #{soppSrate}
+	</if>
+	) subquery1
+	where
 		subquery1.soppStatusN IN('계약요청', '수주', '매출', '계약실패', '계약진행보류')
-		<if test="sSearch != null and sSearch != ''">
-			and (
+	<if test="sSearch != null and sSearch != ''">
+		and (
+		    subquery1.modDatetime like concat('%',#{sSearch},'%')
+			or subquery1.soppTypeN like concat('%',#{sSearch},'%')
+			or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
+			or subquery1.soppTitle like concat('%',#{sSearch},'%')
+			or subquery1.custName like concat('%',#{sSearch},'%')
+			or subquery1.buyrName like concat('%',#{sSearch},'%')
+			or subquery1.userName like concat('%',#{sSearch},'%')
+			or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
+			or subquery1.soppStatusN like concat('%',#{sSearch},'%')
+			or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
+		    )
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by field(soppStatusN, '계약요청') desc, ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by field(soppStatusN, '계약요청') desc, ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+		limit #{limit} offset #{offset}
+	</if>
+</select>
+
+<select id="listSoppCnt2"
+		resultType="_integer">
+	select count(*)
+	from
+	(
+	select subquery1.*
+	from
+	(
+	select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN, f.desc03 cntrctMthN, g.custName buyrName
+	from swc_sopp a
+	left join swc_user b on a.userNo = b.userNo
+	left join swc_cust c on a.custNo = c.custNo
+	left join swc_code d on a.soppType = d.codeNo
+	left join swc_code e on a.soppStatus = e.codeNo
+	left join swc_code f on a.cntrctMth = f.codeNo
+	left join swc_cust g on a.buyrNo = g.custNo
+	where a.attrib not like 'XXX%' and b.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="custNo != null and custNo > 0">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="custMemberNo != null and custMemberNo > 0">
+		and a.custMemberNo = #{custMemberNo}
+	</if>
+	<if test="ptncNo != null and ptncNo > 0">
+		and a.ptncNo = #{ptncNo}
+	</if>
+	<if test="ptncMemberNo != null and ptncMemberNo > 0">
+		and a.ptncMemberNo = #{ptncMemberNo}
+	</if>
+	<if test="buyrNo != null and buyrNo > 0">
+		and a.buyrNo = #{buyrNo}
+	</if>
+	<if test="buyrMemberNo != null and buyrMemberNo > 0">
+		and a.buyrMemberNo = #{buyrMemberNo}
+	</if>
+	<if test="cntrctMth != null and cntrctMth > 0">
+		and a.cntrctMth = #{cntrctMth}
+	</if>
+	<if test="soppTitle != null and soppTitle != ''">
+		and a.soppTitle = #{soppTitle}
+	</if>
+	<if test="soppDesc != null and soppDesc != ''">
+		and a.soppDesc = #{soppDesc}
+	</if>
+	<!-- 예상매출액 보다 큰경우만 일단 쿼리문 작성 추후 수정가능성 있음 -->
+	<if test="soppTargetAmt != null and soppTargetAmt > 0">
+		and a.soppTargetAmt = #{soppTargetAmt}
+	</if>
+	<if test="targetDatefrom != null and targetDatefrom != ''">
+		and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
+	</if>
+	<if test="targetDateto != null and targetDateto != ''">
+		and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
+	</if>
+	<if test="targetDatefrom2 != null and targetDatefrom2 != ''">
+		and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom2}
+	</if>
+	<if test="targetDateto2 != null and targetDateto2 != ''">
+		and date_format(a.modDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto2}
+	</if>
+	<if test="soppType != null and soppType > 0">
+		and a.soppType = #{soppType}
+	</if>
+	<if test="soppStatus != null and soppStatus > 0">
+		and a.soppStatus = #{soppStatus}
+	</if>
+	<if test="soppSrate != null and soppSrate > 0">
+		and a.soppSrate = #{soppSrate}
+	</if>
+	) subquery1
+	where
+		subquery1.soppStatusN IN('계약요청', '수주', '매출', '계약실패', '계약진행보류')
+	<if test="sSearch != null and sSearch != ''">
+		and (
 			subquery1.modDatetime like concat('%',#{sSearch},'%')
-			or
-			subquery1.soppTypeN like concat('%',#{sSearch},'%')
-			or
-			subquery1.cntrctMthN like concat('%',#{sSearch},'%')
-			or
-			subquery1.soppTitle like concat('%',#{sSearch},'%')
-			or
-			subquery1.custName like concat('%',#{sSearch},'%')
-			or
-			subquery1.buyrName like concat('%',#{sSearch},'%')
-			or
-			subquery1.userName like concat('%',#{sSearch},'%')
-			or
-			subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
-			or
-			subquery1.soppStatusN like concat('%',#{sSearch},'%')
-			or
-			subquery1.soppTargetDate like concat('%',#{sSearch},'%')
+			or subquery1.soppTypeN like concat('%',#{sSearch},'%')
+			or subquery1.cntrctMthN like concat('%',#{sSearch},'%')
+			or subquery1.soppTitle like concat('%',#{sSearch},'%')
+			or subquery1.custName like concat('%',#{sSearch},'%')
+			or subquery1.buyrName like concat('%',#{sSearch},'%')
+			or subquery1.userName like concat('%',#{sSearch},'%')
+			or subquery1.soppTargetAmt like concat('%',#{sSearch},'%')
+			or subquery1.soppStatusN like concat('%',#{sSearch},'%')
+			or subquery1.soppTargetDate like concat('%',#{sSearch},'%')
 			)
-		</if>
+	</if>
 
-		<if test="'desc' == orderOption">
-			order by field(soppStatusN, '계약요청') desc, ${orderColumn} desc
-		</if>
-		<if test="'asc' == orderOption">
-			order by field(soppStatusN, '계약요청') desc, ${orderColumn} asc
-		</if>
-		) t
-	</select>
-	<!-- <select id="listSopp" resultType="soppDto"> select a.*, b.userName 
-		, c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a left 
-		join swc_user b on a.userNo = b.userNo left join swc_cust c on a.custNo = 
-		c.custNo left join swc_code d on a.soppType = d.codeNo left join swc_code 
-		e on a.soppStatus = e.codeNo where a.attrib not like 'XXX%' and b.compNo 
-		= #{compNo} order by soppTargetDate desc <if test="limit > 0"> limit #{limit} 
-		offset #{offset} </if> </select> -->
-
-	<select id="listconSopp" resultType="soppDto">
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN from swc_sopp a
+	<if test="'desc' == orderOption">
+		order by field(soppStatusN, '계약요청') desc, ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by field(soppStatusN, '계약요청') desc, ${orderColumn} asc
+	</if>
+	) t
+</select>
+<!--
+<select id="listSopp"
+		resultType="soppDto">
+	select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a
+	left join swc_user b on a.userNo = b.userNo
+	left join swc_cust c on a.custNo = c.custNo
+	left join swc_code d on a.soppType = d.codeNo
+	left join swc_code e on a.soppStatus = e.codeNo
+	where a.attrib not like 'XXX%' and b.compNo = #{compNo}
+	order by soppTargetDate desc
+	<if test="limit > 0">
+		limit  #{limit} offset #{offset}
+	</if>
+</select>
+-->
+ 
+ <select id="listconSopp"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a  
 		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on
-		a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		where a.attrib not like
-		'XXX%' and b.compNo = #{compNo}
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="custNo != null and custNo != ''">
-			and a.custNo = #{custNo}
-		</if>
-		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
-		</if>
-		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
-		</if>
-		<if test="soppType != null and soppType != ''">
-			and a.soppType = #{soppType}
-		</if>
-		<if test="soppStatus != null and soppStatus != ''">
-			and a.soppStatus = #{soppStatus}
-		</if>
-		<if test="businessType != null and businessType != ''">
-			and a.businessType = #{businessType}
-		</if>
-		order by soppTargetDate desc
-	</select>
-
-	<!--<select id="listSopp2" resultType="soppDto"> select a.*, b.userName 
-		, c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a left 
-		join swc_user b on a.userNo = b.userNo left join swc_cust c on a.custNo = 
-		c.custNo left join swc_code d on a.soppType = d.codeNo left join swc_code 
-		e on a.soppStatus = e.codeNo where a.attrib not like 'XXX%' and a.soppStatus 
-		IN('10057', '10058', '10059', '10182', '10183', '10184') and b.compNo = #{compNo} 
-		order by soppSrate desc, soppTargetDate desc </select> -->
-
-	<select id="listconSopp2" resultType="soppDto">
-		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03
-		soppStatusN from swc_sopp a
-		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on
-		a.custNo = c.custNo
-		left join swc_code d on a.soppType = d.codeNo
-		left join swc_code e on a.soppStatus = e.codeNo
-		where a.attrib not like
-		'XXX%' and b.compNo = #{compNo}
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="custNo != null and custNo != ''">
-			and a.custNo = #{custNo}
-		</if>
-		<if test="targetDatefrom != null and targetDatefrom != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{targetDatefrom}
-		</if>
-		<if test="targetDateto != null and targetDateto != ''">
-			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{targetDateto}
-		</if>
-		<if test="soppType != null and soppType != ''">
-			and a.soppType = #{soppType}
-		</if>
-		<if test="soppStatus != null and soppStatus != ''">
-			and a.soppStatus = #{soppStatus}
-		</if>
-		<if test="businessType != null and businessType != ''">
-			and a.businessType = #{businessType}
-		</if>
-		order by soppTargetDate desc
-	</select>
-
-	<select id="listWithSoppNoArray" resultType="soppDto">
-		select * from swc_sopp where compNo = #{compNo} and soppNo IN
-		<foreach collection="dtoList" item="item" open="(" close=")"
-			separator=",">
-			#{item.soppNo}
-		</foreach>
-	</select>
-
-
-	<select id="detailSopp" resultType="soppDto">
-		select a.*, b.userName , c.custName, d.custName buyrName,
-		(select q.custMname from swc_custData03 q where q.custData03no =
-		a.custMemberNo) custMemberName
-		from swc_sopp a
-		left join swc_user b on
-		a.userNo = b.userNo
 		left join swc_cust c on a.custNo = c.custNo
+		left join swc_code d on a.soppType = d.codeNo 
+		left join swc_code e on a.soppStatus = e.codeNo
+		where a.attrib not like 'XXX%' and b.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="targetDatefrom != null and targetDatefrom != ''">
+ 		 	and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
+ 		</if>
+ 		<if test="targetDateto != null and targetDateto != ''">
+ 			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
+ 		</if>
+ 		<if test="soppType != null and soppType != ''">
+ 		 	and a.soppType = #{soppType}
+ 		</if>
+ 		<if test="soppStatus != null and soppStatus != ''">
+ 		 	and a.soppStatus = #{soppStatus}
+ 		</if>
+ 		<if test="businessType != null and businessType != ''">
+ 		 	and a.businessType = #{businessType}
+ 		</if>
+		order by soppTargetDate desc
+ </select>
+
+<!--<select id="listSopp2"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_code d on a.soppType = d.codeNo 
+		left join swc_code e on a.soppStatus = e.codeNo
+		where a.attrib not like 'XXX%' and a.soppStatus IN('10057', '10058', '10059', '10182', '10183', '10184') and b.compNo = #{compNo}
+		order by soppSrate desc, soppTargetDate desc
+ </select>-->
+ 
+ <select id="listconSopp2"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , c.custName, d.desc03 soppTypeN, e.desc03 soppStatusN from swc_sopp a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_code d on a.soppType = d.codeNo 
+		left join swc_code e on a.soppStatus = e.codeNo
+		where a.attrib not like 'XXX%' and a.soppStatus='10057' and b.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="targetDatefrom != null and targetDatefrom != ''">
+ 		 	and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
+ 		</if>
+ 		<if test="targetDateto != null and targetDateto != ''">
+ 			and date_format(a.soppTargetDate, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
+ 		</if>
+ 		<if test="soppType != null and soppType != ''">
+ 		 	and a.soppType = #{soppType}
+ 		</if>
+ 		<if test="businessType != null and businessType != ''">
+ 		 	and a.businessType = #{businessType}
+ 		</if>
+		order by soppTargetDate desc
+ </select>
+
+<select id="listWithSoppNoArray" resultType="soppDto">
+	select * from swc_sopp where compNo = #{compNo} and soppNo IN
+	<foreach collection="dtoList" item="item" open="(" close=")" separator=",">
+		#{item.soppNo}
+	</foreach>
+</select>
+
+
+<select id="detailSopp"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , c.custName, d.custName buyrName,
+			   (select q.custMname from swc_custData03 q where q.custData03no = a.custMemberNo) custMemberName
+		from swc_sopp a
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo 
 		left join swc_cust d on a.buyrNo = d.custNo
-		where a.attrib not like 'XXX%'
-		and soppNo=#{soppNo} order by soppNo
-	</select>
+		where a.attrib not like 'XXX%' and  soppNo=#{soppNo} order by soppNo
+ </select>
+ 
+ <insert id="insertSopp">
+ insert into swc_sopp (compNo, custNo,userNo, buyrNo, ptncNo, soppTitle, soppDesc, soppType, soppSrate, soppStatus
+ , soppTargetDate, soppTargetAmt,attrib, cntrctMth, custMemberNo)
+ values (#{compNo}, #{custNo},#{userNo}, #{buyrNo},#{ptncNo}, #{soppTitle}, #{soppDesc}, #{soppType}, #{soppSrate}, #{soppStatus},
+         #{soppTargetDate}, #{soppTargetAmt},'10000',#{cntrctMth}, #{custMemberNo})
+ </insert>
 
-	<insert id="insertSopp">
-		insert into swc_sopp (compNo, custNo,userNo, buyrNo, ptncNo, soppTitle,
-		soppDesc, soppType, soppSrate, soppStatus
-		, soppTargetDate, soppTargetAmt,attrib, cntrctMth, custMemberNo,
-		Maintenance_S, Maintenance_E)
-		values (#{compNo}, #{custNo},#{userNo}, #{buyrNo},#{ptncNo}, #{soppTitle},
-		#{soppDesc}, #{soppType}, #{soppSrate}, #{soppStatus},
-		#{soppTargetDate}, #{soppTargetAmt},'10000',#{cntrctMth},
-		#{custMemberNo}, #{maintenance_S}, #{maintenance_E})
-	</insert>
+ <update id="updateSopp">
+	update swc_sopp 
+	set 
+	 soppDesc=#{soppDesc}
+	,soppTitle=#{soppTitle}
+	,soppStatus=#{soppStatus}
+	,soppTargetDate=#{soppTargetDate}
+	,soppTargetAmt=#{soppTargetAmt}
+	,soppSrate=#{soppSrate}
+	,soppType=#{soppType}
+	,cntrctMth=#{cntrctMth}
+	,userNo=#{userNo}
+	,custNo=#{custNo}
+	,ptncNo=#{ptncNo}
+	,buyrNo=#{buyrNo}
+	,custMemberNo=#{custMemberNo}
+	where soppNo=#{soppNo}
+ </update>
 
-	<insert id="soppListApp" useGeneratedKeys="true"
-		keyProperty="getNo">
-		<selectKey keyProperty="getNo" resultType="int"
-			order="AFTER">
-			SELECT max(contNo) from swc_cont
-		</selectKey>
-		insert into swc_cont
-		(
-		compNo,
-		soppNo,
-		cntrctMth,
-		contType,
-		exCOntNo,
-		userNo,
-		custNo,
-		custMemberNo,
-		contTitle,
-		buyrNo,
-		buyrMemberNo,
-		ptncNo,
-		supplyNo,
-		contAmt,
-		vatYn,
-		net_profit,
-		regDatetime,
-		modDatetime,
-		paymaintSdate,
-		paymaintEdate,
-		attrib
-		)
-		select
-		compNo,
-		soppNo,
-		cntrctMth,
-		soppType,
-		0,
-		userNo,
-		custNo,
-		0,
-		#{soppTitle},
-		buyrNo,
-		buyrMemberNo,
-		ptncNo,
-		0,
-		soppTargetAmt,
-		'N',
-		0,
-		now(),
-		now(),
-		#{maintenance_S},
-		#{maintenance_E},
-		'100000'
-		from swc_sopp
-		where soppNo = #{soppNo};
-	</insert>
-
-	<insert id="assignPps" useGeneratedKeys="true"
-		keyProperty="getNo">
-		<selectKey keyProperty="getNo" resultType="int"
-			order="AFTER">
-			SELECT max(soppNo) from swc_sopp
-		</selectKey>
-		insert into swc_sopp (compNo, custNo,userNo, buyrNo, ptncNo,
-		soppTitle, soppDesc, soppType, soppSrate, soppStatus
-		, soppTargetDate, soppTargetAmt,attrib, cntrctMth, custMemberNo)
-		values (#{compNo}, #{custNo},#{userNo}, #{buyrNo},#{ptncNo}, #{soppTitle},
-		#{soppDesc}, #{soppType}, #{soppSrate}, #{soppStatus},
-		#{soppTargetDate}, #{soppTargetAmt},'10000',#{cntrctMth},
-		#{custMemberNo})
-	</insert>
-
-	<update id="updateSopp">
-		update swc_sopp
-		set
-		soppDesc=#{soppDesc}
-		,soppTitle=#{soppTitle}
-		,soppStatus=#{soppStatus}
-		,soppTargetDate=#{soppTargetDate}
-		,soppTargetAmt=#{soppTargetAmt}
-		,soppSrate=#{soppSrate}
-		,soppType=#{soppType}
-		,cntrctMth=#{cntrctMth}
-		,userNo=#{userNo}
-		,custNo=#{custNo}
-		,ptncNo=#{ptncNo}
-		,buyrNo=#{buyrNo}
-		,custMemberNo=#{custMemberNo}
-		,maintenance_S=#{maintenance_S}
-		,maintenance_E=#{maintenance_E}
-		where soppNo=#{soppNo}
-	</update>
-
-	<update id="update2Sopp">
-		update swc_sopp
-		set
-		sopp2Desc=#{sopp2Desc}
-		,soppStatus=#{soppStatus}
-		,sopp2regDatetime=now()
-		where compNo = #{compNo}
+<update id="update2Sopp">
+	update swc_sopp 
+	set 
+	 sopp2Desc=#{sopp2Desc}
+	,soppStatus=#{soppStatus}
+	,sopp2regDatetime=now()
+	where compNo = #{compNo}
 		and soppNo = #{soppNo}
-	</update>
-
-	<update id="beforeAppUpdate">
-		update swc_sopp
-		set
-		soppStatus = '10183',
-		modDatetime = now()
-		where soppNo = #{soppNo}
-	</update>
-
-	<delete id="deleteSopp">
-		update swc_sopp
-		set attrib = 'XXXXX'
-		where soppNo=#{soppNo}
-	</delete>
-
-	<select id="detailSopp2222" resultType="soppDto">
-		select a.*, b.userName , c.custName, d.custName ptncName from swc_sopp
-		a
+</update>
+ 
+<delete id="deleteSopp">
+	update swc_sopp 
+	set attrib = 'XXXXX'
+	where soppNo=#{soppNo}
+</delete>
+ 
+<select id="detailSopp2222"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , c.custName, d.custName ptncName from swc_sopp a  
 		left join swc_user b on a.userNo = b.userNo
-		left join swc_cust c on
-		a.custNo = c.custNo
+		left join swc_cust c on a.custNo = c.custNo 
 		left join swc_cust d on a.ptncNo = d.custNo
-		where a.attrib not like 'XXX%'
-		and soppNo=#{soppNo}
+		where a.attrib not like 'XXX%' 
+		and  soppNo=#{soppNo}
 		<if test='userName != null and userName != ""'>
-			AND b.userName = #{userName}
-		</if>
-		<if test='soppSrate over 50 or soppSrate under 5'>
-			AND b.userName = #{userName}
-		</if>
+    	AND b.userName = #{userName}
+        </if>
+        <if test='soppSrate over 50 or soppSrate under 5' >
+    	AND b.userName = #{userName}
+        </if>
 		order by soppNo
-	</select>
+ </select>
 
-	<!-- <select id="listSoppcon" resultType="soppDto"> select a.*, b.userName 
-		, d.custName from swc_sopp a left join swc_user b on a.userNo = b.userNo 
-		left join swc_cust d on a.custNo = d.custNo where a.attrib not like 'XXX%' 
-		<if test='userNo != null and userNo !=""'> and a.userNo = #{userNo} </if> 
-		<if test='custNo != null and custNo != 0'> and a.custNo = #{custNo} </if> 
-		<if test='soppSrate != null and soppSrate == 50'> and a.soppSrate >= 50 </if> 
-		<if test='soppType != null'> and a.soppType = #{soppType} </if> <if test='soppStatus 
-		!= null'> and a.soppStatus = #{soppStatus} </if> order by soppNo </select> -->
-
-	<insert id="insertSoppdata01">
-		insert into swc_soppdata01
-		(soppNo,
-		userNo,
-		catNo,
-		productNo,
-		salesCustNo,
-		dataTitle,
-		dataDesc,
-		dataType,
-		dataQuanty,
-		dataAmt,
-		dataNetprice,
-		dataVat,
-		dataTotal,
-		dataDiscount,
-		dataRemark,
-		vatSerial,
-		linkType,
-		linkNo,
-		issueDate,
-		vatDate,
-		endvataDate,
-		regDatetime)
-		values (
-		#{soppNo},
-		#{userNo},
-		#{catNo},
-		#{productNo},
-		#{salesCustNo},
-		#{dataTitle},
-		#{dataDesc},
-		#{dataType},
-		#{dataQuanty},
-		#{dataAmt},
-		#{dataNetprice},
-		#{dataVat},
-		#{dataTotal},
-		#{dataDiscount},
-		#{dataRemark},
-		#{vatSerial},
-		#{linkType},
-		#{linkNo},
-		#{issueDate},
-		#{vatDate},
-		DATE_SUB(DATE_ADD(#{vatDate}, interval #{divisionMonth} MONTH), interval 1 day),
-		now()
-		)
-	</insert>
-	<insert id="insertdata01_defalut">
-		insert into swc_soppdata01
-		(soppNo,
-		userNo,
-		catNo,
-		productNo,
-		salesCustNo,
-		dataTitle,
-		dataDesc,
-		dataType,
-		dataQuanty,
-		dataAmt,
-		dataNetprice,
-		dataVat,
-		dataTotal,
-		dataDiscount,
-		dataRemark,
-		vatSerial,
-		linkType,
-		linkNo,
-		issueDate,
-		vatDate,
-		regDatetime)
-		values (
-		#{soppNo},
-		#{userNo},
-		#{catNo},
-		#{productNo},
-		#{salesCustNo},
-		#{dataTitle},
-		#{dataDesc},
-		#{dataType},
-		#{dataQuanty},
-		#{dataAmt},
-		#{dataNetprice},
-		#{dataVat},
-		#{dataTotal},
-		#{dataDiscount},
-		#{dataRemark},
-		#{vatSerial},
-		#{linkType},
-		#{linkNo},
-		#{issueDate},
-		#{vatDate},
-		now()
-		)
-	</insert>
-	<delete id="deleteSoppdata01">
-		update swc_soppdata01
-		set attrib = 'XXXXX'
-		where soppdataNo=#{soppdataNo}
-	</delete>
-
-	<select id="listContdata" resultType="soppdataDto">
-		select a.*, b.soppTitle, d.contTitle, c.custName as salesCustNoN
-		from swc_soppdata01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_cont d on a.soppNo = d.soppNo
+<!-- <select id="listSoppcon"
+ 		resultType="soppDto">
+ 		select a.*, b.userName , d.custName from swc_sopp a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust d on a.custNo = d.custNo 
 		where a.attrib not like 'XXX%'
-		AND a.soppNo= 10005223 AND a.catNo=100001 AND d.contNo=#{contNo}
-		order
-		by dataType, regDatetime desc
-	</select>
+		<if test='userNo != null and userNo !=""'>
+		and a.userNo = #{userNo}
+		</if>
+		<if test='custNo != null and custNo != 0'>
+		and a.custNo = #{custNo}
+		</if>
+		<if test='soppSrate != null and soppSrate == 50'>
+		and a.soppSrate >= 50
+		</if>
+		<if test='soppType != null'>
+		and a.soppType = #{soppType}
+		</if>
+		<if test='soppStatus != null'>
+		and a.soppStatus = #{soppStatus}
+		</if>
+		order by soppNo 
+ </select> -->
 
-	<select id="listSoppdata01" resultType="soppdataDto">
-		select a.*, b.soppTitle, d.contTitle, c.custName as salesCustNoN
-		from swc_soppdata01 a
+ <insert id="insertSoppdata01">
+ insert into swc_soppData01 
+ (soppNo,
+userNo,
+catNo,
+productNo,
+salesCustNo,
+dataTitle,
+dataDesc,
+dataType,
+dataQuanty,
+dataAmt,
+dataNetprice,
+dataRemark,
+linkType,
+linkNo,
+regDatetime)
+ values (#{soppNo},
+#{userNo},
+#{catNo},
+#{productNo},
+#{salesCustNo},
+#{dataTitle},
+#{dataDesc},
+#{dataType},
+#{dataQuanty},
+#{dataAmt},
+#{dataNetprice},
+#{dataRemark},
+#{linkType},
+#{linkNo},
+now()
+)
+</insert>
+
+<delete id="deleteSoppdata01">
+	update swc_soppData01 
+	set attrib = 'XXXXX'
+	where soppdataNo=#{soppdataNo}
+ </delete>
+
+<select id="listSoppdata01"
+ 		resultType="soppdataDto">
+ 		select a.*, b.soppTitle, c.custName as salesCustNoN
+ 		from swc_soppData01 a
 		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_cont d on a.soppNo = d.soppNo AND d.attrib LIKE '10000%'
-		where a.attrib not like 'XXX%'
-		AND a.soppNo=#{soppNo} and a.catNo=100001 and a.soppNo != 10005223
-		order by a.vatDate ASC
-	</select>
-	<select id="listSoppdata01_showdetail" resultType="soppdataDto">
-		select a.*, b.soppTitle, d.contTitle, c.custName as salesCustNoN
-		from swc_soppdata01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_cont d on a.soppNo = d.soppNo
-		where a.attrib not like 'XXX%'
-		AND a.soppNo=#{soppNo} and a.catNo=100001 and a.soppNo != 10005223 AND
-		a.dataType = 1101
+ 		left join swc_cust c on a.salesCustNo = c.custNo
+		where a.attrib not like 'XXX%' 
+		AND a.soppNo=#{soppNo} and a.catNo=100001
 		order by dataType, regDatetime desc
-	</select>
-	<select id="listSoppdata01_08" resultType="soppdataDto">
-		select a.*, b.soppTitle, d.contTitle, c.custName as salesCustNoN
-		from swc_soppdata01 a
+ </select>
+
+<select id="listSoppdata02"
+ 		resultType="soppdataDto">
+ 		select a.*, b.soppTitle, c.custName as salesCustNoN
+ 		from swc_soppData01 a
 		left join swc_sopp b on a.soppNo = b.soppNo
 		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_cont d on a.soppNo = d.soppNo
-		where a.attrib not like 'XXX%'
-		AND a.soppNo=#{soppNo} AND d.contNo=#{contNo} and a.catNo=100001 and
-		a.soppNo != 10005223
-		order by a.vatDate ASC
-	</select>
-	<select id="listSoppdata011" resultType="soppdataDto">
-		select *
-		from swc_sopp
-		JOIN swc_cont ON swc_sopp.soppNo = swc_cont.soppNo
-		where swc_sopp.attrib not
-		like 'XXX%' AND swc_sopp.soppNo=#{soppNo} order by swc_sopp.regDatetime
-		DESC
-	</select>
-	<select id="listSoppdata011_1" resultType="soppdataDto">
-		select a.*, b.soppTitle, c.custName as salesCustNoN
-		from swc_soppdata01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		where a.attrib not like
-		'XXX%'
-		AND a.soppNo=10005213 and a.catNo=100001
-		order by dataType, regDatetime
-		desc
-	</select>
-	<select id="listSoppdata011_2" resultType="soppdataDto">
-		select *
-		from swc_sopp
-		where attrib not
-		like 'XXX%' AND soppNo=#{soppNo} order by regDatetime DESC
-	</select>
-
-	<select id="listIOsum" resultType="soppdataDto">
-		select a.soppNo, dataType ,b.soppTitle, c.custName as custName,
-		sum(case when a.dataType='1101' then a.dataTotal end) AS amount,
-		sum(case when a.dataType='1102' then a.dataTotal end) AS take,
-		b.soppDesc, b.regDatetime
-		from swc_soppData01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		where a.attrib not like
-		'XXX%' and b.compNo = #{compNo}
-		<if test="dataType != null and dataType != ''">
-			and a.dataType = #{dataType}
-		</if>
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="salesCustNo != null and salesCustNo != ''">
-			and a.salesCustNo = #{salesCustNo}
-		</if>
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="vatDatefrom != null and vatDatefrom != ''">
-			and date_format(a.vatDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{vatDatefrom}
-		</if>
-		<if test="vatDateto != null and vatDateto != ''">
-			and date_format(a.vatDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{vatDateto}
-		</if>
-		<if
-			test="listDateFrom != null and listDateFrom != '' and vatDatefrom == null or vatDatefrom == '' and vatDateto == null or vatDateto == ''">
-			and b.regDatetime Between #{listDateFrom} and now()
-		</if>
-		and a.catNo=100001
-		group by a.soppNo
-		order by a.soppNo desc
-	</select>
-
-	<select id="listSearchIO" resultType="soppdataDto">
-		select a.soppNo, dataType ,b.soppTitle, c.custName as custName,
-		sum(case when a.dataType='1101' then a.dataTotal end) AS amount,
-		sum(case when a.dataType='1102' then a.dataTotal end) AS take,
-		b.soppDesc, b.regDatetime
-		from swc_soppData01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_user d on b.userNo = d.userNo
-		where a.attrib not like 'XXX%' and b.compNo = #{compNo}
-		<if test="custNo != null and custNo != ''">
-			and b.custNo = #{custNo}
-		</if>
-		<if test="userName != null and userName != ''">
-			and d.userName like CONCAT('%', #{userName}, '%')
-		</if>
-		<if test="listDateFrom != null and listDateFrom != ''">
-			and b.regDatetime Between #{listDateFrom} and now()
-		</if>
-		and a.catNo=100001
-		group by a.soppNo
-		order by a.soppNo desc
-	</select>
-
-	<select id="listIO" resultType="soppdataDto">
-		select a.soppNo, dataType ,b.soppTitle, c.custName as custName,
-		a.dataTotal,a.dataVat,a.dataAmt, b.soppDesc, b.regDatetime
-		from swc_soppData01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join swc_cust c on a.salesCustNo = c.custNo
-		left join swc_user d on a.userNo = d.userNo
-		where a.attrib not like 'XXX%'
-		<if test="dataType != null and dataType != ''">
-			and a.dataType = #{dataType}
-		</if>
-		<if test="userNo != null and userNo != ''">
-			and a.userNo = #{userNo}
-		</if>
-		<if test="salesCustNo != null and salesCustNo != ''">
-			and a.salesCustNo = #{salesCustNo}
-		</if>
-		<if test="vatDatefrom != null and vatDatefrom != ''">
-			and date_format(a.vatDate, '%Y-%m-%d') <![CDATA[>=]]>
-			#{vatDatefrom}
-		</if>
-		<if test="vatDateto != null and vatDateto != ''">
-			and date_format(a.vatDate, '%Y-%m-%d') <![CDATA[<=]]>
-			#{vatDateto}
-		</if>
-		<if test="cntrctMth != null and cntrctMth != ''">
-			and a.dataType = #{cntrctMth}
-		</if>
-		<if test="userName != null and userName != ''">
-			and d.userName like concat('%',#{userName},'%')
-		</if>
-		<if
-			test="listDateFrom != null and listDateFrom != '' and vatDatefrom == null or vatDatefrom == '' and vatDateto == null or vatDateto == ''">
-			and b.regDatetime Between #{listDateFrom} and now()
-		</if>
-		<if test="freemaintSdate != null and freemaintSdate != ''">
-			and date_format(b.regDatetime, '%Y-%m-%d') Between #{freemaintSdate}
-			and
-			<choose>
-				<when test="freemaintEdate != null and freemaintEdate != ''">
-					#{freemaintEdate}
-				</when>
-				<otherwise>
-					now()
-				</otherwise>
-			</choose>
-		</if>
-		and a.catNo=100001
-		order by a.soppNo desc
-	</select>
-
-
-	<select id="listSoppdata02" resultType="soppdataDto">
-		select a.*, b.soppTitle, c.custName as salesCustNoN
-		from swc_soppData01 a
-		left join swc_sopp b on a.soppNo = b.soppNo
-		left join
-		swc_cust c on a.salesCustNo = c.custNo
-		where a.attrib not like 'XXX%'
+		where a.attrib not like 'XXX%' 
 		AND a.soppNo=#{soppNo} and a.catNo=100004
-		order by dataType,
-		regDatetime desc
-	</select>
-
-	<insert id="uploadFile">
-		insert into swc_soppFileData
-		(
+		order by dataType, regDatetime desc
+ </select>
+ 
+ <insert id="uploadFile">
+	insert into swc_soppFileData
+	(
 		fileId,
 		fileName,
 		fileDesc,
 		uploadDate,
 		fileContent,
-		fileSize,
-		fileExtention,
 		soppNo,
 		userNo,
 		regDatetime,
 		attrib
-		)
-		values
-		(
-		#{fileId},
-		#{fileName},
-		#{fileDesc},
-		now(),
-		#{fileContent},
-		#{fileSize},
-		#{fileExtention},
-		#{soppNo},
-		#{userNo},
-		now(),
+	)
+ 	values 
+ 	(
+ 		#{fileId},
+ 		#{fileName},
+ 		#{fileDesc},
+ 		now(),
+ 		#{fileContent},
+ 		#{soppNo},
+ 		#{userNo},
+ 	 	now(),
 		10000
-		)
-	</insert>
+ 	)
+ </insert>
+ 
+<select id="downloadFile" resultType="soppFileDataDTO">
+	select *
+	from swc_soppFileData  
+	where fileId = #{fileId} and soppNo=#{soppNo}
+</select>
 
-	<select id="downloadFile" resultType="soppFileDataDTO">
-		select *
-		from swc_soppFileData
-		where fileId = #{fileId} and soppNo=#{soppNo}
-	</select>
-
-	<delete id="deleteFile">
-		update swc_soppFileData
-		set attrib = 'XXXXX',
+<delete id="deleteFile">
+	update swc_soppFileData
+	set attrib = 'XXXXX',
 		modDatetime = now()
-		where fileId = #{fileId} and soppNo=#{soppNo}
-	</delete>
-
-	<select id="listFile" resultType="soppFileDataDTO">
-		select *
-		from swc_soppFileData
-		where soppNo=#{soppNo}
-		and attrib not like 'XXX%'
-		order by uploadDate desc
-	</select>
-
-	<update id="soppStatusChange">
-		update swc_sopp set
-		soppTargetAmt = #{soppTargetAmt},
-		soppStatus = #{soppStatus},
-		soppSrate = #{soppSrate},
-		modDatetime = now()
-		where soppNo = #{soppNo}
-	</update>
-
-	<select id="selectSoppdetail" resultType="soppDto">
-		select * from swc_sopp
-		where soppNo = #{soppNo} and compNo = #{compNo} and attrib not like 'XXX%';
-	</select>
-
+	where fileId = #{fileId} and soppNo=#{soppNo}
+</delete>
+ 
+<select id="listFile" resultType="soppFileDataDTO">
+ 	select *
+ 	from swc_soppFileData
+ 	where soppNo=#{soppNo}
+ 	and attrib not like 'XXX%'
+	order by uploadDate desc
+</select>
+ 
+ 		
 </mapper>

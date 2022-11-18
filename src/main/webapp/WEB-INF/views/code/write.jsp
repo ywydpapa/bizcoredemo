@@ -1,17 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:set var="path" value ="${pageContext.request.contextPath}"/>
-<c:set var="path2" value="${requestScope['javax.servlet.forward.servlet_path']}" />
 
-<!DOCTYPE html>
-<html>
-<jsp:include page="../head.jsp"/>
-<jsp:include page="../body-top3.jsp"/>
-
-<div id="main_content">
 <!-- Page-header start 페이지 타이틀-->
 <div class="page-header2">
 	<div class="row align-items-end">
@@ -131,11 +123,11 @@
 										<tr>
 										<th scope="row">상위코드 01</th>
 											<td>
-												<select id="code21" name="code21" class="form-control" required>
-													<option value="">선택</option>
-													<c:forEach var="row02" items="${list1}">
-														<option value="${row02.code01}">${row02.desc01}</option>
-													</c:forEach>
+												<select id="code21" class="form-control" required>
+												<option value="">선택</option>
+												<c:forEach var="row02" items="${list1}">
+												<option value="${row02.code01}">${row02.desc01}</option>
+												</c:forEach>
 												</select>
 											</td>
 										</tr>
@@ -321,9 +313,8 @@ function fn_codeInsert01() {
 			.done(function(data) {
 				if(data.code == 10001){
 					alert("저장 성공");
-					//var url ='${path}/code/write.do';
-					//location.herf = url;
-					location.href="${path}/code/write.do";
+					var url ='${path}/code/write.do';
+					location.herf = url;
 				}else{
 					alert("저장 실패");
 				}
@@ -334,11 +325,6 @@ function fn_codeInsert01() {
 	}
 	
 function fn_codeInsert02() {
-	
-	localStorage.setItem('lastTab', "#tab02");
-	var name= $("#code21 option:selected").val();
-	localStorage.setItem('name', name);
-	
 	var codeData = {};
 	codeData.code01 			= $("#code21").val();
 	codeData.code02 			= $("#code02").val();
@@ -370,9 +356,8 @@ function fn_codeInsert02() {
 				if(data.code == 10001){
 					alert("저장 성공");
 					var code01=$("#code21").val();
-					//var url="/${path}/code/reload02/"+code01;
-					//fn_Reload01(url);
-					location.href="${path}/code/write.do";
+					var url="${path}/code/reload02/"+code01;
+					fn_Reload01(url);
 				}else{
 					alert("저장 실패");
 				}
@@ -441,7 +426,7 @@ function fn_Reload01(url, data){
 	$("#codeTable02").load(url, data, function(){
 		setTimeout(function(){
 		}, 500);
-	});
+});
 }
 
 function fn_Reload02(url, data){
@@ -449,17 +434,10 @@ function fn_Reload02(url, data){
 	$("#codeTable03").load(url, data, function(){
 		setTimeout(function(){
 		}, 500);
-	});
+});
 }
 
-var lastTab = localStorage.getItem('lastTab');
-var name = localStorage.getItem('name');
-if (lastTab) {
-  	$('[href="' + lastTab + '"]').tab('show');
-  	$('#code21').val(name);
-  	
-  	localStorage.clear();
-}
 
 </script>
-	<jsp:include page="../body-bottom.jsp"/>
+
+                                                

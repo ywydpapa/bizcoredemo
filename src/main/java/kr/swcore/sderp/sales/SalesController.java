@@ -17,15 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.swcore.sderp.code.service.CodeService;
-import kr.swcore.sderp.cust.service.CustService;
 import kr.swcore.sderp.organiz.Service.OrganizService;
 import kr.swcore.sderp.organiz.dto.OrganizDTO;
 import kr.swcore.sderp.sales.dto.SalesDTO;
 import kr.swcore.sderp.sales.service.SalesService;
 import kr.swcore.sderp.salesTarget.dto.SalesTargetDTO;
 import kr.swcore.sderp.salesTarget.service.SalesTargetService;
-import kr.swcore.sderp.sopp.service.SoppService;
-import kr.swcore.sderp.user.service.UserService;
 
 @Controller
 
@@ -44,23 +41,12 @@ public class SalesController {
 	@Inject
 	SalesTargetService salesTargetService; 
 	
-	@Inject
-	CustService custService;
-	
-	@Inject
-	UserService userService;
-	
-	@Inject
-	SoppService soppService;
 	
 	@RequestMapping("list.do")
 	public ModelAndView list(HttpSession session, ModelAndView mav) {
 		mav.setViewName("sales/list");
 		mav.addObject("list", salesService.listSales(session, null));
 		mav.addObject("acttype", codeService.listActtype(session));
-		mav.addObject("listUser", userService.userList(session));
-		mav.addObject("listCust", custService.listCust(session));
-		mav.addObject("listSopp", soppService.listSopp(session, null));
 		mav.addObject("first","Y");
 		return mav;
 	}
@@ -82,7 +68,7 @@ public class SalesController {
 	
 	@RequestMapping("setTarget.do")
 	public ModelAndView settarget(HttpSession session, ModelAndView mav, @ModelAttribute OrganizDTO organizDto, @ModelAttribute SalesTargetDTO salesTargetDTO) {
-		mav.addObject("listDept", organizService.listDept2(session));
+		mav.addObject("listDept", organizService.listDept(session));
 		mav.addObject("list", salesService.listSales(session, null));
 		mav.addObject("tableData", salesTargetService.listSalesTarget(session, organizDto, salesTargetDTO));
 		mav.setViewName("sales/setTarget");

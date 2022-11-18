@@ -10,11 +10,11 @@ import kr.swcore.sderp.common.dto.PageDTO;
 import kr.swcore.sderp.sales.dto.SalesDTO;
 
 public interface SalesService {
+	
 	List<SalesDTO> listSales();
-	List<SalesDTO> listSalesbycust(int custNo);
 	List<SalesDTO> listSales(HttpSession session, PageDTO pageDTO);
 	List<SalesDTO> listconSales(HttpSession session, SalesDTO dto);
-	List<SalesDTO> listSalesinsopp(HttpSession session, int soppNo, int contNo);
+	List<SalesDTO> listSalesinsopp(HttpSession session, int soppNo);
 	Object listSales(HttpSession session, String param, HttpServletRequest request, HttpServletResponse response);
 	SalesDTO detailSales(int salesNo);
 	int updateSales(SalesDTO dto);

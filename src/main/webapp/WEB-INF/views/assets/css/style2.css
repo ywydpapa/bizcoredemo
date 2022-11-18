@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
 
-/*--ï¿½ï¿½ï¿½ï¿½--*/
-/*--ï¿½ï¿½ï¿½--*/
+/*--°øÅë--*/
+/*--Çì´õ--*/
 
 /*.header-navbar .navbar-wrapper .navbar-container .nav-left a, .header-navbar .navbar-wrapper .navbar-container .nav-right a {padding:0;}*/
  html, body{height:100%; position:relative;}
@@ -44,10 +44,10 @@
 .step {color:#1ABC9C;}
 .table td, .table th {padding: .35rem;}
 
-/*--ï¿½ï¿½ï¿½ï¿½Â¡--*/
+/*--ÆäÀÌÂ¡--*/
 .pagination {display:table; margin: 10px auto;}
 
-/*--ï¿½ï¿½Æ°--*/
+/*--¹öÆ°--*/
 .btn_wr {margin-bottom:5px;overflow: hidden; /*border:1px solid red;*/}
 .btn-outline {border:1px solid #d0d0d0; border-bottom:1px solid #818181; background:#efefef; }
 .btn-outline:hover {background-color: #6d717e; border-color: #303548;color: #fff;cursor: pointer;-webkit-transition: all ease-in 0.3s;transition: all ease-in 0.3s;}
@@ -57,18 +57,18 @@
 .sch_it .input-group{margin-bottom:0;}
 .cnt_wr .form-group {margin-bottom:3px;}
 .cnt_wr .col-form-label {padding-bottom:0;}
-select.form-control:not([size]):not([multiple]) {height: calc(3rem + -14px);}
+select.form-control:not([size]):not([multiple]) {height: calc(2rem + -1px);}
 .ms-selectable.sales_date select {width:23%; display:inline-block;margin-right:3px;}
 .input_inline input{width:46%; display:inline-block;}
 
 .dataTables_length select.form-control:not([size]):not([multiple]) {height: calc(2rem + 1px);}
 .form-control{padding: .3rem .75rem;}
 
-/*--Å¸ï¿½ï¿½Æ²--*/
+/*--Å¸ÀÌÆ²--*/
 .cont_title {margin-bottom:5px;}
 .cont_title i{color:#4680ff;}
 
-/*--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½--*/
+/*--ÄÁÅÙÃ÷ ¿µ¿ª--*/
 .main-body .page-wrapper {min-height: calc(100vh - 90px); padding: 10px 15px; margin-bottom:0.5rem; background:#fff;box-sizing:border-box;}
 .main-body .page-wrapper .page-body .cnt_wr {margin-bottom:20px;}
 .card_box {border:1px solid #ddd; padding:10px 1rem; background:#fcfcfc /*#f9fafd*/;}
@@ -84,11 +84,11 @@ select.form-control:not([size]):not([multiple]) {height: calc(3rem + -14px);}
 .price_sum dd  {float:left; text-align:right;margin-bottom:0;}
 .price {font-size:18px; font-weight: 700;}
 
-/*--ï¿½Î±ï¿½ï¿½ï¿½--*/
+/*--·Î±×ÀÎ--*/
 .login .container-fluid {margin: 0 auto;}
 .login .inwrap {width:80%; margin: 30px auto 20px auto; }
 
-/*--Ä«ï¿½ï¿½ï¿½ï¿½--*/
+/*--Ä«·»´Ù--*/
 .card-header.c-h2 {padding:0;}
 .present_list {clear:both;height: auto; overflow:hidden; }
 .present_list ul li {float:left;display:inline-block;}
@@ -99,7 +99,7 @@ select.form-control:not([size]):not([multiple]) {height: calc(3rem + -14px);}
 }
 
 
-/*--ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½--*/
+/*--¸ð´Þ ÆË¾÷--*/
 .modal-dialog {width:auto; display: table; min-width:700px;}
 .modal-content {border:none;}
 .modal-header {background:#4680ff;padding: 10px 15px; border-top-left-radius: 0.3rem;border-top-right-radius: 0.3rem; }
@@ -113,6 +113,10 @@ select.form-control:not([size]):not([multiple]) {height: calc(3rem + -14px);}
 .modal-footer button.btn-default{background-color: #303548; border-color: #303548;color: #fff;cursor: pointer;-webkit-transition: all ease-in 0.3s;transition: all ease-in 0.3s;}
 .modal-footer button.btn-default:hover {background:#444c67;}
 
+
+
+
+
 /*----*/
 @media only screen and (max-width: 992px) {
 	.header-navbar .navbar-wrapper .navbar-logo a img {margin-top: 20px;}
@@ -120,17 +124,3 @@ select.form-control:not([size]):not([multiple]) {height: calc(3rem + -14px);}
 @media only screen and (max-width: 680px) {
 	.b_total {width:100%;} 
 }
-
-
-#second_title {
-	margin-top: 20px; margin-bottom: 10px;width: 98%;
-}
-
-	#startTime, #endTime {
-		border:1px solid #ccc;
-		margin-left: 5px;
-		width: 84px!important;
-	}
-	.modal-content {
-		width: 120%;
-	}

@@ -16,19 +16,12 @@ public interface SchedService {
 	List<SchedDTO> listconSched(HttpSession session, SchedDTO dto);
 	SchedDTO detailSched(int schedNo);
 	int insertSched(SchedDTO dto);
-	int insertSchedauto(SchedDTO dto);
 	int insertSched(HttpSession session, SchedDTO dto);
 	int deleteSched(int schedNo);
 	int updateSched(SchedDTO dto);
 	int insertSreport(SchedDTO dto);
-	int insertSreport2(SchedDTO dto);
 	List<SchedDTO> listMreport(HttpSession session);
-	List<SchedDTO> listMreport2(HttpSession session);
 	SchedDTO detailAddtext(int sreportNo);
 	Object detailSreport(HttpSession session,SchedDTO dto);
 	SchedDTO myAddtext(HttpSession session,SchedDTO dto);
-	SchedDTO myAddtext2(HttpSession session,SchedDTO dto);
-	int updateSreport(SchedDTO dto);
-	int updateSreport1(SchedDTO dto);
-	int updateSreport2(SchedDTO dto);
 }

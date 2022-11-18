@@ -127,7 +127,7 @@
                     <!--//모달 팝업-->
                 </td>
                 <td><input type="text" class="form-control form-control-sm" id="data02Netprice" style="min-width: 80px;" /></td>
-                <td><input type="text" class="form-control form-control-sm" id="data02Quanty" style="min-width: 80px;" value="1" min="1"/></td>
+                <td><input type="text" class="form-control form-control-sm" id="data02Quanty" style="min-width: 80px;" /></td>
                 <td><input type="text" class="form-control form-control-sm" id="data02Amt" style="min-width: 80px;" readonly /></td>
                 <td><input type="text" id="data02Remark" class="form-control form-control-sm" /></td>
                 <td>

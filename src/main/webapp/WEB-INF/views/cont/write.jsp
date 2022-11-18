@@ -47,14 +47,10 @@
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
-								<col width="5%" />
 								<col width="15%" />
-								<col width="5%" />
-								<col width="15%" />
-								<col width="5%" />
-								<col width="15%" />
-								<col width="5%" />
-								<col width="15%" />
+								<col width="35%"/>
+								<col width="15%"/>
+								<col width="35%"/>
 							</colgroup>
 							<tbody>
 								<tr>
@@ -63,7 +59,7 @@
 										<div class="form-radio">
 											<form>
 												<div class="radio radio-inline">
-													<label style="margin-top: 10px;"> <input type="radio" name="contractType" value="NEW" checked="checked"> <i class="helper"></i>판매계약</label>
+													<label> <input type="radio" name="contractType" value="NEW" checked="checked"> <i class="helper"></i>판매계약</label>
 												</div>
 												<div class="radio radio-inline">
 													<label> <input type="radio" name="contractType" value="OLD"> <i class="helper"></i>유지보수</label>
@@ -74,17 +70,19 @@
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">계약명</th>
-									<td >
+									<td colspan="3">
 										<input type="text" class="form-control form-control-sm" id="contTitle" name="contTitle" placeholder="계약명을 입력해 주세요.">
 									</td>
+								</tr>
+								<tr>
 									<th scope="row">계약번호</th>
 									<td>
-										<input type="text" id="contNo" name="contNo" class="form-control" readonly placeholder="자동생성 됩니다..">
+										<input type="text" id="contNo" name="contNo" class="form-control " readonly placeholder="자동생성 됩니다..">
 									</td>
 									<th class="contDetailSopp requiredTextCss">영업기회</th>
 									<td class="contDetailSopp">
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="soppDTO" id="soppTitle" value="" readonly>
+											<input type="text" class="form-control" name="soppDTO" id="soppTitle" value="" />
 											<input type="hidden" class="form-control" name="soppDTO" id="soppNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-opportunity2"
@@ -121,9 +119,8 @@
 									<th class="contDetailCont requiredTextCss">계약</th>
 									<td class="contDetailCont">
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="oldContTitle" id="oldContTitle" readonly>
+											<input type="text" class="form-control" name="oldContTitle" id="oldContTitle" readonly />
 											<input type="hidden" name="oldContNo" id="oldContNo" value="" />
-											<input type="hidden" id="oldSoppNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-opportunity2" data-remote="${path}/modal/popup.do?popId=cont"
 														type="button" data-toggle="modal" data-target="#contModal">
@@ -152,10 +149,12 @@
 											</div>
 										</div>
 									</td>
+								</tr>
+								<tr>
 									<th scope="row" class="requiredTextCss">담당사원</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="userName" id="userName" value="${sessionScope.userName}" readonly>
+											<input type="text" class="form-control" name="userName" id="userName" value="${sessionScope.userName}" />
 											<input type="hidden" class="form-control" name="userNo" id="userNo" value="${sessionScope.userNo}" />
 											 <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
@@ -189,9 +188,8 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<tr>
-									<th class="requiredTextCss">판매방식</th>
+
+									<th>판매방식</th>
 									<td>
 										<select name="select" class="form-control form-control-sm" id="contType">
 											<option value="">선택</option>
@@ -200,10 +198,13 @@
 											</c:forEach>
 										</select>
 									</td>
+
+								</tr>
+								<tr>
 									<th class="requiredTextCss">매출처</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="custName" id="custName" value="" readonly>
+											<input type="text" class="form-control" name="custName" id="custName" value="" />
 											<input type="hidden" name="custNo" id="custNo" value="" /> <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
 														data-remote="${path}/modal/popup.do?popId=cust"
@@ -236,10 +237,11 @@
 											</div>
 										</div>
 									</td>
+
 									<th>매출처 담당자</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" id="custmemberName" name="custmemberName" class="form-control" readonly>
+											<input type="text" id="custmemberName" name="custmemberName" class="form-control ">
 											<input type="hidden" id="custmemberNo" name="custmemberNo" class="form-control ">
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-company btn-sm"  data-remote="${path}/modal/popup.do?popId=custmem&compNo=" type="button" data-toggle="modal" data-target="#custmemberModal" id="custmemberModalbtn" data-whatever="">
@@ -271,10 +273,12 @@
 											</div>
 										</div>
 									</td>
-									<th scope="row" class="requiredTextCss">엔드유저</th>
+								</tr>
+								<tr>
+									<th scope="row">엔드유저</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control " id="endCustName" value="" readonly>
+											<input type="text" class="form-control" id="endCustName" value="" />
 											<input type="hidden" id="endCustNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
@@ -285,7 +289,7 @@
 												<div class="modal-dialog modal-80size" role="document">
 													<div class="modal-content modal-80size">
 														<div class="modal-header">
-															<h4 class="modal-title">엔드유저검색</h4>
+															<h4 class="modal-title"></h4>
 															<button type="button" class="close" onclick="$('#endCustModal').modal('hide');" aria-label="Close">
 																<span aria-hidden="true">&times;</span>
 															</button>
@@ -302,13 +306,11 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<tr>
 									<th>엔드유저 담당자</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" id="endCustmemberName" name="endCustmemberName" class="form-control" readonly>
-											<input type="hidden" id="endCustmemberNo" name="endCustmemberNo" class="form-control">
+											<input type="text" id="endCustmemberName" name="endCustmemberName" class="form-control ">
+											<input type="hidden" id="endCustmemberNo" name="endCustmemberNo" class="form-control ">
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-company btn-sm"  data-remote="${path}/modal/popup.do?popId=endCustmem&compNo=" type="button" data-toggle="modal" data-target="#endCustmemberModal" id="endCustmemberModalbtn" data-whatever="">
 													<i class="icofont icofont-search"></i>
@@ -335,69 +337,42 @@
 											</div>
 										</div>
 									</td>
+								</tr>
+								<tr>
 									<th scope="row">발주일자</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input class="form-control form-control-sm " type="date" max="9999-12-31" id="contOrddate" name="contOrddate">
+											<input class="form-control form-control-sm col-sm-12" type="date" id="contOrddate" name="contOrddate">
 										</div>
 									</td>
-									<th scope="row">검수일자</th>
+									<th>공급일자</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input class="form-control form-control-sm col-sm-12" type="date" max="9999-12-31" id="delivDate" name="delivDate">
-										</div>
-									</td>
-									<th>(부)담당사원</th>
-									<td>
-										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="secondUserName" id="secondUserName" value="${sessionScope.secondUserName}" readonly>
-											<input type="hidden" class="form-control" name="secondUserNo" id="secondUserNo" value="${sessionScope.secondUserNo}" />
-											 <span class="input-group-btn">
-												<button class="btn btn-primary sch-company"
-													data-remote="${path}/modal/popup.do?popId=secondUser"
-													type="button" data-toggle="modal" data-target="#secondUserModal">
-													<i class="icofont icofont-search"></i>
-												</button>
-											</span>
-											<div class="modal fade " id="secondUserModal" tabindex="-1"
-												role="dialog">
-												<div class="modal-dialog modal-80size" role="document">
-													<div class="modal-content modal-80size">
-														<div class="modal-header">
-															<h4 class="modal-title"></h4>
-															<button type="button" class="close" data-dismiss="modal"
-																aria-label="Close">
-																<span aria-hidden="true">&times;</span>
-															</button>
-														</div>
-														<div class="modal-body">
-															<h5>사용자목록</h5>
-															<p>Loading!!!</p>
-														</div>
-														<div class="modal-footer">
-															<button type="button"
-																class="btn btn-default waves-effect "
-																data-dismiss="modal">Close</button>
-														</div>
-													</div>
-												</div>
-											</div>
+											<input class="form-control form-control-sm col-sm-12" type="date" id="supplyDate" name="supplyDate">
 										</div>
 									</td>
 								</tr>
 								<tr>
+									<th scope="row">검수일자</th>
+									<td>
+										<div class="input-group input-group-sm mb-0">
+											<input class="form-control form-control-sm col-sm-12" type="date" id="delivDate" name="delivDate">
+										</div>
+									</td>
 									<th scope="row" class="contDetailSopp">무상유지보수일자</th>
 									<td class="contDetailSopp">
 										<div class="input-group input-group-sm mb-0">
-											<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30" id="freemaintSdate"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31" id="freemaintEdate">
+											<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" id="freemaintSdate"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" id="freemaintEdate">
 										</div>
 									</td>
-									<!-- <th scope="row" class="contDetailCont">유상유지보수일자</th>
+									<th scope="row" class="contDetailCont">유상유지보수일자</th>
 									<td class="contDetailCont">
 										<div class="input-group input-group-sm mb-0">
-											<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30" id="paymaintSdate"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31" id="paymaintEdate">
+											<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" id="paymaintSdate"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" id="paymaintEdate">
 										</div>
 									</td>
+								</tr>
+								<tr>
 									<th >계약금액</th>
 									<td>
 										<input type="text" id="contAmt" name="contAmt" class="form-control" style="text-align: right;" value="0">
@@ -409,11 +384,11 @@
 											<option value="N" >No</option>
 										</select>
 									</td>
+								</tr>
+								<tr>
 									<th>매출이익</th>
 									<td><input style="text-align: right;" type="text" id="netprofit" name="netprofit" class="form-control" value="0">
-									</td> -->
-								</tr>
-								<%-- <tr>
+									</td>
 									<th scope="row">지역</th>
 									<td>
 										<select name="select" id="contArea" class="form-control form-control-sm" >
@@ -423,18 +398,10 @@
 											</c:forEach>
 										</select>
 									</td>
-									<!-- 빈박스 -->
-									<th></th>
-									<td></td>
-									<th></th>
-									<td></td>
-									<th></th>
-									<td></td>
-									<!-- 빈박스 -->
-								</tr> --%>
+								</tr>
 								<tr>
 									<th scope="row">내용</th>
-									<td colspan="7">
+									<td colspan="3">
 										<textarea name="contDesc" id="contDesc" rows="8" class="form-control"></textarea>
 									</td>
 								</tr>
@@ -487,13 +454,6 @@
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
 		});
-		
-		$('#secondUserModal').on('show.bs.modal', function(e) {
-			var button = $(e.relatedTarget);
-			var modal = $(this);
-			modal.find('.modal-body').load(button.data("remote"));
-		});
-		
 		$('#ptncModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
@@ -515,16 +475,6 @@
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
 		});
-		
-		//계약 table의 soppNo 값이 0일 경우 
-		function fnSetContData1(a,b,c,d,e){
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			alert("영업기회에 연결되어있지 않은 계약압니다.");
-			return false;
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			/* $("#soppNo").val(e);
-			location.href = "${path}/cont/iowrite.do/" + e; */
-		}
 
 		function fnSetCustData(a, b) {
     		// '${row.custName}','${row.custNo}'
@@ -555,13 +505,6 @@
 			$("#userName").val(b);
 			$(".modal-backdrop").remove();
 			$("#userModal").modal("hide");
-		}
-		
-		function fnSetSecondUserData(a, b) {
-			$("#secondUserNo").val(a);
-			$("#secondUserName").val(b);
-			$(".modal-backdrop").remove();
-			$("#secondUserModal").modal("hide");
 		}
 		
 		function fnSetPtncData(a, b) {
@@ -597,10 +540,9 @@
 			$("#supplyModal").modal("hide");
 		}
 
-		function fnSetContData(a,b,c,d,e){
+		function fnSetContData(a,b,c,d){
 			$("#oldContTitle").val(a);
 			$("#oldContNo").val(b);
-			$("#oldSoppNo").val(e);
 			$(".modal-backdrop").remove();
 			$("#contModal").modal("hide");
 		}
@@ -609,11 +551,9 @@
 			var contData = {};
 			var contractType					= $("input[name='contractType']:checked").val();	// 신규 영업지원 or 기존계약
 			if(contractType == 'NEW'){
-				var cntrctMth = "${contractType[0].codeNo}";
-				
 				contData.soppNo					= $("#soppNo").val();			// 영업기회
 				contData.exContNo				= 0;							// 기존계약
-				contData.cntrctMth				= cntrctMth;
+				contData.cntrctMth				= ${contractType[0].codeNo};
 				if($("#freemaintSdate").val() != "") contData.freemaintSdate = $("#freemaintSdate").val();	// 무상유지보수 시작일자
 				if($("#freemaintEdate").val() != "") contData.freemaintEdate = $("#freemaintEdate").val();	// 무상유지보수 마감일자
 				if(!contData.soppNo){
@@ -621,10 +561,9 @@
 					return;
 				}
 			} else {
-				var cntrctMth = "${contractType[1].codeNo}";
-				contData.soppNo					= $("#oldSoppNo").val();							// 영업기회
+				contData.soppNo					= 0;							// 영업기회
 				contData.exContNo				= $("#oldContNo").val();		// 기존계약
-				contData.cntrctMth				= cntrctMth;
+				contData.cntrctMth				= ${contractType[1].codeNo};
 				if($("#paymaintSdate").val() != "") contData.paymaintSdate = $("#paymaintSdate").val();		// 유상유지보수 시작일자
 				if($("#paymaintEdate").val() != "") contData.paymaintEdate = $("#paymaintEdate").val();		// 유상유지보수 마감일자
 				if(!contData.exContNo){
@@ -634,7 +573,7 @@
 			}
 			contData.contTitle 				= $("#contTitle").val(); 		// 계약명
 			if($("#userName").val() != "")			contData.userNo		 	= Number($("#userNo").val());			// 담당사원
-			var net_profit = typeof $("#netprofit").val() === "undefined" ? 0 : Number($("#netprofit").val()).replace(/[\D\s\._\-]+/g, ""); // 매출이익
+			var net_profit = Number($("#netprofit").val().replace(/[\D\s\._\-]+/g, "")); // 매출이익
 			if (net_profit >= 0){
 				contData.net_profit = net_profit;
 			} else {
@@ -645,11 +584,10 @@
 			if($("#endCustName").val() != "") 		contData.buyrNo			= Number($("#endCustNo").val());		// 엔드유저
 			if($("#endCustmemberName").val() != "") contData.buyrMemberNo	= Number($("#endCustmemberNo").val());	// 엔드유저 담당자
 			if($("#contOrddate").val() != "")		contData.contOrddate 			= $("#contOrddate").val();		// 발주일자
-			/* if($("#supplyDate").val() != "") 		contData.supplyDate = $("#supplyDate").val(); */		// 공급일자
-			if($("#secondUserNo").val() != "") 		contData.secondUserNo	= Number($("#secondUserNo").val());	//(부)담당사원
+			if($("#supplyDate").val() != "") 		contData.supplyDate = $("#supplyDate").val();		// 공급일자
 			if($("#delivDate").val() != "")  		contData.delivDate	 = $("#delivDate").val();		// 검수일자
 
-			var contAmt = typeof $("#contAmt").val() === "undefined" ? 0 : Number($("#contAmt").val().replace(/[\D\s\._\-]+/g, ""));			// 계약금액
+			var contAmt = Number($("#contAmt").val().replace(/[\D\s\._\-]+/g, ""));			// 계약금액
 			if (contAmt >= 0){
 				contData.contAmt = contAmt;
 			} else {
@@ -658,8 +596,8 @@
 			if($("#vatYn").val() != "")		contData.vatYn					= $("#vatYn").val();			// VAT 포함여부 (기본값 : Y)
 			if($("#contArea").val() != "") 		contData.contArea 				= $("#contArea").val();			// 지역
 			if($("#contType").val() != "")		contData.contType 				= $("#contType").val();			// 판매방식
-			if(tinyMCE.get("contDesc").getContent() != "")		contData.contDesc			 	= tinyMCE.get("contDesc").getContent();			// 계약내용
-			
+			if($("#contDesc").val() != "")		contData.contDesc			 	= $("#contDesc").val();			// 계약내용
+
 			if (!contData.contTitle) {
 				alert("계약명 제목을 입력하십시오.");		
 				return;
@@ -668,12 +606,6 @@
 				return;
 			} else if (!contData.custNo){
 				alert("매출처를 입력하십시오.");
-				return;
-			} else if(!contData.contType){
-				alert("판매방식을 선택해주십시오.");
-				return;
-			} else if(!contData.buyrNo){
-				alert("엔드유저를 선택해주십시오.");
 				return;
 			}
 
@@ -697,31 +629,6 @@
 		}
 
 		$(document).ready(function() {
-			$("#delivDate").change(function(){
-				var contractType = $("input[name='contractType']:checked").val();
-				
-				if(contractType === 'NEW'){
-					var date = new Date($(this).val());
-					var month = date.getMonth() + 1;
-					var day = date.getDate();
-					
-					date.setFullYear(date.getFullYear() + 1);
-					
-					if(month < 10){
-						month = "0" + month;
-					}
-					
-					if(day < 10){
-						day = "0" + day;
-					}
-					
-					var fullDate = date.getFullYear() + "-" + month + "-" + day;
-					
-					$("#freemaintSdate").val($(this).val());
-					$("#freemaintEdate").val(fullDate);
-				}
-			});
-			
 			$('input[name=contractType]').on('change', function() {
 				var contractType					= $("input[name='contractType']:checked").val();	// 신규 영업지원 or 기존계약
 				if(contractType == 'NEW'){

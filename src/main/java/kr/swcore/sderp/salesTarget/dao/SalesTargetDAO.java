@@ -2,7 +2,6 @@ package kr.swcore.sderp.salesTarget.dao;
 
 import java.util.List;
 
-import kr.swcore.sderp.account.dto.AccountDTO;
 import kr.swcore.sderp.sales.dto.SalesDTO;
 import kr.swcore.sderp.salesTarget.dto.SalesTargetDTO;
 import kr.swcore.sderp.user.dto.UserDTO;
@@ -31,23 +30,4 @@ public interface SalesTargetDAO {
 //	SalesTargetDTO listSalesTargetYearCompany(SalesTargetDTO salesTargetDTO);
 
 	SalesTargetDTO listViewGraphData01CompnayMonth(SalesTargetDTO salesTargetDTO);
-	List<SalesTargetDTO> gradata(SalesTargetDTO dto);
-	List<SalesTargetDTO> gradata01(AccountDTO dto);
-	List<SalesTargetDTO> gradata02(AccountDTO dto);
-	List<SalesTargetDTO> gradata03(AccountDTO dto);
-	List<SalesTargetDTO> gradata04(AccountDTO dto);
-	List<SalesTargetDTO> gradata05(AccountDTO dto);
-	List<SalesTargetDTO> gradata06(AccountDTO dto);
-	List<SalesTargetDTO> gradata07(AccountDTO dto);
-	List<SalesTargetDTO> gradata08(AccountDTO dto);
-	List<SalesTargetDTO> gradata09(AccountDTO dto);
-	List<SalesTargetDTO> gradata10(AccountDTO dto);
-	List<SalesTargetDTO> gradata11(AccountDTO dto);
-	List<SalesTargetDTO> gradata12(AccountDTO dto);
-	List<SalesTargetDTO> nomalgradata(SalesTargetDTO dto);
-	List<AccountDTO> user_sales_target(AccountDTO dto);
-	List<AccountDTO> cnt_mouth_data(AccountDTO dto);
-	List<AccountDTO> cnt_mouth_data_last(AccountDTO dto);
-	List<AccountDTO> user_chart_target(AccountDTO dto);
-	List<AccountDTO> user_now_graph(AccountDTO dto);
 }
