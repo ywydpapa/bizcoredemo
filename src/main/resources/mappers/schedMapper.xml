@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sched">
+
+<!-- <select id="listSched"
+ 		resultType="schedDto">
+ 		select a.*, b.custName, c.soppTitle, d.userName, e.desc03 schedCatN, f.desc03 schedTypeN  
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		left join swc_code e on a.schedCat = e.codeNo
+ 		left join swc_code f on a.schedType = f.codeNo
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		order by schedNo 
+ </select> -->
+ 
+<select id="listSched"
+ 		resultType="schedDto">
+		select subquery1.*
+		from
+			(
+			select a.schedNo, a.schedTitle, a.schedFrom, a.schedTo, a.schedPlace, a.schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+			from swc_sched a
+			left join swc_cust b on a.custNo = b.custNo
+			left join swc_user c on a.userNo = c.userNo
+			left join swc_code d on a.schedType = d.codeNo
+			left join swc_code e on a.schedCat = e.codeNo
+			where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+			<if test="userNo != null and userNo != ''">
+				and a.userNo = #{userNo}
+			</if>
+			<if test="soppNo != null and soppNo != ''">
+				and a.soppNo = #{soppNo}
+			</if>
+			<if test="custNo != null and custNo != ''">
+				and a.custNo = #{custNo}
+			</if>
+			<if test="schedCat != null and schedCat != ''">
+				and a.schedCat = #{schedCat}
+			</if>
+			<if test="schedFrom != null and schedFrom != ''">
+				and date_format(a.schedFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+			</if>
+			<if test="schedTo != null and schedTo != ''">
+				and date_format(a.schedTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+			</if>
+			<if test="regSDate != null and regSDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+			</if>
+			<if test="regEDate != null and regEDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+			</if>
+			<if test="schedType != null and schedType != ''">
+				and schedType = #{schedType}
+			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
+			</if>
+			) subquery1
+		<if test="sSearch != null and sSearch != ''">
+		where
+			date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+			or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+			or subquery1.schedTitle like concat('%',#{sSearch},'%')
+			or subquery1.custName like concat('%',#{sSearch},'%')
+			or subquery1.userName like concat('%',#{sSearch},'%')
+			or subquery1.schedPlace like concat('%',#{sSearch},'%')
+			or subquery1.schedCatN like concat('%',#{sSearch},'%')
+			or subquery1.schedDesc like concat('%',#{sSearch},'%')
+			or subquery1.schedFrom like concat('%',#{sSearch},'%')
+			or subquery1.schedTo like concat('%',#{sSearch},'%')
+		</if>
+ 		
+ 		UNION
+
+		select subquery1.*
+		from
+			(
+			select a.salesNo schedNo, a.salesTitle schedTitle, a.salesFrdatetime schedFrom, a.salesTodatetime schedTo, a.salesPlace schedPlace, a.salesDesc schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+			from swc_sales a
+			left join swc_cust b on a.custNo = b.custNo
+			left join swc_user c on a.userNo = c.userNo
+			left join swc_code d on a.schedType = d.codeNo
+			left join swc_code e on a.salesType = e.codeNo
+			where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+			<if test="userNo != null and userNo != ''">
+				and a.userNo = #{userNo}
+			</if>
+			<if test="soppNo != null and soppNo != ''">
+				and a.soppNo = #{soppNo}
+			</if>
+			<if test="custNo != null and custNo != ''">
+				and a.custNo = #{custNo}
+			</if>
+			<if test="schedCat != null and schedCat != ''">
+				and a.salesType = #{schedCat}
+			</if>
+			<if test="schedFrom != null and schedFrom != ''">
+				and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+			</if>
+			<if test="schedTo != null and schedTo != ''">
+				and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+			</if>
+			<if test="regSDate != null and regSDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+			</if>
+			<if test="regEDate != null and regEDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+			</if>
+			<if test="schedType != null and schedType != ''">
+				and schedType = #{schedType}
+			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
+			</if>
+			) subquery1
+		<if test="sSearch != null and sSearch != ''">
+			where
+			date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+			or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+			or subquery1.schedTitle like concat('%',#{sSearch},'%')
+			or subquery1.custName like concat('%',#{sSearch},'%')
+			or subquery1.userName like concat('%',#{sSearch},'%')
+			or subquery1.schedPlace like concat('%',#{sSearch},'%')
+			or subquery1.schedCatN like concat('%',#{sSearch},'%')
+			or subquery1.schedDesc like concat('%',#{sSearch},'%')
+			or subquery1.schedFrom like concat('%',#{sSearch},'%')
+			or subquery1.schedTo like concat('%',#{sSearch},'%')
+		</if>
+
+		UNION
+
+		select subquery1.*
+		from
+		(
+			select a.techdNo schedNo, a.techdTitle schedTitle, a.techdFrom schedFrom, a.techdTo schedTo, a.techdPlace schedPlace, a.techdDesc schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+			from swc_techd a
+			left join swc_cust b on a.custNo = b.custNo
+			left join swc_user c on a.userNo = c.userNo
+			left join swc_code d on a.schedType = d.codeNo
+			left join swc_code e on a.techdType = e.codeNo
+			where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+			<if test="userNo != null and userNo != ''">
+				and a.userNo = #{userNo}
+			</if>
+			<if test="soppNo != null and soppNo != ''">
+				and a.soppNo = #{soppNo}
+			</if>
+			<if test="custNo != null and custNo != ''">
+				and a.custNo = #{custNo}
+			</if>
+			<if test="schedCat != null and schedCat != ''">
+				and a.techdType = #{schedCat}
+			</if>
+			<if test="schedFrom != null and schedFrom != ''">
+				and date_format(a.techdFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+			</if>
+			<if test="schedTo != null and schedTo != ''">
+				and date_format(a.techdTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+			</if>
+			<if test="regSDate != null and regSDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+			</if>
+			<if test="regEDate != null and regEDate != ''">
+				and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+			</if>
+			<if test="schedType != null and schedType != ''">
+				and schedType = #{schedType}
+			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
+			</if>
+			) subquery1
+		<if test="sSearch != null and sSearch != ''">
+			where
+			date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+			or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+			or subquery1.schedTitle like concat('%',#{sSearch},'%')
+			or subquery1.custName like concat('%',#{sSearch},'%')
+			or subquery1.userName like concat('%',#{sSearch},'%')
+			or subquery1.schedPlace like concat('%',#{sSearch},'%')
+			or subquery1.schedCatN like concat('%',#{sSearch},'%')
+			or subquery1.schedDesc like concat('%',#{sSearch},'%')
+			or subquery1.schedFrom like concat('%',#{sSearch},'%')
+			or subquery1.schedTo like concat('%',#{sSearch},'%')
+		</if>
+
+ 		<if test="'desc' == orderOption">
+			order by ${orderColumn} desc
+ 		</if>
+		<if test="'asc' == orderOption">
+			order by ${orderColumn} asc
+		</if>
+
+		limit #{limit} offset #{offset}
+ </select>
+
+<select id="listSchedCnt"
+		resultType="_integer">
+select count(*)
+from
+(
+	select subquery1.*
+	from
+	(
+	select a.schedNo, a.schedTitle, a.schedFrom, a.schedTo, a.schedPlace, a.schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_sched a
+	left join swc_cust b on a.custNo = b.custNo
+	left join swc_user c on a.userNo = c.userNo
+	left join swc_code d on a.schedType = d.codeNo
+	left join swc_code e on a.schedCat = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="soppNo != null and soppNo != ''">
+		and a.soppNo = #{soppNo}
+	</if>
+	<if test="custNo != null and custNo != ''">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="schedCat != null and schedCat != ''">
+		and a.schedCat = #{schedCat}
+	</if>
+	<if test="schedFrom != null and schedFrom != ''">
+		and date_format(a.schedFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+	</if>
+	<if test="schedTo != null and schedTo != ''">
+		and date_format(a.schedTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+	</if>
+	<if test="regSDate != null and regSDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+	</if>
+	<if test="regEDate != null and regEDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+	</if>
+	<if test="schedType != null and schedType != ''">
+		and schedType = #{schedType}
+	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
+	</if>
+	) subquery1
+	<if test="sSearch != null and sSearch != ''">
+		where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+		or subquery1.schedTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.schedPlace like concat('%',#{sSearch},'%')
+		or subquery1.schedCatN like concat('%',#{sSearch},'%')
+		or subquery1.schedDesc like concat('%',#{sSearch},'%')
+		or subquery1.schedFrom like concat('%',#{sSearch},'%')
+		or subquery1.schedTo like concat('%',#{sSearch},'%')
+	</if>
+
+	UNION
+
+	select subquery1.*
+	from
+	(
+	select a.salesNo schedNo, a.salesTitle schedTitle, a.salesFrdatetime schedFrom, a.salesTodatetime schedTo, a.salesPlace schedPlace, a.salesDesc schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_sales a
+	left join swc_cust b on a.custNo = b.custNo
+	left join swc_user c on a.userNo = c.userNo
+	left join swc_code d on a.schedType = d.codeNo
+	left join swc_code e on a.salesType = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="soppNo != null and soppNo != ''">
+		and a.soppNo = #{soppNo}
+	</if>
+	<if test="custNo != null and custNo != ''">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="schedCat != null and schedCat != ''">
+		and a.salesType = #{schedCat}
+	</if>
+	<if test="schedFrom != null and schedFrom != ''">
+		and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+	</if>
+	<if test="schedTo != null and schedTo != ''">
+		and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+	</if>
+	<if test="regSDate != null and regSDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+	</if>
+	<if test="regEDate != null and regEDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+	</if>
+	<if test="schedType != null and schedType != ''">
+		and schedType = #{schedType}
+	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
+	</if>
+	) subquery1
+	<if test="sSearch != null and sSearch != ''">
+		where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+		or subquery1.schedTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.schedPlace like concat('%',#{sSearch},'%')
+		or subquery1.schedCatN like concat('%',#{sSearch},'%')
+		or subquery1.schedDesc like concat('%',#{sSearch},'%')
+		or subquery1.schedFrom like concat('%',#{sSearch},'%')
+		or subquery1.schedTo like concat('%',#{sSearch},'%')
+	</if>
+
+	UNION
+
+	select subquery1.*
+	from
+	(
+	select a.techdNo schedNo, a.techdTitle schedTitle, a.techdFrom schedFrom, a.techdTo schedTo, a.techdPlace schedPlace, a.techdDesc schedDesc, a.regDatetime, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_techd a
+	left join swc_cust b on a.custNo = b.custNo
+	left join swc_user c on a.userNo = c.userNo
+	left join swc_code d on a.schedType = d.codeNo
+	left join swc_code e on a.techdType = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="soppNo != null and soppNo != ''">
+		and a.soppNo = #{soppNo}
+	</if>
+	<if test="custNo != null and custNo != ''">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="schedCat != null and schedCat != ''">
+		and a.techdType = #{schedCat}
+	</if>
+	<if test="schedFrom != null and schedFrom != ''">
+		and date_format(a.techdFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+	</if>
+	<if test="schedTo != null and schedTo != ''">
+		and date_format(a.techdTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+	</if>
+	<if test="regSDate != null and regSDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+	</if>
+	<if test="regEDate != null and regEDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+	</if>
+	<if test="schedType != null and schedType != ''">
+		and schedType = #{schedType}
+	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
+	</if>
+	) subquery1
+	<if test="sSearch != null and sSearch != ''">
+		where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.schedTypeN like concat('%',#{sSearch},'%')
+		or subquery1.schedTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.schedPlace like concat('%',#{sSearch},'%')
+		or subquery1.schedCatN like concat('%',#{sSearch},'%')
+		or subquery1.schedDesc like concat('%',#{sSearch},'%')
+		or subquery1.schedFrom like concat('%',#{sSearch},'%')
+		or subquery1.schedTo like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+<!-- listSched 백업 -->
+<!--<select id="listSched"
+		resultType="schedDto">
+	select a.schedNo, a.schedTitle, a.schedFrom, a.schedTo, a.schedPlace, a.schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_sched a
+			 left join swc_cust b on a.custNo = b.custNo
+			 left join swc_user c on a.userNo = c.userNo
+			 left join swc_code d on a.schedType = d.codeNo
+			 left join swc_code e on a.schedCat = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+
+	UNION
+
+	select a.salesNo schedNo, a.salesTitle schedTitle, a.salesFrdatetime schedFrom, a.salesTodatetime schedTo, a.salesPlace schedPlace, a.salesDesc schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_sales a
+			 left join swc_cust b on a.custNo = b.custNo
+			 left join swc_user c on a.userNo = c.userNo
+			 left join swc_code d on a.schedType = d.codeNo
+			 left join swc_code e on a.salesType = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+
+	UNION
+
+	select a.techdNo schedNo, a.techdTitle schedTitle, a.techdFrom schedFrom, a.techdTo schedTo, a.techdPlace schedPlace, a.techdDesc schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	from swc_techd a
+			 left join swc_cust b on a.custNo = b.custNo
+			 left join swc_user c on a.userNo = c.userNo
+			 left join swc_code d on a.schedType = d.codeNo
+			 left join swc_code e on a.techdType = e.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+
+	order by schedFrom desc
+</select>-->
+
+<!-- <select id="listconSched"
+ 		resultType="schedDto">
+ 		select a.*, b.custName, c.soppTitle, d.userName, e.desc03 schedCatN, f.desc03 schedTypeN  
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		left join swc_code e on a.schedCat = e.codeNo
+ 		left join swc_code f on a.schedType = f.codeNo
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="soppNo != null and soppNo != ''">
+ 		 	and a.soppNo = #{soppNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="schedCat != null and schedCat != ''">
+ 		 	and a.schedCat = #{schedCat}
+ 		</if>
+ 		<if test="schedFrom != null and schedFrom != ''">
+ 		 	and date_format(a.schedFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+ 		</if>
+ 		<if test="schedTo != null and schedTo != ''">
+ 			and date_format(a.schedTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+ 		</if>
+ 		order by schedNo 
+ </select> -->
+ 
+ <select id="listconSched"
+ 		resultType="schedDto">
+ 		select a.schedNo, a.schedTitle, a.schedFrom, a.schedTo, a.schedPlace, a.schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+	 from swc_sched a
+	 left join swc_cust b on a.custNo = b.custNo
+	 left join swc_user c on a.userNo = c.userNo
+	 left join swc_code d on a.schedType = d.codeNo
+	 left join swc_code e on a.schedCat = e.codeNo
+	 where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	 <if test="userNo != null and userNo != ''">
+		 and a.userNo = #{userNo}
+	 </if>
+	 <if test="soppNo != null and soppNo != ''">
+		 and a.soppNo = #{soppNo}
+	 </if>
+	 <if test="custNo != null and custNo != ''">
+		 and a.custNo = #{custNo}
+	 </if>
+	 <if test="schedCat != null and schedCat != ''">
+		 and a.schedCat = #{schedCat}
+	 </if>
+	 <if test="schedFrom != null and schedFrom != ''">
+		 and date_format(a.schedFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+	 </if>
+	 <if test="schedTo != null and schedTo != ''">
+		 and date_format(a.schedTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+	 </if>
+ 		
+ 		UNION 
+ 		
+ 		select a.salesNo schedNo, a.salesTitle schedTitle, a.salesFrdatetime schedFrom, a.salesTodatetime schedTo, a.salesPlace schedPlace, a.salesDesc schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+ 		from swc_sales a 
+ 		left join swc_cust b on a.custNo = b.custNo
+ 		left join swc_user c on a.userNo = c.userNo
+ 		left join swc_code d on a.schedType = d.codeNo
+ 		left join swc_code e on a.salesType = e.codeNo
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="soppNo != null and soppNo != ''">
+ 		 	and a.soppNo = #{soppNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="schedCat != null and schedCat != ''">
+ 		 	and a.salesType = #{schedCat}
+ 		</if>
+ 		<if test="schedFrom != null and schedFrom != ''">
+ 		 	and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+ 		</if>
+ 		<if test="schedTo != null and schedTo != ''">
+ 			and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+ 		</if>
+
+		UNION
+ 		
+ 		select a.techdNo schedNo, a.techdTitle schedTitle, a.techdFrom schedFrom, a.techdTo schedTo, a.techdPlace schedPlace, a.techdDesc schedDesc, b.custName, c.userName, d.desc03 schedTypeN, e.desc03 schedCatN
+ 		from swc_techd a 
+ 		left join swc_cust b on a.custNo = b.custNo
+ 		left join swc_user c on a.userNo = c.userNo
+ 		left join swc_code d on a.schedType = d.codeNo
+ 		left join swc_code e on a.techdType = e.codeNo
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="soppNo != null and soppNo != ''">
+ 		 	and a.soppNo = #{soppNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="schedCat != null and schedCat != ''">
+ 		 	and a.techdType = #{schedCat}
+ 		</if>
+ 		<if test="schedFrom != null and schedFrom != ''">
+ 		 	and date_format(a.techdFrom, '%Y-%m-%d') <![CDATA[>=]]> #{schedFrom}
+ 		</if>
+ 		<if test="schedTo != null and schedTo != ''">
+ 			and date_format(a.techdTo, '%Y-%m-%d') <![CDATA[<=]]> #{schedTo}
+ 		</if>
+ 		
+ 		order by schedFrom desc
+ 		
+ </select>
+
+<select id="detailSched"
+ 		resultType="schedDto">
+ 		select a.*, b.custName, c.soppTitle, d.userName,
+ 		       CONCAT(left(a.schedFrom,10),'T',substring(a.schedFrom,12,9)) sTime,
+ 		       CONCAT(left(a.schedTo,10),'T',substring(a.schedTo,12,9)) eTime
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		where a.schedNo=#{schedNo}  
+ </select>
+<!-- 업무 일지 작성을 위해 전주,차주 일정 리스트업 -->  
+ <select id="listSreport" resultType="schedDto">
+select 'p' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype  
+from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
+c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
+d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
+#{userNo}) and yearweek(a.schedFrom) = yearweek(date_sub(now(), interval 7 day))
+union
+select 'p' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
+,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
+= e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in (#{userNo}) 
+and yearweek(a.salesTodatetime) = yearweek(date_sub(now(), interval 7 day))
+union
+select 'p' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype  
+from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
+e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
+in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(date_sub(now(), interval 7 day))
+union
+select 't' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype
+from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
+c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
+d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
+#{userNo}) and yearweek(a.schedFrom) = yearweek(now()) 
+union
+select 't' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
+,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
+= e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( #{userNo} ) 
+and yearweek(a.salesTodatetime) = yearweek(now())
+union
+select 't' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype 
+from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
+e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
+in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(now()) 
+union
+select 'n' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype
+from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
+c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
+d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
+#{userNo}) and yearweek(a.schedFrom) = yearweek(date_add(now(), interval 7 day))
+union
+select 'n' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
+,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
+= e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( #{userNo} ) 
+and yearweek(a.salesTodatetime) = yearweek(date_add(now(), interval 7 day))
+union
+select 'n' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype 
+from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
+e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
+in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(date_add(now(), interval 7 day))
+order by weekno,weekdays,start
+ </select>
+ 
+ <insert id="insertSched">
+<selectKey keyProperty="userNo" order="BEFORE" resultType="int">
+			SELECT userNo FROM swc_user where userId = #{userId} and compNo = #{compNo}
+</selectKey>
+ insert into swc_sched (
+	userNo
+	,compNo
+	,soppNo
+	,custNo
+	,schedName
+	,schedFrom
+	,schedTo
+	,schedTitle
+	,schedDesc
+	,subschedNo
+	,schedActive
+	,schedAllday
+	,remindflag
+	,schedPlace
+	,schedType
+	,schedColor
+	,schedCat
+	,attrib )
+ values (
+	#{userNo}
+	,#{compNo}
+	<choose>
+		<when test="soppNo == 0">
+			,NULL	
+		</when>
+		<otherwise>
+			,#{soppNo}
+		</otherwise>		
+	</choose>
+	<choose>
+		<when test="custNo == 0">
+			,NULL	
+		</when>
+		<otherwise>
+			,#{custNo}
+		</otherwise>		
+	</choose>
+	,#{schedName}
+	,#{schedFrom}
+	,#{schedTo}
+	,#{schedTitle}
+	,#{schedDesc}
+	,#{subschedNo}
+	,#{schedActive}
+	,#{schedAllday}
+	,#{remindflag}
+	,#{schedPlace}
+	,#{schedType}
+	,#{schedColor}
+	,#{schedCat}
+	,'100000' )
+ </insert>
+
+	<insert id="insertSchedauto">
+		insert into swc_sched (
+		userNo
+		,compNo
+		,soppNo
+		,custNo
+		,schedName
+		,schedFrom
+		,schedTo
+		,schedTitle
+		,schedDesc
+		,subschedNo
+		,schedActive
+		,schedAllday
+		,remindflag
+		,schedPlace
+		,schedType
+		,schedColor
+		,schedCat
+		,attrib )
+		values (
+		#{userNo}
+		,#{compNo}
+		<choose>
+			<when test="soppNo == 0">
+				,NULL
+			</when>
+			<otherwise>
+				,#{soppNo}
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="custNo == 0">
+				,NULL
+			</when>
+			<otherwise>
+				,#{custNo}
+			</otherwise>
+		</choose>
+		,#{schedName}
+		,#{schedFrom}
+		,#{schedTo}
+		,#{schedTitle}
+		,#{schedDesc}
+		,#{subschedNo}
+		,#{schedActive}
+		,#{schedAllday}
+		,#{remindflag}
+		,#{schedPlace}
+		,#{schedType}
+		,#{schedColor}
+		,#{schedCat}
+		,'100000' )
+	</insert>
+
+ <update id="updateSched">
+ update swc_sched set
+ 	<choose>
+		<when test="soppNo == 0">
+			soppNo=NULL	
+		</when>
+		<otherwise>
+			soppNo=#{soppNo}
+		</otherwise>		
+	</choose>
+	<choose>
+		<when test="custNo == 0">
+			,custNo=NULL	
+		</when>
+		<otherwise>
+			,custNo=#{custNo}
+		</otherwise>		
+	</choose> 
+	,schedName=#{schedName}
+	,schedFrom=#{schedFrom}
+	,schedTo=#{schedTo}
+	,schedTitle=#{schedTitle}
+	,schedDesc=#{schedDesc}
+	,subschedNo=#{subschedNo}
+	,schedActive=#{schedActive}
+	,schedAllday=#{schedAllday}
+	,remindflag=#{remindflag}
+	<!-- ,schedType=#{schedType} -->
+	,schedCat=#{schedCat}
+	,schedPlace=#{schedPlace}
+ where schedNo=#{schedNo}
+ </update>
+ 
+ <update id="updateSreport">
+ 	update swc_sched set schedCheck=#{schedCheck} where schedNo=#{schedNo}
+ </update>
+ 
+ <update id="updateSreport1">
+ 	update swc_sales set salesCheck=#{salesCheck} where salesNo=#{salesNo}
+ </update>
+ 
+  <update id="updateSreport2">
+ 	update swc_techd set techdCheck=#{techdCheck} where techdNo=#{techdNo}
+ </update>
+ 
+ <insert id="insertSreport">
+ insert into swc_sreport
+ (userNo,compNo,weekNum,prComment,prCheck,thComment,thCheck,regDate)
+ values(#{userNo},#{compNo},yearweek(CURDATE()),#{prComment},#{prCheck},#{thComment},#{thCheck},now())
+ </insert>
+ 
+ <insert id="insertSreport2">
+ insert into swc_sreport
+ (userNo,compNo,weekNum,prComment,prCheck,thComment,thCheck,regDate)
+ values(#{userNo},#{compNo},yearweek(CURDATE())+1,#{prComment},#{prCheck},#{thComment},#{thCheck},now())
+ </insert>
+ 
+ <select id="listMreport" resultType="schedDto">
+select so.org_title, su.userNo, su.userName, su.org_id ,max(ss.sreportNo) sreportNo, ss.weekNum from swc_user su 
+left join swc_sreport ss on su.userNo = ss.userNo and ss.weekNum = yearweek(curdate()) 
+left join swc_organiz so on su.org_id = so.org_id 
+where su.compNo = #{compNo} and su.attrib not like 'XXX%' group by userNo order by su.userOtp asc
+ </select>
+ 
+  <select id="listMreport2" resultType="schedDto">
+select so.org_title, su.userNo, su.userName, su.org_id ,max(ss.sreportNo) sreportNo, ss.weekNum from swc_user su 
+left join swc_sreport ss on su.userNo = ss.userNo and ss.weekNum = yearweek(date_add(now(), interval 7 day))
+left join swc_organiz so on su.org_id = so.org_id 
+where su.compNo = #{compNo} and su.attrib not like 'XXX%' group by userNo order by su.userOtp asc
+ </select>
+ 
+ 
+<select id="detailAddtext" resultType="schedDto">
+select * from swc_sreport where sreportNo=#{sreportNo}
+</select>
+
+<select id="myAddtext" resultType="schedDto">
+select * from swc_sreport where userNo=#{userNo} and weekNum = yearweek(curdate()) order by sreportNo desc limit 1
+</select>
+
+<select id="myAddtextNx" resultType="schedDto">
+select * from swc_sreport where userNo=#{userNo} and weekNum = yearweek(curdate())-1 order by sreportNo desc limit 1
+</select>
+  
+ <delete id="deleteSched">
+ update swc_sched set attrib='XXXXX' where schedNo=#{schedNo}
+ </delete>
+ 		
+</mapper>

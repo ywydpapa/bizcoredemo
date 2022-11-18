@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notice">
+<select id="listNotice" resultType="noticeDto">
+	select row_number() over(order by notiNo asc ) as row_num, subquery1.*
+	from
+		(
+		select a.*, b.userName, b.compNo
+		from swc_notice a
+		left join swc_user b on a.userNo = b.userNo
+		where b.compNo = #{compNo}
+		<if test="userName != null and userName != ''">
+			and b.userName like concat('%',#{userName},'%')
+		</if>
+		<if test="notiTitle != null and notiTitle != ''">
+			and a.notiTitle like concat('%',#{notiTitle},'%')
+		</if>
+		<if test="notiContents != null and notiContents != ''">
+			and a.notiContents like concat('%',#{notiContents},'%')
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1 where userName IS NOT NULL
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.notiTitle like concat('%',#{sSearch},'%')
+		or subquery1.notiContents like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+	limit #{limit} offset #{offset}
+	</if>
+</select>
+
+<select id="listNoticeCnt"
+		resultType="_integer">
+select count(*)
+from
+(
+	select row_number() over(order by notiNo asc ) as row_num, subquery1.*
+	from
+		(
+		select a.*, b.userName, b.compNo
+		from swc_notice a
+		left join swc_user b on a.userNo = b.userNo
+		where b.compNo = #{compNo}
+		<if test="userName != null and userName != ''">
+			and b.userName like concat('%',#{userName},'%')
+		</if>
+		<if test="notiTitle != null and notiTitle != ''">
+			and a.notiTitle like concat('%',#{notiTitle},'%')
+		</if>
+		<if test="notiContents != null and notiContents != ''">
+			and a.notiContents like concat('%',#{notiContents},'%')
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1 where userName IS NOT NULL
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.notiTitle like concat('%',#{sSearch},'%')
+		or subquery1.notiContents like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+
+<insert id="insertNotice">
+ insert into swc_notice 
+ (
+ notiTitle, 
+ notiContents, 
+ userNo 
+ )
+ values 
+ (
+ #{notiTitle}, 
+ #{notiContents}, 
+ #{userNo}
+ )
+ </insert>
+ 
+ <select id="detailNotice"
+ 		resultType="noticeDto">
+select a.*, b.userName, b.compNo 
+from swc_notice a
+		left join swc_user b on a.userNo = b.userNo
+		where notiNo=#{notiNo} order by notiNo
+ </select>
+ 
+ <update id="updateNotice">
+	update swc_notice 
+	set 
+	 notiTitle=#{notiTitle}
+	,notiContents=#{notiContents}
+	where notiNo=#{notiNo}
+ </update>
+ 
+ <delete id="deleteNotice">
+	delete from swc_notice 
+	where notiNo=#{notiNo}
+ </delete>
+ 
+ <select id="listNotice1" resultType="board_fileDto">
+	select row_number() over(order by bf_pk asc ) as row_num, subquery1.*
+	from
+		(
+		select a.*, b.userName, b.compNo
+		from swc_board_file a
+		left join swc_user b on a.userNo = b.userNo
+		where b.compNo = #{compNo} 
+		<if test="userName != null and userName != ''">
+			and b.userName like concat('%',#{userName},'%')
+		</if>
+		<if test="bf_Title != null and bf_Title != ''">
+			and a.bf_Title like concat('%',#{bf_Title},'%')
+		</if>
+		<if test="bf_Contents != null and bf_Contents != ''">
+			and a.bf_Contents like concat('%',#{bf_Contents},'%')
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1 where userName IS NOT NULL
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.bf_Title like concat('%',#{sSearch},'%')
+		or subquery1.bf_Contents like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+	limit #{limit} offset #{offset}
+	</if>
+</select>
+
+<select id="listNoticeCnt1"
+		resultType="_integer">
+select count(*)
+from
+(
+	select row_number() over(order by bf_pk asc ) as row_num, subquery1.*
+	from
+		(
+		select a.*, b.userName, b.compNo
+		from swc_board_file a
+		left join swc_user b on a.userNo = b.userNo
+		where b.compNo = #{compNo} 
+		<if test="userName != null and userName != ''">
+			and b.userName like concat('%',#{userName},'%')
+		</if>
+		<if test="bf_Title != null and bf_Title != ''">
+			and a.bf_Title like concat('%',#{bf_Title},'%')
+		</if>
+		<if test="bf_Contents != null and bf_Contents != ''">
+			and a.bf_Contents like concat('%',#{bf_Contents},'%')
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1 where userName IS NOT NULL
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.bf_Title like concat('%',#{sSearch},'%')
+		or subquery1.bf_Contents like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+</mapper>

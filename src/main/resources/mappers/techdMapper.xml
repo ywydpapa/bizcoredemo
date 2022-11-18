@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="techd">
+
+<select id="listTechd" resultType="TechdDto">
+	select subquery1.*
+	from
+		(
+		select a.*, b.userName , c.custName, f.desc03 techdStepsN
+		from swc_techd a
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cont e on a.contNo = e.contNo
+		left join swc_code f on a.techdSteps = f.codeNo
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+			and a.userNo = #{userNo}
+		</if>
+		<if test="custNo != null and custNo != ''">
+			and a.custNo = #{custNo}
+		</if>
+		<if test="custmemberNo != null and custmemberNo != ''">
+			and a.custmemberNo = #{custmemberNo}
+		</if>
+		<if test="techdSteps != null and techdSteps != ''">
+			and a.techdSteps = #{techdSteps}
+		</if>
+		<if test="techdFrom != null and techdFrom != ''">
+			and date_format(a.techdFrom, '%Y-%m-%d') <![CDATA[>=]]> #{techdFrom}
+		</if>
+		<if test="techdTo != null and techdTo != ''">
+			and date_format(a.techdTo, '%Y-%m-%d') <![CDATA[<=]]> #{techdTo}
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="techdDesc != null and techdDesc != ''">
+			and a.techdDesc like CONCAT('%', #{techdDesc}, '%')
+		</if>
+		<if test="cntrctMth != null and cntrctMth != ''">
+			and a.cntrctMth = #{cntrctMth}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and techdFrom == null or techdFrom == '' and techdTo == null or techdTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regdatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regdatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.techdTitle like concat('%',#{sSearch},'%')
+		or subquery1.techdDesc like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.techdStepsN like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.techdFrom like concat('%',#{sSearch},'%')
+		or subquery1.techdTo like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+	limit #{limit} offset #{offset}
+	</if>
+</select>
+
+<select id="listTechdCnt" resultType="_integer">
+select count(*)
+from
+(
+	select subquery1.*
+	from
+	(
+	select a.*, b.userName , c.custName, f.desc03 techdStepsN
+	from swc_techd a
+	left join swc_user b on a.userNo = b.userNo
+	left join swc_cust c on a.custNo = c.custNo
+	left join swc_sopp d on a.soppNo = d.soppNo
+	left join swc_cont e on a.contNo = e.contNo
+	left join swc_code f on a.techdSteps = f.codeNo
+	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	<if test="userNo != null and userNo != ''">
+		and a.userNo = #{userNo}
+	</if>
+	<if test="custNo != null and custNo != ''">
+		and a.custNo = #{custNo}
+	</if>
+	<if test="custmemberNo != null and custmemberNo != ''">
+		and a.custmemberNo = #{custmemberNo}
+	</if>
+	<if test="techdSteps != null and techdSteps != ''">
+		and a.techdSteps = #{techdSteps}
+	</if>
+	<if test="techdFrom != null and techdFrom != ''">
+		and date_format(a.techdFrom, '%Y-%m-%d') <![CDATA[>=]]> #{techdFrom}
+	</if>
+	<if test="techdTo != null and techdTo != ''">
+		and date_format(a.techdTo, '%Y-%m-%d') <![CDATA[<=]]> #{techdTo}
+	</if>
+	<if test="regSDate != null and regSDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+	</if>
+	<if test="regEDate != null and regEDate != ''">
+		and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+	</if>
+	<if test="techdDesc != null and techdDesc != ''">
+		and a.techdDesc like CONCAT('%', #{techdDesc}, '%')
+	</if>
+	<if test="cntrctMth != null and cntrctMth != ''">
+		and a.cntrctMth = #{cntrctMth}
+	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and techdFrom == null or techdFrom == '' and techdTo == null or techdTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regdatetime Between #{listDateFrom} and now()
+	</if>
+	) subquery1
+	<if test="sSearch != null and sSearch != ''">
+		where
+		date_format(subquery1.regdatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.techdTitle like concat('%',#{sSearch},'%')
+		or subquery1.techdDesc like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.techdStepsN like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.techdFrom like concat('%',#{sSearch},'%')
+		or subquery1.techdTo like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+
+<select id="listTechdbycust" resultType="TechdDto">
+ 		select a.*, b.userName , c.custName, f.desc03 techdStepsN 
+ 		from swc_techd a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cont e on a.contNo = e.contNo
+		left join swc_code f on a.techdSteps = f.codeNo 
+		where a.attrib not like 'XXX%' and a.custNo = #{custNo}
+ 		order by techdFrom desc
+ </select>
+ 
+ <select id="listconTechd" resultType="TechdDto">
+ 		select a.*, b.userName , c.custName, f.desc03 techdStepsN 
+ 		from swc_techd a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cont e on a.contNo = e.contNo
+		left join swc_code f on a.techdSteps = f.codeNo 
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo} 
+		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="custmemberNo != null and custmemberNo != ''">
+ 		 	and a.custmemberNo = #{custmemberNo}
+ 		</if>
+ 		<if test="techdSteps != null and techdSteps != ''">
+ 		 	and a.techdSteps = #{techdSteps}
+ 		</if>
+ 		<if test="targetDatefrom != null and targetDatefrom != ''">
+ 		 	and date_format(a.regdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{targetDatefrom}
+ 		</if>
+ 		<if test="targetDateto != null and targetDateto != ''">
+ 			and date_format(a.regdatetime, '%Y-%m-%d') <![CDATA[<=]]> #{targetDateto}
+ 		</if>
+ 		<if test="techdDesc != null and techdDesc != ''">
+ 			and a.techdDesc like CONCAT('%', #{techdDesc}, '%')
+ 		</if>
+		order by techdFrom desc
+ </select>
+ 
+ <select id="listTechdinsopp" resultType="TechdDto">
+ 		select a.*, b.userName , c.custName, f.desc03 techdTypeN from swc_techd a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cont e on a.contNo = e.contNo
+		left join swc_code f on a.techdType = f.codeNo 
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.soppNo != 10005223
+		<if test="soppNo != 0">
+			and a.soppNo = #{soppNo}
+		</if>
+		<if test="soppNo == 0">
+			and a.contNo = #{contNo}
+		</if>
+		order by techdNo 
+ </select>
+
+<select id="detailTechd" resultType="techdDto">
+	select a.*, b.userName , c.custName as endCustName, d.soppTitle, e.contTitle, f.custMname custmemberName, g.desc03 cntrctMthN, h.custName,
+ 		       CONCAT(left(a.techdFrom,10),'T',substring(a.techdFrom,12,9)) targetDatefrom,
+ 		       CONCAT(left(a.techdTo,10),'T',substring(a.techdTo,12,9)) targetDateto
+ 		from swc_techd a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cont e on a.contNo = e.contNo
+		left join swc_code g on a.cntrctMth = g.codeNo
+		left join swc_custData03 f on a.custmemberNo = f.custData03No 
+		left join swc_cust h on a.endCustNo = h.custNo
+		where a.attrib not like 'XXX%' and techdNo=#{techdNo} order by techdNo
+ </select>
+ 
+ <insert id="insertTechd">
+ insert into swc_techd 
+ (
+	compNo,
+	custNo,
+	custmemberNo,
+	endCustNo,
+	cntrctMth,
+	techdTitle,
+	techdDesc,
+	techdItemmodel,
+	techdItemversion,
+	techdPlace,
+	techdFrom,
+	techdTo,
+	techdType,
+	techdSteps,
+	regdatetime,
+	modDatetime,
+	attrib,
+	userNo,
+	schedType,
+	soppNo,
+	contNo
+ )
+ values 
+ (
+	#{compNo},
+	#{endCustNo},
+	#{custmemberNo},
+	#{compNo},
+	#{cntrctMth},
+	#{techdTitle},
+	#{techdDesc},
+	#{techdItemmodel},
+	#{techdItemversion},
+	#{techdPlace},
+	#{techdFrom},
+	#{techdTo},
+	#{techdType},
+	#{techdSteps},
+	now(),
+	now(),
+	'10000',
+	#{userNo},
+	#{schedType},
+	#{soppNo},
+	#{contNo}
+ )
+ </insert>
+
+ <update id="updateTechd">
+	update swc_techd 
+	set 
+	<if test="custNo != 100002">
+	custNo = #{custNo},
+	</if>
+	soppNo = #{soppNo},
+	contNo = #{contNo},
+	custmemberNo = #{custmemberNo},
+	cntrctMth = #{cntrctMth},
+	techdTitle = #{techdTitle},
+	techdDesc = #{techdDesc},
+	techdItemmodel = #{techdItemmodel},
+	techdItemversion = #{techdItemversion},
+	techdPlace = #{techdPlace},
+	techdFrom = #{techdFrom},
+	techdTo = #{techdTo},
+	techdType = #{techdType},
+	techdSteps = #{techdSteps},
+	userNo = #{userNo},
+	modDatetime	= NOW()
+	where techdNo=#{techdNo}
+ </update>
+ 
+ <delete id="deleteTechd">
+	update swc_techd 
+	set attrib = 'XXXXX'
+	where techdNo=#{techdNo}
+ </delete>
+ 		
+</mapper>

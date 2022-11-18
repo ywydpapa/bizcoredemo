@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sales">
+
+<select id="listSales" resultType="salesDto">
+	select subquery1.*
+	from
+		(
+		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN
+		from swc_sales a
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cust e on a.ptncNo = e.custNo
+		left join swc_code f on a.salesType = f.codeNo
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+			and a.userNo = #{userNo}
+		</if>
+		<if test="soppNo != null and soppNo != ''">
+			and a.soppNo = #{soppNo}
+		</if>
+		<if test="custNo != null and custNo != ''">
+			and a.custNo = #{custNo}
+		</if>
+		<if test="salesType != null and salesType != ''">
+			and a.salesType = #{salesType}
+		</if>
+		<if test="salesFrdatetime != null and salesFrdatetime != ''">
+			and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{salesFrdatetime}
+		</if>
+		<if test="salesTodatetime != null and salesTodatetime != ''">
+			and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{salesTodatetime}
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and salesFrdatetime == null or salesFrdatetime == '' and salesTodatetime == null or salesTodatetime == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.salesTitle like concat('%',#{sSearch},'%')
+		or subquery1.salesFrdatetime like concat('%',#{sSearch},'%')
+		or subquery1.salesTodatetime like concat('%',#{sSearch},'%')
+		or subquery1.soppTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.ptncName like concat('%',#{sSearch},'%')
+		or subquery1.salesDesc like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+	<if test="limit > 0">
+	limit #{limit} offset #{offset}
+	</if>
+</select>
+
+<select id="listSalesCnt" resultType="_integer">
+select count(*)
+from
+(
+	select subquery1.*
+	from
+		(
+		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN
+		from swc_sales a
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cust e on a.ptncNo = e.custNo
+		left join swc_code f on a.salesType = f.codeNo
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+			and a.userNo = #{userNo}
+		</if>
+		<if test="soppNo != null and soppNo != ''">
+			and a.soppNo = #{soppNo}
+		</if>
+		<if test="custNo != null and custNo != ''">
+			and a.custNo = #{custNo}
+		</if>
+		<if test="salesType != null and salesType != ''">
+			and a.salesType = #{salesType}
+		</if>
+		<if test="salesFrdatetime != null and salesFrdatetime != ''">
+			and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{salesFrdatetime}
+		</if>
+		<if test="salesTodatetime != null and salesTodatetime != ''">
+			and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{salesTodatetime}
+		</if>
+		<if test="regSDate != null and regSDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[>=]]> #{regSDate}
+		</if>
+		<if test="regEDate != null and regEDate != ''">
+			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
+		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and salesFrdatetime == null or salesFrdatetime == '' and salesTodatetime == null or salesTodatetime == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
+		) subquery1
+	<if test="sSearch != null and sSearch != ''">
+	where
+		date_format(subquery1.regDatetime, '%Y-%m-%d') like concat('%',#{sSearch},'%')
+		or subquery1.salesTitle like concat('%',#{sSearch},'%')
+		or subquery1.salesFrdatetime like concat('%',#{sSearch},'%')
+		or subquery1.salesTodatetime like concat('%',#{sSearch},'%')
+		or subquery1.soppTitle like concat('%',#{sSearch},'%')
+		or subquery1.custName like concat('%',#{sSearch},'%')
+		or subquery1.userName like concat('%',#{sSearch},'%')
+		or subquery1.ptncName like concat('%',#{sSearch},'%')
+		or subquery1.salesDesc like concat('%',#{sSearch},'%')
+	</if>
+
+	<if test="'desc' == orderOption">
+		order by ${orderColumn} desc
+	</if>
+	<if test="'asc' == orderOption">
+		order by ${orderColumn} asc
+	</if>
+) t
+</select>
+
+<select id="listSalesbycust" resultType="salesDto">
+	select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a
+	left join swc_user b on a.userNo = b.userNo
+	left join swc_cust c on a.custNo = c.custNo
+	left join swc_sopp d on a.soppNo = d.soppNo
+	left join swc_cust e on a.ptncNo = e.custNo
+	left join swc_code f on a.salesType = f.codeNo
+	where a.attrib not like 'XXX%' and a.custNo = #{custNo}
+	order by salesFrdatetime desc
+</select>
+
+ <select id="listconSales" resultType="salesDto">
+ 		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cust e on a.ptncNo = e.custNo
+		left join swc_code f on a.salesType = f.codeNo
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		<if test="userNo != null and userNo != ''">
+ 		 	and a.userNo = #{userNo}
+ 		</if>
+ 		<if test="soppNo != null and soppNo != ''">
+ 		 	and a.soppNo = #{soppNo}
+ 		</if>
+ 		<if test="custNo != null and custNo != ''">
+ 		 	and a.custNo = #{custNo}
+ 		</if>
+ 		<if test="salesType != null and salesType != ''">
+ 		 	and a.salesType = #{salesType}
+ 		</if>
+ 		<if test="salesFrdatetime != null and salesFrdatetime != ''">
+ 		 	and date_format(a.salesFrdatetime, '%Y-%m-%d') <![CDATA[>=]]> #{salesFrdatetime}
+ 		</if>
+ 		<if test="salesTodatetime != null and salesTodatetime != ''">
+ 			and date_format(a.salesTodatetime, '%Y-%m-%d') <![CDATA[<=]]> #{salesTodatetime}
+ 		</if> 
+		order by salesFrdatetime desc
+ </select>
+
+<select id="listSalesinsopp" resultType="salesDto">
+ 		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_sopp d on a.soppNo = d.soppNo
+		left join swc_cust e on a.ptncNo = e.custNo
+		left join swc_code f on a.salesType = f.codeNo
+		where a.attrib not like 'XXX%' and a.soppNo = #{soppNo} and a.compNo = #{compNo} and a.soppNo != 10005223
+		order by salesNo 
+ </select>
+
+
+<select id="detailSales" resultType="salesDto">
+select a.*, b.userName , c.custName, d.custName ptncName, concat(left(a.salesFrdatetime,10),'T',substring(a.salesFrdatetime,12,9)) salesStime, CONCAT(left(a.salesTodatetime,10),'T',substring(a.salesTodatetime,12,9)) 
+salesEtime, e.soppTitle  from swc_sales a  
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo 
+		left join swc_cust d on a.ptncNo = d.custNo
+		left join swc_sopp e on a.soppNo = e.soppNo
+		where a.attrib not like 'XXX%' and  salesNo=#{salesNo} order by salesNo
+ </select>
+ 
+ <insert id="insertSales">
+ insert into swc_sales 
+ (
+ soppNo, 
+ compNo, 
+ custNo, 
+ userNo, 
+ salesTitle, 
+ salesDesc, 
+ salesType, 
+ salesFrdatetime, 
+ salesTodatetime,
+ salesPlace,
+ ptncNo, 
+ attrib,
+ schedType,
+ modDatetime
+ )
+ values 
+ (
+ <choose>
+	<when test="soppNo == 0">
+		NULL,	
+	</when>
+	<otherwise>
+		#{soppNo},
+	</otherwise>		
+</choose>
+ #{compNo},
+<choose>
+	<when test="custNo == 0">
+		NULL,	
+	</when>
+	<otherwise>
+		#{custNo},
+	</otherwise>		
+</choose>
+ #{userNo}, 
+ #{salesTitle}, 
+ #{salesDesc}, 
+ #{salesType}, 
+ #{salesFrdatetime}, 
+ #{salesTodatetime},
+ #{salesPlace},
+ <choose>
+	 <when test="ptncNo == 0">
+		 NULL,
+	 </when>
+	 <otherwise>
+		 #{ptncNo},
+	 </otherwise>
+ </choose>
+ '10000',
+ #{schedType},
+  now()
+ )
+ </insert>
+
+ <update id="updateSales">
+	update swc_sales 
+	set 
+	 salesDesc=#{salesDesc}
+	,salesFrdatetime=#{salesFrdatetime}
+	,salesTodatetime=#{salesTodatetime}
+	,salesPlace=#{salesPlace}
+	,salesType=#{salesType}
+	,salesTitle=#{salesTitle}
+	 <choose>
+		 <when test="soppNo == 0">
+			 ,soppNo= NULL
+		 </when>
+		 <otherwise>
+			 ,soppNo=#{soppNo}
+		 </otherwise>
+	 </choose>
+	 <choose>
+		 <when test="custNo == 0">
+			 ,custNo= NULL
+		 </when>
+		 <otherwise>
+			 ,custNo=#{custNo}
+		 </otherwise>
+	 </choose>
+	 <choose>
+		 <when test="ptncNo == 0">
+			 ,ptncNo= NULL
+		 </when>
+		 <otherwise>
+			 ,ptncNo=#{ptncNo}
+		 </otherwise>
+	 </choose>
+	,modDatetime = now()
+	where salesNo=#{salesNo}
+ </update>
+ 
+ <delete id="deleteSales">
+	update swc_sales 
+	set attrib = 'XXXXX'
+	where salesNo=#{salesNo}
+ </delete>
+ 		
+</mapper>

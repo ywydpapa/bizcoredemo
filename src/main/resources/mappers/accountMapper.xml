@@ -1,0 +1,1544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="account">
+
+	<select id="listVat" resultType="accountDto">
+		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(case when a.vatType='B' then a.vatTax + a.vatAmount end) AS vatAmountB, sum(case when a.vatType='S' then a.vatTax + a.vatAmount end) AS vatAmountS, 
+		sum(case when a.vatStatus='B5' then d.dataTotal end) AS serialTotalB, sum(case when a.vatStatus='S5' then d.dataTotal end) AS serialTotalS, f.custCRbalance AS custBalance
+		from swc_vat a
+				   left join swc_cust b on a.vatSellerCustNo = b.custNo
+				   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+				   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+				   left join swc_cust e ON if(a.vatType='B', a.vatSellerCustNo = e.custNo, a.vatBuyerCustNo = e.custNo)
+				   left join swc_custdata f ON e.custNo = f.custNo and f.attrib not like 'XXX%' 
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%'
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.vatIssueDate Between #{listDateFrom} and now()
+		</if>
+		 group by (case when a.vatType='B' then a.vatSellerCustNo END), (case when a.vatType='S' then a.vatBuyerCustNo END) order by a.vatIssueDate desc
+	
+	</select>
+
+	<select id="sumBVat" resultType="accountDto">
+		SELECT a.*, b.settleDRbalance as custBalance, a.custName AS vatSellerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountB, sum(case when c.vatStatus='B5' then c.vatAmount + c.vatTax end) AS serialTotalB FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleDRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatSellerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		GROUP BY a.custNo
+	</select>
+	
+	<select id="sumBvat_sub" resultType="accountDto">		
+		SELECT a.custNo, a.custName, sum(b.modal_receive_data) AS modal_receive_data FROM swc_cust a
+		LEFT JOIN swc_vat b ON a.custNo = b.vatSellerCustNo AND (b.vatStatus = 'B3' OR b.vatStatus = 'B5')
+		LEFT JOIN(SELECT * FROM swc_bacledger_detail group BY linkDocno) c ON b.vatSerial = c.linkDocno
+		LEFT JOIN swc_bacledger d ON d.baclogId = c.baclogId
+		WHERE d.linkDoc = 'y' and d.baclogTime LIKE CONCAT('%', #{selectYear}, '%') and b.attrib not like 'XXX%' GROUP BY a.custName;
+	</select>
+
+	<select id="sumBVatSearch" resultType="accountDto">
+		SELECT a.*, b.settleDRbalance as custBalance, a.custName AS vatSellerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountB, sum(case when c.vatStatus='B5' then c.vatAmount + c.vatTax end) AS serialTotalB FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleDRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatSellerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		<if test="vatSellerCustNo != null and vatSellerCustNo != ''">
+			and c.vatSellerCustNo = #{vatSellerCustNo}
+		</if>
+		GROUP BY a.custNo
+	</select>
+
+	<select id="sumSVat" resultType="accountDto">
+		SELECT a.*, b.settleCRbalance as custBalance, a.custName AS vatBuyerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountS, sum(case when c.vatStatus='S5' then c.vatAmount + c.vatTax end) AS serialTotalS FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleCRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatBuyerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		GROUP BY a.custNo
+	</select>
+	<select id="sumSvat_sub" resultType="accountDto">
+		SELECT a.custNo, a.custName, sum(b.modal_receive_data) AS modal_receive_data  FROM swc_cust a
+		LEFT JOIN swc_vat b ON a.custNo = b.vatBuyerCustNo AND (b.vatStatus = 'S3' OR b.vatStatus = 'S5')
+		LEFT JOIN(SELECT * FROM swc_bacledger_detail group BY linkDocno) c ON b.vatSerial = c.linkDocno 
+		LEFT JOIN swc_bacledger d ON d.baclogId = c.baclogId
+		WHERE d.linkDoc = 'y' and d.baclogTime LIKE CONCAT('%', #{selectYear}, '%') and b.attrib not like 'XXX%' GROUP BY a.custName;
+	</select>
+	<select id="sumSVatSearch" resultType="accountDto">
+		SELECT a.*, b.settleCRbalance as custBalance, a.custName AS vatBuyerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountS, sum(case when c.vatStatus='S5' then c.vatAmount + c.vatTax end) AS serialTotalS FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleCRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatBuyerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		<if test="vatBuyerCustNo != null and vatBuyerCustNo != ''">
+			and c.vatBuyerCustNo = #{vatBuyerCustNo}
+		</if>
+		GROUP BY a.custNo
+	</select>
+	
+	<select id="custVatListS" resultType="accountDto">
+		SELECT a.*, b.settleCRbalance as custBalance, a.custName AS vatBuyerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountS, sum(case when c.vatStatus='S5' then c.vatAmount + c.vatTax end) AS serialTotalS FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleCRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatBuyerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		GROUP BY a.custNo
+	</select>
+	
+	<select id="custVatListB" resultType="accountDto">
+		SELECT a.*, b.settleDRbalance as custBalance, a.custName AS vatSellerName, SUM(c.vatTax + c.vatAmount) 
+		AS vatAmountB, sum(case when c.vatStatus='B5' then c.vatAmount + c.vatTax end) AS serialTotalB FROM swc_cust a
+		LEFT JOIN swc_cust_balance b on a.custNo = b.custNo AND b.settleYear = #{selectYear} AND b.compNo = #{compNo} AND b.attrib NOT LIKE 'XXX%' AND b.settleDRbalance IS NOT NULL
+		LEFT JOIN swc_vat c ON a.custNo = c.vatSellerCustNo AND c.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} and c.attrib NOT LIKE 'XXX%' AND c.vatType != 'T'
+		WHERE a.compNo = #{compNo} AND a.custCompNo != #{compNo}
+		GROUP BY a.custNo
+	</select>
+	
+	<select id="ledgerListS" resultType="accountDto">
+		SELECT a.*, b.vatProductName, c.baclogTime, d.custName FROM swc_bacledger_detail a
+		LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial 
+		LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId AND c.baclogTime BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo}
+		LEFT JOIN swc_cust d ON b.vatBuyerCustNo = d.custNo
+		WHERE d.custNo = #{vatBuyerCustNo} ORDER BY c.baclogTime asc
+	</select>
+	
+	<select id="ledgerListB" resultType="accountDto">
+		SELECT a.*, b.vatProductName, c.baclogTime, d.custName FROM swc_bacledger_detail a
+		LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial
+		LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId AND c.baclogTime BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo}
+		LEFT JOIN swc_cust d ON b.vatSellerCustNo = d.custNo
+		WHERE d.custNo = #{vatSellerCustNo} ORDER BY c.baclogTime asc
+	</select>
+
+	<select id="listVatSearch" resultType="accountDto">
+ 		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(case when a.vatType='B' then a.vatTax + a.vatAmount end) AS vatAmountB, sum(case when a.vatType='S' then a.vatTax + a.vatAmount end) AS vatAmountS, 
+		sum(case when a.vatStatus='B5' then d.dataTotal end) AS serialTotalB, sum(case when a.vatStatus='S5' then d.dataTotal end) AS serialTotalS 
+		from swc_vat a
+		   left join swc_cust b on a.vatSellerCustNo = b.custNo
+		   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+		   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' 
+		<if test="vatSellerCustNo != null and vatSellerCustNo != ''">
+ 		 	and a.vatSellerCustNo = #{vatSellerCustNo}
+ 		</if>
+ 		<if test="vatType != null and vatType != ''">
+ 		 	and a.vatType = #{vatType}
+ 		</if>
+ 		<if test="vatIssueDateTo != null and vatIssueDateTo != ''">
+ 		 	and a.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo}
+ 		</if>
+ 		<if test="vatSerial != null and vatSerial != ''">
+ 		 	and a.vatSerial like CONCAT('%', #{vatSerial}, '%')
+ 		</if>
+ 		<if test="vatRemark != null and vatRemark != ''">
+ 		 	and a.vatRemark like CONCAT('%', #{vatRemark}, '%')
+ 		</if>
+ 		<if test="listDateFrom != null and listDateFrom != '' and vatIssueDateTo == null or vatIssueDateTo == '' and vatSerial == null or vatSerial == ''">
+			and a.vatIssueDate Between #{listDateFrom} and now()
+		</if>
+		 group by (case when a.vatType='B' then a.vatSellerCustNo END), (case when a.vatType='S' then a.vatBuyerCustNo END) order by a.vatIssueDate desc
+ 	</select>
+ 	
+ 	<select id="listVatBCnt" resultType="accountDto">
+		select count(*), a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum, (a.vatTax + a.vatAmount) as vatTotal from swc_vat a
+				   left join swc_cust b on a.vatSellerCustNo = b.custNo
+				   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+				   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'B'
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		 group by a.vatSerial order by a.vatIssueDate desc
+	</select>
+ 	
+ 	<select id="listVatB" resultType="accountDto">
+		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum, (a.vatTax + a.vatAmount) as vatTotal from swc_vat a
+				   left join swc_cust b on a.vatSellerCustNo = b.custNo
+				   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+				   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'B'
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		 group by a.vatSerial order by a.vatIssueDate desc
+	</select>
+
+	<select id="listVatT" resultType="accountDto">
+		select a.*, b.custName vatSellerName, c.custName vatBuyerName, d.contNo, d.contTitle from swc_vat a
+		left join swc_cust b on a.vatSellerCustNo = b.custNo
+		left join swc_cust c on a.vatBuyerCustNo = c.custNo
+		left join swc_cont d on a.contNo = d.contNo
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'T'
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and a.regDate Between #{listDateFrom} and now()
+		</if>
+		order by a.vatIssueDate desc
+	</select>
+	
+	<select id="selectExcelData" resultType="accountDto">
+		select a.*, b.custName as vatSellerName, b.custVatno AS proCustVatNo, b.custBossname AS proBossName, c.custName as vatBuyerName, c.custVatno AS recCustVatNo, c.custBossname AS recBossName from swc_vat a
+		left join swc_cust b on a.vatSellerCustNo = b.custNo
+		left join swc_cust c on a.vatBuyerCustNo = c.custNo
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'T' and a.vatId = #{vatId}
+	</select>
+
+	<select id="listVatSearchB" resultType="accountDto">
+ 		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum, (a.vatTax + a.vatAmount) as vatTotal from swc_vat a
+			   left join swc_cust b on a.vatSellerCustNo = b.custNo
+			   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+			   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'B' 
+		<if test="vatSellerCustNo != null and vatSellerCustNo != ''">
+			and a.vatSellerCustNo = #{vatSellerCustNo}
+		</if>
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		<if test="vatTotalFrom != null and vatTotalFrom !=''">
+			and (a.vatTax + a.vatAmount) Between #{vatTotalFrom} and #{vatTotalTo}
+		</if>
+		 group by a.vatSerial order by a.vatIssueDate desc
+ 	</select>
+ 	
+ 	<select id="listVatS" resultType="accountDto">
+		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum, (a.vatTax + a.vatAmount) as vatTotal from swc_vat a
+				   left join swc_cust b on a.vatSellerCustNo = b.custNo
+				   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+				   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'S'
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		 group by a.vatSerial order by a.vatIssueDate desc
+	
+	</select>
+
+	<select id="listVatSearchS" resultType="accountDto">
+ 		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum, (a.vatTax + a.vatAmount) as vatTotal from swc_vat a
+			   left join swc_cust b on a.vatSellerCustNo = b.custNo
+			   left join swc_cust c on a.vatBuyerCustNo = c.custNo
+			   left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'S' 
+		<if test="vatBuyerCustNo != null and vatBuyerCustNo != ''">
+			and a.vatBuyerCustNo = #{vatBuyerCustNo}
+		</if>
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		<if test="vatTotalFrom != null and vatTotalFrom !=''">
+			and (a.vatTax + a.vatAmount) Between #{vatTotalFrom} and #{vatTotalTo}
+		</if>
+		 group by a.vatSerial order by a.vatIssueDate desc
+ 	</select>
+
+	<select id="listVatSearchT" resultType="accountDto">
+		select a.*, b.custName vatSellerName, c.custName vatBuyerName, sum(d.dataAmt) vatSum from swc_vat a
+		left join swc_cust b on a.vatSellerCustNo = b.custNo
+		left join swc_cust c on a.vatBuyerCustNo = c.custNo
+		left join swc_soppdata01 d on a.vatSerial = d.vatSerial and d.attrib not like 'XXX%'
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%' and a.vatType = 'T'
+		<if test="vatSellerCustNo != null and vatSellerCustNo != ''">
+			and a.vatSellerCustNo = #{vatSellerCustNo}
+		</if>
+		<if test="vatType != null and vatType != ''">
+			and a.vatType = #{vatType}
+		</if>
+		<if test="vatIssueDateTo != null and vatIssueDateTo != ''">
+			and a.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		<if test="vatSerial != null and vatSerial != ''">
+			and a.vatSerial like CONCAT('%', #{vatSerial}, '%')
+		</if>
+		<if test="vatRemark != null and vatRemark != ''">
+			and a.vatRemark like CONCAT('%', #{vatRemark}, '%')
+		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and vatIssueDateTo == null or vatIssueDateTo == '' and vatSerial == null or vatSerial == ''">
+			and a.vatIssueDate Between #{listDateFrom} and now()
+		</if>
+		group by a.vatSerial order by a.vatIssueDate desc
+	</select>
+
+ 	<select id="custVatListModal" resultType="accountDto">
+ 		select a.*, b.custName vatSellerName, c.custName vatBuyerName, e.baclogTime, d.remain_data from swc_vat a
+ 		left join swc_cust b on a.vatSellerCustNo = b.custNo
+		left join swc_cust c on a.vatBuyerCustNo = c.custNo
+		LEFT JOIN swc_bacledger_detail d ON a.vatSerial = d.linkDocno
+        LEFT JOIN swc_bacledger e ON d.baclogId = e.baclogId
+ 		where a.compNo = #{compNo} and a.vatType = #{vatType} and a.attrib not like 'XXX%'
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+ 		and (a.vatBuyerCustNo = #{custNo} or a.vatSellerCustNo = #{custNo}) order by a.vatIssueDate desc;
+ 	</select>
+ 	
+ 	<select id="bacCalSelect" resultType="accountDto">
+		SELECT SUM(inAmt) AS inAmt, SUM(outAmt) AS outAmt from swc_bacledger 
+		where bacSerial = #{bacSerial} and attrib not like 'XXX%' 
+		and bacDesc like CONCAT('%', #{bacDesc}, '%')
+		<if test="baclogTimeFrom != null and baclogTimeFrom != ''">
+			and baclogTime Between #{baclogTimeFrom} and #{baclogTimeTo}
+		</if>
+		<if test="linkDoc != null and linkDoc != ''">
+			and linkDoc = #{linkDoc}
+		</if>
+		order by baclogTime desc;
+	</select>
+ 
+	<select id="bacSelectList" resultType="accountDto">
+		select * from swc_bacledger 
+		where bacSerial = #{bacSerial} and attrib not like 'XXX%' 
+		<if test="bacDesc != null and bacDesc != ''">
+			and bacDesc like CONCAT('%', #{bacDesc}, '%')
+		</if>
+		<if test="baclogTimeFrom != null and baclogTimeFrom != ''">
+			and baclogTime Between #{baclogTimeFrom} and #{baclogTimeTo}
+		</if>
+		<if test="linkDoc != null and linkDoc != ''">
+			and linkDoc = #{linkDoc}
+		</if>
+		order by baclogTime desc limit #{betFirstNum}, #{betLastNum};
+	</select>
+	
+	<select id="bacSelectListCnt" resultType="accountDto">
+		select count(*) as resultCount from swc_bacledger
+		where bacSerial = #{bacSerial} and attrib not like 'XXX%'
+		<if test="bacDesc != null and bacDesc != ''">
+			and bacDesc like CONCAT('%', #{bacDesc}, '%')
+		</if>
+		<if test="baclogTimeFrom != null and baclogTimeFrom != ''">
+			and baclogTime Between #{baclogTimeFrom} and #{baclogTimeTo}
+		</if>
+		<if test="linkDoc != null and linkDoc != ''">
+			and linkDoc = #{linkDoc}
+		</if>
+		order by baclogTime desc 
+	</select>
+	
+	<select id="cardSelectList" resultType="accountDto">
+		select * from swc_cardledger
+		where compNo = #{compNo} and cardDisNum = #{cardDisNum} 
+		<if test="appDateFrom != null and appDateFrom != ''">
+			and appDate Between #{appDateFrom} and #{appDateTo}
+		</if>
+		<if test="appContents != null and appContents != ''">
+			and appContents like CONCAT('%', #{appContents}, '%')
+		</if>
+		<if test="appSerial != null and appSerial != ''">
+			and appSerial like CONCAT('%', #{appSerial}, '%')
+		</if>
+		order by appDate desc limit #{betFirstNum}, #{betLastNum};
+	</select>
+	
+	<select id="cardSelectListCount" resultType="accountDto">
+		select count(*) as resultCount from swc_cardledger 
+		where compNo = #{compNo} and cardDisNum = #{cardDisNum}
+		<if test="appDateFrom != null and appDateFrom != ''">
+			and appDate Between #{appDateFrom} and #{appDateTo}
+		</if>
+		<if test="appContents != null and appContents != ''">
+			and appContents like CONCAT('%', #{appContents}, '%')
+		</if>
+		<if test="appSerial != null and appSerial != ''">
+			and appSerial like CONCAT('%', #{appSerial}, '%')
+		</if>
+		;
+	</select>
+	
+	<select id="detailVat" resultType="accountDto">
+		select * from swc_vat where vatId = #{vatId};
+	</select>
+
+	<select id="listVatitems" resultType="accountDto">
+		select * from swc_vatdata where vatId = #{vatId};
+	</select>
+
+	<select id="modalVatB" resultType="accountDto">
+		select a.*, b.custName from swc_vat a 
+		left join swc_cust b on a.vatSellerCustNo = b.custNo 
+		WHERE a.vatStatus in ('B1','B3') and a.attrib not like 'XXX%' AND a.linkedcheck = 1 and a.compNo = #{compNo} 
+		<if test="custName_modal != '' and custName_modal != null">
+			and b.custName like CONCAT('%', #{custName_modal}, '%')
+		</if>
+		<if test="regSDate_modal != '' and regSDate_modal != null">
+			and a.vatIssueDate Between #{regSDate_modal} and #{regEDate_modal}
+		</if>
+		order by a.vatIssueDate desc limit #{betFirstNum}, #{betLastNum};
+	</select>
+	
+	<select id="modalVatListB" resultType="accountDto">
+		select a.*, b.custName from swc_vat a 
+		left join swc_cust b on a.vatSellerCustNo = b.custNo 
+		WHERE a.vatStatus in ('B1','B3') and a.attrib not like 'XXX%' AND a.linkedcheck = 1 and a.compNo = #{compNo} 
+		and a.vatIssueDate Between #{regSDate_modal} and #{regEDate_modal}
+		order by a.vatIssueDate desc;
+	</select>
+	
+	<select id="modalVatBCnt" resultType="accountDto">
+		select count(*) as resultCount from swc_vat a 
+		left join swc_cust b on a.vatSellerCustNo = b.custNo 
+		WHERE a.vatStatus in ('B1','B3') and a.attrib not like 'XXX%' AND a.linkedcheck = 1 and a.compNo = #{compNo} 
+		<if test="custName_modal != '' and custName_modal != null">
+			and b.custName like CONCAT('%', #{custName_modal}, '%')
+		</if>
+		<if test="regSDate_modal != '' and regSDate_modal != null">
+			and a.vatIssueDate Between #{regSDate_modal} and #{regEDate_modal}
+		</if>
+		order by a.vatIssueDate desc
+	</select>
+	<select id="modalVatS" resultType="accountDto">
+		select a.*, b.custName from swc_vat a 
+		left join swc_cust b on a.vatBuyerCustNo = b.custNo 
+		WHERE a.vatStatus in ('S1', 'S3') and a.attrib not like 'XXX%' AND a.linkedcheck = 1 and a.compNo = #{compNo} 
+		<if test="custName_modal != '' and custName_modal != null">
+			and b.custName like CONCAT('%', #{custName_modal}, '%')
+		</if>
+		<if test="regSDate_modal != '' and regSDate_modal != null">
+			and a.vatIssueDate Between #{regSDate_modal} and #{regEDate_modal}
+		</if>
+		order by a.vatIssueDate desc limit #{betFirstNum}, #{betLastNum};
+	</select>
+	<select id="modalVatSCnt" resultType="accountDto">
+		select count(*) as resultCount from swc_vat a 
+		left join swc_cust b on a.vatBuyerCustNo = b.custNo 
+		WHERE a.vatStatus in ('S1','S3') and a.attrib not like 'XXX%' AND a.linkedcheck = 1 and a.compNo = #{compNo} 
+		<if test="custName_modal != '' and custName_modal != null">
+			and b.custName like CONCAT('%', #{custName_modal}, '%')
+		</if>
+		<if test="regSDate_modal != '' and regSDate_modal != null">
+			and a.vatIssueDate Between #{regSDate_modal} and #{regEDate_modal}
+		</if>
+		order by a.vatIssueDate desc
+	</select>
+	<select id="checkVat" resultType="accountDto">
+		select count(*) as resultCount from swc_vat where vatSerial = #{vatSerial} and attrib not like 'XXX%'
+	</select>
+	
+	<select id="checkBac" resultType="accountDto">
+		select count(*) as resultCount from swc_bacledger where bacSerial = #{bacSerial} and baclogTime = #{baclogTime} and attrib not like 'XXX%'
+	</select>
+	
+	<select id="cardCheck" resultType="accountDto">
+		select count(*) as resultCount from swc_cardledger where appSerial = #{appSerial} and attrib not like 'XXX%'
+	</select>
+	
+	<select id="baclist" resultType="accountDto">
+		select c.desc03 bacTypeN ,b.desc03 bankCodeN ,a.*, d.baclogTime, d.balanceAmt from swc_bac a
+	   	left join swc_code b on b.code03 = a.bankCode
+	   	LEFT join swc_code c on c.code03 = a.bacType
+	   	LEFT JOIN 
+	   	(SELECT * FROM(
+			SELECT * 
+				FROM swc_bacledger 
+				WHERE (bacSerial, baclogTime) IN (
+			SELECT bacSerial, MAX(baclogTime)
+			FROM swc_bacledger where attrib not like 'XXX%' GROUP BY bacSerial
+			)
+			ORDER BY baclogTime DESC
+		)t
+		GROUP BY t.bacSerial) d ON a.bacSerial = d.bacSerial
+				where a.compNo = #{compNo} and a.attrib not like 'XXX%';
+	</select>
+
+	<select id="listCard" resultType="accountDto">
+		select a.*, b.desc03 bankCodeN, c.userName from swc_card a
+	   	left join swc_code b on b.code03 = a.cardBank
+	   	LEFT JOIN swc_user c ON a.user_card = c.userNo
+		where a.compNo = #{compNo} and a.attrib not like 'XXX%';
+	</select>
+
+	<select id="baclog" resultType="accountDto">
+		select * from swc_bacledger where bacSerial = #{bacSerial} and attrib not like 'XXX%' order by baclogTime;
+	</select>
+	
+	<select id="selectVatCust" resultType="accountDto">
+		select count(*) as count, custNo as getNo from swc_cust where custVatno = #{vatNo}
+	</select>
+
+	<select id="treqCardList" resultType="accountDto">
+		SELECT b.appSerial, b.appDate, a.cardSerial, b.appContents, SUM(b.appAmount) AS appAmount, b.appExchange from swc_card a
+		LEFT JOIN swc_cardledger b ON a.cardDisNum = b.cardDisNum and b.attrib NOT LIKE "XXX%"
+		WHERE a.user_card = #{userNo} AND a.compNo = #{compNo} AND a.attrib NOT LIKE "XXX%"
+		GROUP BY b.appSerial ORDER BY b.appDate DESC
+	</select>
+	
+	<select id="Search_treqCardList" resultType="accountDto">
+		SELECT b.appSerial, b.appDate, a.cardSerial, b.appContents, SUM(b.appAmount) AS appAmount, b.appExchange from swc_card a
+		LEFT JOIN swc_cardledger b ON a.cardDisNum = b.cardDisNum and b.attrib NOT LIKE "XXX%"
+		WHERE a.user_card = #{docUserNo} AND a.compNo = #{compNo} AND a.attrib NOT LIKE "XXX%" AND b.appDate BETWEEN #{vatSdate} AND #{vatEdate}
+		GROUP BY b.appSerial ORDER BY b.appDate DESC
+	</select>
+	
+	<select id="vatSelectList" resultType="accountDto">
+		select * from swc_vat where contNo = #{contNo} and attrib not like 'XXX%' order by vatId asc;
+	</select>
+	
+	<select id="vatHtmlListB" resultType="accountDto">
+		select a.*, rb.custName AS recCustName, rb.custBossname AS recBossName, rc.custAddr AS recCustAddrFirst, rc.custAddr2 AS recCustAddrLast, rd.custVattype AS recCustVatType, rd.custVatbiz AS recCustVatBiz, 
+		pb.custName AS proCustName, pb.custBossname AS proBossName, pb.custEmail AS proCustEmail, pc.custAddr AS proCustAddrFirst, pc.custAddr2 AS proCustAddrLast, pd.custVattype AS proCustVatType, pd.custVatbiz AS proCustVatBiz, pd.custVatno AS proCustVatNo 
+		from swc_vat a
+		LEFT JOIN swc_cust rb on a.vatSellerCustNo = rb.custNo
+		LEFT JOIN swc_custdata02 rc ON a.vatSellerCustNo = rc.custNo
+		LEFT JOIN swc_custdata rd ON a.vatSellerCustNo = rd.custNo and rd.attrib not like 'XXX%'
+		LEFT JOIN swc_cust pb on a.vatBuyerCustNo = pb.custNo
+		LEFT JOIN swc_custdata02 pc ON a.vatBuyerCustNo = pc.custNo
+		LEFT JOIN swc_custdata pd ON a.vatBuyerCustNo = pd.custNo and pd.attrib not like 'XXX%'
+		where a.vatSerial = #{vatSerial} and a.vatType = #{vatType} and a.attrib not like 'XXX%'
+	</select>
+	
+	<select id="vatHtmlListS" resultType="accountDto">
+		select a.*, rb.custName AS recCustName, rb.custBossname AS recBossName, rc.custAddr AS recCustAddrFirst, rc.custAddr2 AS recCustAddrLast, rd.custVattype AS recCustVatType, rd.custVatbiz AS recCustVatBiz, 
+		pb.custName AS proCustName, pb.custBossname AS proBossName, pb.custEmail AS proCustEmail, pc.custAddr AS proCustAddrFirst, pc.custAddr2 AS proCustAddrLast, pd.custVattype AS proCustVatType, pd.custVatbiz AS proCustVatBiz, pd.custVatno AS proCustVatNo 
+		from swc_vat a
+		LEFT JOIN swc_cust rb on a.vatBuyerCustNo = rb.custNo
+		LEFT JOIN swc_custdata02 rc ON a.vatBuyerCustNo = rc.custNo
+		LEFT JOIN swc_custdata rd ON a.vatBuyerCustNo = rd.custNo and rd.attrib not like 'XXX%'
+		LEFT JOIN swc_cust pb on a.vatSellerCustNo = pb.custNo
+		LEFT JOIN swc_custdata02 pc ON a.vatSellerCustNo = pc.custNo
+		LEFT JOIN swc_custdata pd ON a.vatSellerCustNo = pd.custNo and pd.attrib not like 'XXX%'
+		where a.vatSerial = #{vatSerial} and a.vatType = #{vatType} and a.attrib not like 'XXX%'
+	</select>
+	
+	<select id="custSelectVatList" resultType="accountDto">
+		SELECT a.*, sum(a.vatTax) as sumVatTax, sum(a.vatAmount) as sumVatAmount, b.custName FROM swc_vat a
+		LEFT JOIN swc_cust b ON a.vatBuyerCustNo = b.custNo
+		WHERE a.vatBuyerCustNo != 0 and a.compNo = #{compNo}
+		<if test="vatBuyerCustNo != null and vatBuyerCustNo != ''">
+			and a.vatBuyerCustNo = #{vatBuyerCustNo}
+		</if>
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		GROUP BY a.vatBuyerCustNo order by b.custName asc limit #{betFirstNum}, #{betLastNum}
+	</select>
+	
+	<select id="custBalanceS" resultType="accountDto">
+		select * from swc_cust_balance where compNo = #{compNo} and settleYear = #{selectYear} and custNo = #{vatBuyerCustNo} and settleCRbalance IS NOT NULL
+	</select>
+	
+	<select id="custBalanceB" resultType="accountDto">
+		select * from swc_cust_balance where compNo = #{compNo} and settleYear = #{selectYear} and custNo = #{vatSellerCustNo} and settleDRbalance IS NOT NULL
+	</select>
+	
+	<select id="custVatListCount" resultType="accountDto">
+		SELECT a.* FROM swc_vat a
+		LEFT JOIN swc_cust b ON a.vatBuyerCustNo = b.custNo
+		WHERE a.vatBuyerCustNo != 0 and a.compNo = #{compNo}
+		<if test="vatBuyerCustNo != null and vatBuyerCustNo != ''">
+			and a.vatBuyerCustNo = #{vatBuyerCustNo}
+		</if>
+		<if test="vatIssueDateFrom != null and vatIssueDateFrom !=''">
+			and a.vatIssueDate Between #{vatIssueDateFrom} and #{vatIssueDateTo}
+		</if>
+		GROUP BY a.vatBuyerCustNo
+	</select>
+
+	<select id="custVatListHtmlS" resultType="accountDto">
+		SELECT * FROM(
+
+			SELECT a.detailId, a.compNo, a.linkDocno, b.vatProductName, c.baclogTime AS vatIssueDate, a.receive_data AS vatTotal, e.settleCRbalance FROM swc_bacledger_detail a 
+			LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial 
+			LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId 
+			LEFT JOIN swc_cust d ON b.vatBuyerCustNo = d.custNo 
+			LEFT JOIN swc_cust_balance e ON e.custNo = #{vatBuyerCustNo} AND e.settleYear = #{selectYear}
+			WHERE d.custNo = #{vatBuyerCustNo} AND c.baclogTime BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} GROUP BY a.detailId
+			
+			UNION ALL
+			
+			SELECT "0" as detailId, a.compNo, b.vatSerial, b.vatProductName, b.vatIssueDate, b.test AS 
+			vatTotal, c.settleCRbalance FROM swc_cust a 
+			LEFT JOIN swc_vat b ON a.custNo = b.vatBuyerCustNo AND b.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} AND b.attrib NOT LIKE 'XXX%' 
+			LEFT JOIN swc_cust_balance c ON a.custNo = c.custNo AND c.settleYear = #{selectYear}
+			WHERE a.compNo = #{compNo} and a.custNo = #{vatBuyerCustNo} and b.vatType = 'S' GROUP BY b.vatSerial
+			
+		) AS a
+		ORDER BY a.vatIssueDate
+	</select>
+	
+	<select id="custVatListHtmlB" resultType="accountDto">
+		SELECT * FROM(
+		
+			SELECT a.detailId, a.compNo, a.linkDocno, b.vatProductName, c.baclogTime AS vatIssueDate, a.receive_data AS vatTotal, e.settleDRbalance FROM swc_bacledger_detail a 
+			LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial 
+			LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId 
+			LEFT JOIN swc_cust d ON b.vatSellerCustNo = d.custNo 
+			LEFT JOIN swc_cust_balance e ON e.custNo = #{vatSellerCustNo} AND e.settleYear = #{selectYear}
+			WHERE d.custNo = #{vatSellerCustNo} AND c.baclogTime BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} GROUP BY a.detailId
+			
+			UNION ALL
+			
+			SELECT "0" as detailId, a.compNo, b.vatSerial, b.vatProductName, b.vatIssueDate, b.test AS 
+			vatTotal, c.settleDRbalance FROM swc_cust a 
+			LEFT JOIN swc_vat b ON a.custNo = b.vatSellerCustNo AND b.vatIssueDate BETWEEN #{vatIssueDateFrom} and #{vatIssueDateTo} AND b.attrib NOT LIKE 'XXX%' 
+			LEFT JOIN swc_cust_balance c ON a.custNo = c.custNo AND c.settleYear = #{selectYear} 
+			WHERE a.compNo = #{compNo} and a.custNo = #{vatSellerCustNo} and b.vatType = 'B' GROUP BY b.vatSerial
+		
+		) AS a
+		ORDER BY a.vatIssueDate
+	</select>
+	
+	<select id="reloadVatListB" resultType="accountDto">
+		select a.*, b.custName, c.regDate as baclogTime from swc_vat a
+		left join swc_bacledger_detail c on a.vatserial = c.linkDocno
+		<if test='vatType == "S"'>
+			left join swc_cust b on a.vatSellerCustNo = b.custNo
+		</if>
+		<if test='vatType == "B"'>
+			left join swc_cust b on a.vatBuyerCustNo = b.custNo
+		</if>
+		where a.compNo = #{compNo} and a.contNo = #{contNo} and a.attrib not like 'XXX%' and a.contNo != 0 and a.vatType = #{vatType}
+	</select>
+
+	<insert id="insertbacledger">
+		insert into swc_bacledger
+		(
+			compNo,
+			bacSerial,
+			bacDesc,
+			inAmt,
+			outAmt,
+			baclogTime,
+			logType,
+			logRemark,
+			balanceAmt,
+			branchCode,
+			linkDoc,
+			difference_price,
+			regDate,
+			attrib 
+		) 
+		values 
+		(
+			#{compNo},
+			#{bacSerial},
+			#{bacDesc},
+			#{inAmt},
+			#{outAmt},
+			#{baclogTime},
+			#{logType},
+			#{logRemark},
+			#{balanceAmt},
+			#{branchCode},
+			#{linkDoc},
+			#{difference_price},
+			now(),
+			'10000'
+		);
+	</insert>
+	
+	<insert id="insertCardLedger">
+		insert into swc_cardledger
+		(
+			compNo,
+			cardSerial,
+			cardDisNum,
+			appContents,
+			appSerial,
+			useDivision,
+			salesType,
+			instPeriod,
+			appAmount,
+			appExchange,
+			appDate,
+			appTime,
+			regDate,
+			attrib 
+		) 
+		values 
+		(
+			#{compNo},
+			#{cardSerial},
+			#{cardDisNum},
+			#{appContents},
+			#{appSerial},
+			#{useDivision},
+			#{salesType},
+			#{instPeriod},
+			#{appAmount},
+			#{appExchange},
+			#{appDate},
+			#{appTime},
+			now(),
+			'10000'
+		);
+	</insert>
+
+	<insert id="insertbac">
+		insert into swc_bac
+		(
+			bankCode,
+			compNo,
+			bacNo,
+			bacSerial,
+			bacIssueDate,
+			lastUpdTime,
+			bacOwner,
+			bacType,
+			bacBalance,
+			bacMemo,
+			regDate,
+			attrib
+		) 
+		values 
+		(
+			#{bankCode},
+			#{compNo},
+			#{bacNo},
+			#{bacSerial},
+			#{bacIssueDate},
+			#{lastUpdTime},
+			#{bacOwner},
+			#{bacType},
+			#{bacBalance},
+			#{bacMemo},
+			now(),
+			'100001'
+		);
+	</insert>
+	
+	<insert id="insertCard">
+		insert into swc_card
+		(
+			compNo,
+			cardSerial,
+			cardDisNum,
+			cardDivision,
+			cardBank,
+			cardStatus,
+			cardMemo,
+			cardIssueDate,
+			regDate,
+			attrib
+		) 
+		values 
+		(
+			#{compNo},
+			#{cardSerial},
+			#{cardDisNum},
+			#{cardDivision},
+			#{cardBank},
+			#{cardStatus},
+			#{cardMemo},
+			#{cardIssueDate},
+			now(),
+			'100001'
+		);
+	</insert>
+
+<insert id="insertVat">
+	insert into swc_vat
+	(
+			compNo,
+			vatBuyerCustNo,
+			vatSellerCustNo,
+			vatEmail,
+			vatStatus,
+			vatNo,
+			vatSerial,
+			vatProductName,
+			vatIssueDate,
+			vatTradeDate,
+			vatTransDate,
+			vatType,
+			vatTax,
+			vatAmount,
+			vatNet,
+			vatQuan,
+			vatStandard,
+			vatBillType,
+			vatRecType,
+			vatRemark,
+			vatIssueType,
+			linkedDocNo,
+			modal_vatmemo,
+			test,
+			vatMemo,
+			regDate,
+	 		attrib)
+		values 
+	(
+		#{compNo},
+		#{vatBuyerCustNo},
+		#{vatSellerCustNo},
+		#{vatEmail},
+		#{vatStatus},
+		#{vatNo},
+		#{vatSerial},
+		#{vatProductName},
+		#{vatIssueDate},
+		#{vatTradeDate},
+		#{vatTransDate},
+		#{vatType},
+		#{vatTax},
+		#{vatAmount},
+		#{vatNet},
+		#{vatQuan},
+		#{vatStandard},
+		#{vatBillType},
+		#{vatRecType},
+		#{vatRemark},
+		#{vatIssueType},
+		#{linkedDocNo},
+		#{modal_vatmemo},
+		#{test},
+		#{vatMemo},
+		now(),
+		'100001'
+	);
+</insert>
+
+	<insert id="insertVatItem">
+		insert into swc_vatdata
+(vatId,
+tradeDate,
+itemNo,
+itemTitle,
+itemUnit,
+itemNetprice,
+itemQuty,
+itemAmount,
+itemVat,
+itemRemark,
+linkedDocNo,
+regDate,
+attrib) values (#{vatId},
+				#{tradeDate},
+				#{itemNo},
+				#{itemTitle},
+				#{itemUnit},
+				#{itemNetprice},
+				#{itemQuty},
+				#{itemAmount},
+				#{itemVat},
+				#{itemRemark},
+				#{linkedDocNo},
+				now(),
+				'100001');
+	</insert>
+	
+	<insert id="bacCheckConnect">
+		insert into swc_bacledger_detail
+		(
+			compNo,
+			baclogId,
+			linkType,
+			linkDocno,
+			regDate,
+			receive_data,
+			remain_data,
+			attrib	
+		)
+		values
+		(
+			#{compNo},
+			#{baclogId},
+			#{linkType},
+			#{linkDocno},
+			now(),
+			#{modal_receive_data_sole},
+			#{modal_vatmemo_secound},
+			'10000'			
+		);
+	</insert>
+	
+	<insert id="billInsert">
+		insert into swc_vat
+		(
+			compNo,
+			contNo,
+			vatBuyerCustNo,
+			vatSellerCustNo,
+			vatEmail,
+			vatStatus,
+			vatNo,
+			vatProductName,
+			vatIssueDate,
+			vatTradeDate,
+			vatBillType,
+			vatRecType,
+			vatStandard,
+			vatQuan,
+			vatNet,
+			vatAmount,
+			vatTax,
+			vatRemark,
+			vatMemo,
+			vatType,
+			regDate,
+	 		attrib
+	 	)
+			values 
+		(
+			#{compNo},
+			#{contNo},
+			#{vatBuyerCustNo},
+			#{vatSellerCustNo},
+			#{vatEmail},
+			#{vatStatus},
+			#{vatNo},
+			#{vatProductName},
+			#{vatIssueDate},
+			#{vatTradeDate},
+			#{vatBillType},
+			#{vatRecType},
+			#{vatStandard},
+			#{vatQuan},
+			#{vatNet},
+			#{vatAmount},
+			#{vatTax},
+			#{vatRemark},
+			#{vatMemo},
+			#{vatType},
+			now(),
+			'100001'
+		);
+	</insert>
+	
+	<insert id="bacDrawInsert" useGeneratedKeys="true" keyProperty="getId">
+	 	<selectKey keyProperty="getId" resultType="int" order="AFTER">
+	        SELECT max(baclogId) from swc_bacledger
+	    </selectKey>
+		insert into swc_bacledger
+		(
+			compNo,
+			bacDesc,
+			inAmt,
+			baclogTime,
+			logType,
+			branchCode,
+			linkDoc,
+			regDate,
+			attrib
+		)
+			values
+		(
+			#{compNo},
+			#{bacDesc},
+			#{inAmt},
+			now(),
+			#{logType},
+			#{branchCode},
+			#{linkDoc},
+			now(),
+			'10000'
+		)
+	</insert>
+	
+	<update id="bacDrawAfterUpdate">
+		<selectKey resultType="BigDecimal" keyProperty="balanceAmt" order="BEFORE">
+			select (balanceAmt - #{outAmt}) from swc_bacledger where bacSerial = #{bacSerial} and compNo = #{compNo} and attrib not like 'XXX%' order by baclogId desc limit 1
+	 	</selectKey>
+		update swc_bacledger set bacSerial = #{bacSerial}, outAmt = #{outAmt}, balanceAmt = #{balanceAmt} where compNo = #{compNo} and baclogId = #{baclogId};
+	</update>
+
+	<update id="updVatStatus">
+		update swc_vat set vatStatus = #{vatStatus} where vatSerial = #{vatSerial} and compNo = #{compNo} and attrib not like 'XXX%';
+	</update>
+	
+	<update id="lastUpdate">
+		update swc_bac set lastUpdTime = now() where bacSerial = #{bacSerial};
+	</update>
+	
+	<update id="lastUpdateCard">
+		update swc_card set lastUpdTime = now() where cardSerial = #{cardSerial};
+	</update>
+	
+	<update id="bacSerialUpdate">
+		update swc_bacledger set linkDoc = #{linkDoc} where baclogId = #{baclogId};
+	</update>
+	
+	<select id="connect_list" resultType="accountDto">
+		select * from swc_soppdata01
+		left join swc_user on swc_soppdata01.userNo = swc_user.userNo
+		LEFT JOIN swc_sopp on swc_soppdata01.soppNo = swc_sopp.soppNo
+		where vatSerial = #{vatSerial} and swc_soppdata01.attrib not like 'XXX%'
+	</select>
+	<update id="updatevatlinkedcheck">
+		update swc_vat set linkedcheck = 0 where vatSerial = #{linkDoc}
+	</update>
+	<update id="sVatToChange">
+		update swc_vat set vatStatus = #{vatStatus}, vatType = #{vatType} where vatId = #{vatId};
+	</update>
+	<update id="updatelogIdlink">
+		update swc_bacledger set linkDoc = 'y'
+		where baclogId = #{baclogId}
+	</update>
+	<update id="updatevatmultilinkedcheck">
+		update swc_vat set linkedcheck = 0 where vatSerial = #{linkDocno}
+	</update>
+	
+	<update id="bacUpdateMemo">
+		update swc_bacledger set bacUpdateMemo = #{bacUpdateMemo} where compNo = #{compNo} and baclogId = #{baclogId};
+	</update>
+	
+	<update id="bacDrawDelect">
+		update swc_bacledger set attrib = 'XXXXX' where compNo = #{compNo} and baclogId = #{baclogId};
+	</update>
+	
+	<update id="productUpdate">
+		update swc_vat set vatMemo = #{vatMemo} where vatSerial = #{vatSerial} and compNo = #{compNo};
+	</update>
+	
+	<select id="bac_connect_list" resultType="accountDto">
+		SELECT * FROM swc_vat WHERE vatSerial = #{vatId}
+	</select>
+	<select id="list_secound_modalVatB_secound" resultType="accountDto">
+		select * from swc_bacledger
+		where baclogId = #{baclogId}
+	</select>
+	<select id="new_bac_connect_list" resultType="accountDto">
+		SELECT b.*, c.custName, d.custName AS custName_sub, a.* FROM swc_bacledger_detail a 
+		left join swc_vat b on a.linkDocno = b.vatSerial
+		LEFT JOIN swc_cust c ON b.vatBuyerCustNo = c.custNo
+		LEFT JOIN swc_cust d on b.vatSellerCustNo = d.custNo
+		WHERE baclogId = #{vatId}
+	</select>
+	<select id="connnectlist_Num" resultType="integer">
+		SELECT COUNT(*) FROM swc_bacledger_detail 
+		WHERE baclogId = #{baclogId}
+	</select>
+	<delete id="deleteconnectlist">
+		delete from swc_bacledger_detail
+		where linkDocno = #{linkDocno}
+	</delete>
+	<delete id="deleteconnectlist_sub">
+		delete from swc_bacledger_detail
+		where linkDocno = #{linkDocno} and baclogId = #{baclogId}
+	</delete>
+	
+	<update id="cancelconnect_linkedcheck">
+		update swc_vat set linkedcheck = 1
+		where vatSerial = #{linkDocno};
+	</update>
+	<select id="searchserial"  resultType="integer">
+		SELECT COUNT(*) FROM swc_bacledger
+		WHERE linkDoc = #{linkDocno}
+	</select>
+	<update id="cancelconnect_linkDoc">
+		update swc_bacledger set linkDoc = 'n'
+		where linkDoc = #{linkDocno}
+	</update>
+	<update id="cancel_connect_final">
+		update swc_bacledger set linkDoc = 'n'
+		where baclogId = #{baclogId}
+	</update>
+	<select id="number_linkDoc" resultType="String">
+		select linkDoc from swc_bacledger
+		where baclogId = #{baclogId}
+	</select>
+	<insert id="change_originlinkDoc">
+			insert into swc_bacledger_detail
+		(
+			compNo,
+			baclogId,
+			linkType,
+			linkDocno,
+			regDate,
+			receive_data,
+			remain_data,
+			attrib	
+		)
+		values
+		(
+			#{compNo},
+			#{baclogId},
+			#{linkType},
+			#{linkDocno},
+			now(),
+			#{modal_receive_data_sole},
+			#{modal_vatmemo_secound},
+			'10000'			
+		);
+	</insert>
+	<select id="dataprice" resultType="accountDto">
+		SELECT * FROM swc_bacledger_detail  a
+		left join swc_vat b ON b.vatSerial = a.linkDocno
+		WHERE a.baclogId = #{baclogId}
+	</select>
+	<select id="dataprice_secound" resultType="accountDto">
+		SELECT * FROM swc_bacledger_detail  a
+		left join swc_vat b ON b.vatSerial = a.linkDocno
+		WHERE a.linkDocno = #{linkDocno}
+	</select>
+	<select id="total_price" resultType="accountDto">
+		SELECT a.inAmt, a.outAmt, b.linkDocno
+		FROM swc_bacledger a
+		left join swc_bacledger_detail b on a.baclogId = b.baclogId
+		WHERE a.baclogId = #{baclogId}
+	</select>
+	<update id="update_s5">
+		update swc_vat set vatStatus = 'S5'
+		where vatSerial = #{linkDocno};
+	</update>
+	<update id="update_s3">
+		update swc_vat set vatStatus = 'S3'
+		where vatSerial = #{linkDocno};
+	</update>
+	<update id="update_b5">
+		update swc_vat set vatStatus = 'B5'
+		where vatSerial = #{linkDocno};
+	</update>
+	<update id="update_b3">
+		update swc_vat set vatStatus = 'B3'
+		where vatSerial = #{linkDocno};
+	</update>
+	<select id="select_vatStatus" resultType="accountDto">
+		select vatStatus from swc_vat
+		where vatSerial = #{linkDocno}
+	</select>
+	<update id="update_vatStatus">
+		update swc_vat set vatStatus = 'S1'
+		where vatSerial = #{linkDocno}
+	</update>
+	<update id="update_vatStatus_B">
+		update swc_vat set vatStatus = 'B1'
+		where vatSerial = #{linkDocno}
+	</update>
+	<select id="endusernamelist" resultType="accountDto">
+		SELECT a.buyrNo, b.custName FROM swc_sopp a
+		LEFT JOIN swc_cust b ON a.buyrNo = b.custNo
+		WHERE a.soppNo = #{soppNo}
+	</select>
+	<select id="endusernamelist_cont" resultType="accountDto">
+		SELECT a.buyrNo, b.custName, a.buyrMemberNo, c.custMname FROM swc_cont a
+		LEFT JOIN swc_cust b ON a.buyrNo = b.custNo
+		LEFT JOIN swc_custdata03 c ON a.buyrMemberNo = c.custData03no
+		WHERE a.contNo = #{contNo}
+	</select>
+	<update id="bacCheckConnect_modal_update">
+		update swc_vat set modal_vatmemo = #{modal_vatmemo}, modal_receive_data = #{modal_receive_data}
+		where vatSerial = #{linkDocno};
+	</update>
+	<select id="checktotalprice_vat_and_detail" resultType="accountDto">
+		SELECT a.*, c.inAmt, sum(c.inAmt) AS total_Amt FROM swc_bacledger_detail a
+		LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial
+		LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId
+		WHERE a.linkDocno = #{linkDocno}
+	</select>
+	<select id="checktotalprice_vat_and_detail_out" resultType="accountDto">
+		SELECT a.*, c.outAmt, sum(c.outAmt) AS total_Amt FROM swc_bacledger_detail a
+		LEFT JOIN swc_vat b ON a.linkDocno = b.vatSerial
+		LEFT JOIN swc_bacledger c ON a.baclogId = c.baclogId
+		WHERE a.linkDocno = #{linkDocno}
+	</select>
+	<select id="detail_Count_equal_baclogId" resultType="integer">
+		SELECT COUNT(*) FROM swc_bacledger_detail
+		WHERE linkDocno = #{linkDocno}
+	</select>
+	<select id="list_secound_modalVatB" resultType="accountDto">
+		select * from swc_bacledger
+		where baclogId = #{baclogId}
+	</select>
+	<update id="bacCheckConnect_modal_baclogId_memo">
+		update swc_bacledger set difference_price = #{difference_price}, difference_memo = #{difference_memo}
+		where baclogId = #{baclogId}
+	</update>
+	<select id="getlicked_price" resultType="accountDto">
+		select * from swc_vat 
+		where vatSerial = #{linkDocno}
+	</select>
+	<select id="getlicked_price_secound" resultType="accountDto">
+		select * from swc_bacledger
+		where baclogId = #{baclogId}
+	</select>
+	<update id="bacCheckConnect_modal_update_secound">
+		update swc_bacledger set difference_price = #{difference_price}
+		where baclogId = #{baclogId}
+	</update>
+	<select id="check_link_vatandbac" resultType="accountDto">
+		SELECT d.bacNo, a.vatProductName, a.modal_receive_data, a.modal_vatmemo, b.regDate, a.vatSerial, a.vatRemark
+		FROM swc_vat a
+		LEFT JOIN swc_bacledger_detail b ON a.vatSerial = b.linkDocno
+		LEFT JOIN swc_bacledger c ON b.baclogId = c.baclogId
+		LEFT JOIN swc_bac d ON c.bacSerial = d.bacSerial
+		where a.compNo = #{compNo} order by d.bacNo desc limit #{betFirstNum}, #{betLastNum};
+	</select>
+	<select id="check_link_vatandbacCnt" resultType="accountDto">
+		SELECT count(*) as resultCount
+		FROM swc_vat a
+		LEFT JOIN swc_bacledger_detail b ON a.vatSerial = b.linkDocno
+		LEFT JOIN swc_bacledger c ON b.baclogId = c.baclogId
+		LEFT JOIN swc_bac d ON c.bacSerial = d.bacSerial
+		where a.compNo = #{compNo};
+	</select>
+	<select id="check_remain_money_from_swc_vat" resultType="accountDto">
+		SELECT * FROM swc_vat 
+		WHERE vatSerial = #{linkDocno};
+	</select>
+	<update id="update_check_remain_money_from_swc_vat">
+		update swc_vat set vatStatus = 'S5'
+		WHERE vatSerial = #{linkDocno}
+	</update>
+	<update id="update_check_remain_money_from_swc_vat_B">
+		update swc_vat set vatStatus = 'B5'
+		WHERE vatSerial = #{linkDocno}
+	</update>
+	<select id="check_lincked_last" resultType="accountDto">
+		select * from swc_vat
+		where vatSerial = #{linkDocno};
+	</select>
+	
+	<select id="gradata" resultType="accountDto">
+		select sst.userNo, su.userName. sst.deptNo, sst.targetType,
+		sst.mm01, sst.mm02, sst.mm03, sst.mm04, sst.mm05
+		sst.mm06, sst.mm07, sst.mm08, sst.mm09, sst.mm10
+		sst.mm11, sst.mm12
+		from swc_sales_target sst
+		left join swc_user su on sst.userNo = su.userNo
+		where sst.compNo = #{compNo} and sst.targetYear = #{targetYear}
+		and sst.targetType = #{targetType} and sst.userNo IN
+	</select>
+	<select id="gradata01" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-01-01' and '2022-01-31' ;
+	</select>
+	<select id="gradata02" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-02-02' and '2022-02-31';
+	</select>
+	<select id="gradata03" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-03-01' and '2022-03-31';
+	</select>
+	<select id="gradata04" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-04-01' and '2022-04-31';
+	</select>
+	<select id="gradata05" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-05-01' and '2022-05-31';
+	</select>
+	<select id="gradata06" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-06-01' and '2022-06-31';
+	</select>
+	<select id="gradata07" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-07-01' and '2022-07-31';
+	</select>
+	<select id="gradata08" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-08-01' and '2022-08-31';
+	</select>
+	<select id="gradata09" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-09-01' and '2022-09-31';
+	</select>
+	<select id="gradata10" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-10-01' and '2022-10-31';
+	</select>
+	<select id="gradata11" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-11-01' and '2022-11-31';
+	</select>
+	<select id="gradata12" resultType="accountDto">
+		select * from swc_vat
+		where (vatStatus = 'S1' or vatStatus = 'S3' or vatStatus = 'S5')
+		and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-12-01' and '2022-12-31';
+	</select>
+	<select id="cnt_mouth_data" resultType="AccountDTO">
+ 			SELECT COUNT(*) AS count FROM swc_vat a
+			WHERE a.attrib not like "XXX%"
+			<choose>
+				<when test="mouth == 1">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-01-01' and '2022-01-31';
+				</when>
+				<when test="mouth == 2">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-02-01' and '2022-02-31';
+				</when>
+				<when test="mouth == 3">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-03-01' and '2022-03-31';
+				</when>
+				<when test="mouth == 4">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-04-01' and '2022-04-31';
+				</when>
+				<when test="mouth == 5">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-05-01' and '2022-05-31';
+				</when>
+				<when test="mouth == 6">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-06-01' and '2022-06-31';
+				</when>
+				<when test="mouth == 7">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-07-01' and '2022-07-31';
+				</when>
+				<when test="mouth == 8">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-08-01' and '2022-08-31';
+				</when>
+				<when test="mouth == 9">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-09-01' and '2022-09-31';
+				</when>
+				<when test="mouth == 10">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-10-01' and '2022-10-31';
+	 			</when>
+	 			<when test="mouth == 11">
+	 				and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-11-01' and '2022-11-31';
+	 			</when>
+	 			<when test="mouth == 12">
+	 				and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-12-01' and '2022-12-31';
+	 			</when>
+	 		</choose>
+ 		</select>
+ 		<select id="cnt_mouth_data_last" resultType="AccountDTO">
+ 			SELECT COUNT(*) AS count FROM swc_vat a
+			WHERE a.attrib not like "XXX%"
+			<choose>
+				<when test="last_mouth == 1">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-01-01' and '2022-01-31';
+				</when>
+				<when test="last_mouth == 2">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-02-01' and '2022-02-31';
+				</when>
+				<when test="last_mouth == 3">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-03-01' and '2022-03-31';
+				</when>
+				<when test="last_mouth == 4">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-04-01' and '2022-04-31';
+				</when>
+				<when test="last_mouth == 5">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-05-01' and '2022-05-31';
+				</when>
+				<when test="last_mouth == 6">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-06-01' and '2022-06-31';
+				</when>
+				<when test="last_mouth == 7">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-07-01' and '2022-07-31';
+				</when>
+				<when test="last_mouth == 8">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-08-01' and '2022-08-31';
+				</when>
+				<when test="last_mouth == 9">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-09-01' and '2022-09-31';
+				</when>
+				<when test="last_mouth == 10">
+					and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-10-01' and '2022-10-31';
+	 			</when>
+	 			<when test="last_mouth == 11">
+	 				and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-11-01' and '2022-11-31';
+	 			</when>
+	 			<when test="last_mouth == 12">
+	 				and date_format(vatIssueDate, '%Y-%m-%d') BETWEEN '2022-12-01' and '2022-12-31';
+	 			</when>
+ 			</choose>
+ 		</select>
+ 		<select id="user_chart_target" resultType="AccountDTO">
+			<choose>
+				<when test="mouth == 1">
+					SELECT b.userNo, b.userName, a.mm01 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 2">
+					SELECT b.userNo, b.userName, a.mm02 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 3">
+					SELECT b.userNo, b.userName, a.mm03 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 4">
+					SELECT b.userNo, b.userName, a.mm04 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 5">
+					SELECT b.userNo, b.userName, a.mm05 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 6">
+					SELECT b.userNo, b.userName, a.mm06 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 7">
+					SELECT b.userNo, b.userName, a.mm07 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 8">
+					SELECT b.userNo, b.userName, a.mm08 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 9">
+					SELECT b.userNo, b.userName, a.mm09 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 10">
+					SELECT b.userNo, b.userName, a.mm10 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 11">
+					SELECT b.userNo, b.userName, a.mm11 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+				<when test="mouth == 12">
+					SELECT b.userNo, b.userName, a.mm12 AS month_target, a.mm01 AS test FROM swc_sales_target a
+					LEFT JOIN swc_user b ON a.userNo = b.userNo
+					WHERE a.targetYear = "2022" AND a.attrib NOT LIKE "XXX%" AND a.mm01 != 0 and a.compNo = #{compNo}
+				</when>
+			</choose>
+ 		</select>
+ 		<select id="user_now_graph" resultType="AccountDTO">
+ 			SELECT c.userNo, c.userName , SUM(a.test) AS test from swc_vat a
+			JOIN swc_cont b ON a.contNo = b.contNo
+			LEFT JOIN swc_user c ON b.userNo = c.userNo
+			WHERE a.attrib NOT LIKE "XXX%" AND (a.vatStatus = "S5" OR a.vatStatus = "S3") and a.compNo = #{compNo}
+			<choose>
+				<when test="mouth == 1">
+					and a.vatIssueDate BETWEEN "2022-01-01" and "2022-01-31"
+				</when>
+				<when test="mouth == 2">
+					and a.vatIssueDate BETWEEN "2022-02-01" and "2022-02-31"
+				</when>
+				<when test="mouth == 3">
+					and a.vatIssueDate BETWEEN "2022-03-01" and "2022-03-31"
+				</when>
+				<when test="mouth == 4">
+					and a.vatIssueDate BETWEEN "2022-04-01" and "2022-04-31"
+				</when>
+				<when test="mouth == 5">
+					and a.vatIssueDate BETWEEN "2022-05-01" and "2022-05-31"
+				</when>
+				<when test="mouth == 6">
+					and a.vatIssueDate BETWEEN "2022-06-01" and "2022-06-31"
+				</when>
+				<when test="mouth == 7">
+					and a.vatIssueDate BETWEEN "2022-07-01" and "2022-07-31"
+				</when>
+				<when test="mouth == 8">
+					and a.vatIssueDate BETWEEN "2022-08-01" and "2022-08-31"
+				</when>
+				<when test="mouth == 9">
+					and a.vatIssueDate BETWEEN "2022-09-01" and "2022-09-31"
+				</when>
+				<when test="mouth == 10">
+					and a.vatIssueDate BETWEEN "2022-10-01" and "2022-10-31"
+				</when>
+				<when test="mouth == 11">
+					and a.vatIssueDate BETWEEN "2022-11-01" and "2022-11-31"
+				</when>
+				<when test="mouth == 12">
+					and a.vatIssueDate BETWEEN "2022-12-01" and "2022-12-31"
+				</when>
+			</choose>
+			GROUP BY c.userNo;
+ 		</select>
+ 		<select id="modalVatB_main" resultType="AccountDTO">
+ 			select a.*, b.custName from swc_vat a left join swc_cust b on a.vatSellerCustNo = b.custNo where a.vatStatus in ('B1','B3','B5') and a.attrib not like 'XXX%' AND a.linkedcheck in (0, 1) and a.compNo = #{compNo} order by a.vatIssueDate desc
+ 		</select>
+ 		<select id="modalVatS_main" resultType="AccountDTO">
+ 			select a.*, b.custName from swc_vat a left join swc_cust b on a.vatBuyerCustNo = b.custNo where a.vatStatus in ('S1','S3','S5') and a.attrib not like 'XXX%' AND a.linkedcheck in (0, 1) and a.compNo = #{compNo} order by a.vatIssueDate desc
+ 		</select>
+ 		<select id="listusercontribution" resultType="accountDTO">
+			SELECT a.userNo AS main_userNo, a.userName, b.contribution_percent, c.userNo FROM swc_user a
+			LEFT JOIN swc_cont_contribution b ON a.userNo = b.userNo AND b.contNo = #{contNo}
+			LEFT JOIN swc_cont c ON c.contNo = #{contNo} AND c.userNo = a.userNo
+			WHERE a.compNo = #{compNo} AND a.attrib NOT LIKE "XXX%" order by main_userNo desc;
+ 		</select>
+ 		<select id="listusercontributionCnt" resultType="accountDTO">
+			SELECT count(*) as count FROM swc_user a
+			LEFT JOIN swc_cont_contribution b ON a.userNo = b.userNo AND b.contNo = #{contNo}
+			LEFT JOIN swc_cont c ON c.contNo = #{contNo} AND c.userNo = a.userNo
+			WHERE a.compNo = #{compNo} AND a.attrib NOT LIKE "XXX%"
+		</select>
+		<insert id="insert_contribution_percent">
+				insert into swc_cont_contribution 
+			(
+				contNo,
+				userNo,
+				contribution_percent,
+				atrrib
+			)
+				values
+			(
+				#{contNo},
+				#{userNo},
+				#{contribution_percent},
+				'10001'
+			);
+		</insert>
+		<select id="userList" resultType="AccountDTO">
+			select userNo, userName from swc_user
+			where compNo = #{compNo} and attrib not like 'XXX%';
+		</select>
+		<update id="update_card_data">
+			update swc_card set user_card = #{user_card}
+			where cardSerial = #{cardSerial} and compNo = #{compNo};
+		</update>
+		<select id="connect_cont_and_vat" resultType="AccountDTO">
+			select * from swc_vat a
+			WHERE a.contNo = #{contNo} AND a.attrib NOT LIKE "XXX%" AND a.compNo = #{compNo};
+		</select>
+		<update id="vatContUpdate">
+			update swc_vat set contNo = #{contNo} where vatSerial = #{vatSerial} and compNo = #{compNo};
+		</update>
+		<select id="request_vat" resultType="AccountDTO">
+			select * from swc_vat a
+			LEFT JOIN swc_cont b ON a.contNo = b.contNo AND b.attrib NOT LIKE "xxx%"
+			LEFT JOIN swc_user c ON b.userNo = c.userNo AND c.compNo = #{compNo}
+			where a.vatStatus = "T1" AND a.attrib NOT LIKE "xxx%" AND a.compNo = #{compNo}
+		</select>
+		<select id ="request_payment" resultType="AccountDTO">			
+			select a.docType, a.regDate, a.docAmount, b.appStatus, d.custName, e.userName as firstUser from swc_businessdoc a 
+			left join swc_businessdocapp b on a.docNo = b.docNo 
+			left join swc_user c on c.userNo = b.userNoIS 
+			left join swc_cust d on a.linkCustNo = d.custNo
+			left join swc_user e on a.docCrUserNo = e.userNo
+			where a.attrib not like 'XXX%' and b.compNo = #{compNo} and a.docStatus BETWEEN 2 and 3 and b.appStatus BETWEEN 2 and 5 and b.appStatus = 2 order by a.docNo desc;
+		</select>
+		<select id ="request_payment_boss" resultType="AccountDTO">			
+			select a.docType, a.regDate, a.docAmount, b.appStatus, d.custName, e.userName as firstUser from swc_businessdoc a 
+			left join swc_businessdocapp b on a.docNo = b.docNo 
+			left join swc_user c on c.userNo = b.userNoIS 
+			left join swc_cust d on a.linkCustNo = d.custNo
+			left join swc_user e on a.docCrUserNo = e.userNo
+			where a.attrib not like 'XXX%' and b.compNo = #{compNo} and a.docStatus BETWEEN 2 and 3 and b.appStatus BETWEEN 2 and 5 and b.appStatus = 4 order by a.docNo desc;
+		</select>
+		<select id="request_attlist" resultType="AccountDTO">
+			SELECT b.userName, a.attType, a.attStart, a.attEnd, a.regDate FROM swc_userattend a
+			LEFT JOIN swc_user b ON a.userNo = b.userNo
+			WHERE a.attStatus = 1 AND a.compNo = #{compNo} AND a.attrib NOT LIKE "xxx%";
+		</select>
+		<select id="count1" resultType="AccountDTO">
+			SELECT a.soppNo, a.cntrctMth, a.maintenance_S, a.maintenance_E, b.contNo, d.userName, b.contTitle, f.vatId, e.vatDate, e.endvataDate, f.test FROM swc_sopp a 
+			LEFT JOIN swc_cont b ON a.soppNo = b.soppNo AND b.attrib NOT LIKE "xxx%" 
+			LEFT JOIN swc_user d ON b.userNo = d.userNo 
+			LEFT JOIN swc_soppdata01 e ON a.soppNo = e.soppNo AND e.attrib NOT LIKE "xxx%" AND e.dataType = "1102" AND NOW() BETWEEN e.vatDate AND e.endvataDate
+			LEFT JOIN swc_vat f ON e.vatSerial = f.vatSerial AND f.attrib NOT LIKE "xxx%" 
+			WHERE  a.compNo = 100002 AND b.contNo IS NOT NULL AND a.attrib NOT LIKE "xxx%" AND e.vatDate IS NOT NULL; 
+		</select>
+		<select id="count2" resultType="AccountDTO">
+			SELECT a.soppNo, a.cntrctMth, a.maintenance_S, a.maintenance_E, b.contNo, d.userName, b.contTitle, f.vatId, e.vatDate, e.endvataDate, f.test FROM swc_sopp a 
+			LEFT JOIN swc_cont b ON a.soppNo = b.soppNo AND b.attrib NOT LIKE "xxx%" 
+			LEFT JOIN swc_user d ON b.userNo = d.userNo 
+			LEFT JOIN swc_soppdata01 e ON a.soppNo = e.soppNo AND e.attrib NOT LIKE "xxx%" AND e.dataType = "1102" AND NOW() BETWEEN e.vatDate AND e.endvataDate
+			LEFT JOIN swc_vat f ON e.vatSerial = f.vatSerial AND f.attrib NOT LIKE "xxx%" 
+			WHERE  a.compNo = 100002 AND b.contNo IS NOT NULL AND a.attrib NOT LIKE "xxx%" AND e.vatDate IS NOT NULL AND f.vatId IS NOT null;
+		</select>
+		<select id="count3" resultType="AccountDTO">
+			SELECT a.soppNo, a.cntrctMth, a.maintenance_S, a.maintenance_E, b.contNo, d.userName, b.contTitle, f.vatId, e.vatDate, e.endvataDate, f.test FROM swc_sopp a 
+			LEFT JOIN swc_cont b ON a.soppNo = b.soppNo AND b.attrib NOT LIKE "xxx%" 
+			LEFT JOIN swc_user d ON b.userNo = d.userNo 
+			LEFT JOIN swc_soppdata01 e ON a.soppNo = e.soppNo AND e.attrib NOT LIKE "xxx%" AND e.dataType = "1102" AND NOW() BETWEEN e.vatDate AND e.endvataDate
+			LEFT JOIN swc_vat f ON e.vatSerial = f.vatSerial AND f.attrib NOT LIKE "xxx%" 
+			WHERE  a.compNo = 100002 AND b.contNo IS NOT NULL AND a.attrib NOT LIKE "xxx%" AND e.vatDate IS NOT NULL AND f.vatId IS null;
+		</select>
+</mapper>

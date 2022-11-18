@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code">
+
+<select id="listCode"
+ 		resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and compNo = #{compNo} order by sortNo 
+ </select>
+
+<select id="listCode01"
+ 		resultType="codeDto">
+ 		select codeNo, code01, desc01, value01 from swc_code where desc01 is not null and compNo = #{compNo} group by code01 
+ </select>
+
+<select id="listCode02"
+ 		resultType="codeDto">
+ 		select codeNo, code02, desc02, value02 from swc_code where desc02 is not null and compNo = #{compNo} group by code02
+ </select>
+ 
+ <select id="listCode02n" resultType="codeDto">
+ 		select * from swc_code where code01=#{code01} and code03 is null and code02 is not null 
+ </select>
+
+<select id="listCode03"
+ 		resultType="codeDto">
+ 		select codeNo, code03, desc03, value03 from swc_code where code02 is not null and code03 is not null
+ </select>
+
+<select id="listCode03n"
+ 		resultType="codeDto">
+ 		select * from swc_code where code02 =#{code02} and code03 is not null order by sortNo 
+ </select>
+
+<select id="listCode003"
+ 		resultType="codeDto">
+ 		select codeNo, code03, desc03, value03 from swc_code where code02 = #{code02} and code03 is not null 
+ </select>
+
+<select id="detailCode"
+ 		resultType="codeDto">
+ 		select * from swc_code where codeNo=#{codeNo} 
+ </select>
+
+ <select id="listComp"
+ 		resultType="codeDto">
+ 		select * from swc_company where attrib not like 'XXX%' 
+ </select>
+
+<select id="listDept"
+ 		resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='USERDEPT' and desc02 IS NULL
+ </select>
+
+<select id="listRank"
+ 		resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='USERRANK' and desc02 IS NULL
+ </select>
+
+<select id="listSaletype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='SALES01' and desc02 IS NULL
+ </select>
+
+<select id="listComptype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='SUPP01' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listActtype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='ACT0001' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listSalestype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='SALETYPE' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listSoppstatus" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='SSTATUS' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listSchedtype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='SCHED01' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listSprttype" resultType="codeDto">  
+ 		select * from swc_code where attrib not like 'XXX%' and code02='ACT0002' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listSprtstat" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='TECHSTAT' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+
+<select id="listBoardtype" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='BOARDTYP' and desc02 IS NULL and compNo = #{compNo}
+ </select>
+ 
+<select id="listBusinessType" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='BTYPE01' and desc02 IS NULL and compNo = #{compNo}
+</select>
+
+<select id="listContractType" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='CTYPE01' and desc02 IS NULL and compNo = #{compNo}
+</select>
+
+<select id="listTechdSteps" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='TECHSTAT' and desc02 IS NULL and compNo = #{compNo}
+</select>
+
+<select id="listSchedDetailType" resultType="codeDto">
+ 		select * from swc_code where attrib not like 'XXX%' and code02='ACT0003' and desc02 IS NULL and compNo = #{compNo}
+</select>
+
+<select id="listActSprtScheduleDetailType" resultType="codeDto">
+		select * from swc_code 
+		where attrib not like 'XXX%' 
+		and code02 IN ('ACT0001', 'ACT0002', 'ACT0003')
+		and desc02 IS NULL
+		and compNo = #{compNo}
+</select>
+
+<select id="listContType" resultType="codeDto">
+	select * from swc_code
+	where attrib not like 'XXX%' and code02='SALETYPE' and desc03 is not NULL and compNo = #{compNo}
+</select>
+
+<select id="listSchdType" resultType="codeDto">
+	select * from swc_code where attrib not like 'XXX%' and code02 IN ('SCHED01') and desc02 IS NULL and compNo = #{compNo}
+</select>
+	
+<select id="listAreaType" resultType="codeDto">
+	select * from swc_code where attrib not like 'XXX%' and code02 = 'AREA01' and desc02 IS NULL and compNo = #{compNo}
+</select>
+
+ <insert id="insertCode">
+ insert into swc_code (
+compNo
+,code01
+,code02
+,code03
+,desc01
+,desc02
+,desc03
+,value01
+,value02
+,value03
+,sortNo
+,attrib
+ )
+ values (
+#{compNo}
+,#{code01}
+,#{code02}
+,#{code03}
+,#{desc01}
+,#{desc02}
+,#{desc03}
+,#{value01}
+,#{value02}
+,#{value03}
+,#{sortNo}
+,'10001'
+ )
+ </insert>
+
+ <update id="updateCode01">
+	update swc_code 
+	set
+	code01		=#{code01}
+	,desc01 	=#{desc01}
+	,value01	=#{value01} 
+	,sortNo		=#{sortNo}
+	,modDatetime = NOW()
+	,attrib = #{attrib}
+	where codeNO=#{codeNo}
+ </update>
+
+ <update id="updateCode02">
+	update swc_code 
+	set
+	code02		=#{code02}
+	,desc02 	=#{desc02}
+	,value02	=#{value02} 
+	,sortNo		=#{sortNo}
+	,modDatetime = NOW()
+	,attrib = #{attrib}
+	where codeNO=#{codeNo}
+ </update>
+
+<update id="updateCode03">
+	update swc_code 
+	set
+	code03		=#{code03}
+	,desc03 	=#{desc03}
+	,value03	=#{value03} 
+	,sortNo		=#{sortNo}
+	,modDatetime = NOW()
+	,attrib = #{attrib}
+	where codeNO=#{codeNo}
+ </update>
+ 
+ <delete id="deleteSopp">
+	update swc_code 
+	set attrib = 'XXXXX'
+	where codeNo=#{codeNo}
+ </delete>
+ 		
+</mapper>

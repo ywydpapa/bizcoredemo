@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cust">
+
+<select id="listCust"
+ 		resultType="custDto">
+ 		select * from swc_cust where attrib not like 'XXX%' and compNo = #{compNo} order by custNo
+ </select>
+ 
+ <select id="listBuyr"
+ 		resultType="custDto">
+ 		select custNo buyrNo, custName buyrName, custBossname, custVatno 
+ 		from swc_cust 
+ 		where attrib not like 'XXX%' and buyrYn = 'YY' and compNo = #{compNo}
+ 		order by custNo
+ </select>
+ 
+<select id="listPtnc"
+ 		resultType="custDto">
+ 		select custNo ptncNo, custName ptncName, custBossname, custVatno from swc_cust 
+ 		where attrib not like 'XXX%' and ptncYn='YY' and compNo = #{compNo}
+ 		order by custNo
+ </select>
+ 
+ <select id="listSupply"
+ 		resultType="custDto">
+ 		select custNo supplyNo, custName supplyName, custBossname, custVatno from swc_cust 
+ 		where attrib not like 'XXX%' and suppYn='YY' and compNo = #{compNo}
+ 		order by custNo
+ </select>
+ 
+ <select id="detailCust"
+ 		resultType="custDto">
+ 		select * from swc_cust where custNo=#{custNo}
+ </select>
+ 
+ <select id="detailCust02"
+ 		resultType="custDto">
+ 		SELECT * from swc_custData02 where custNo=#{custNo} and attrib not like 'XXX%' order by custData02no DESC limit 1 
+ </select>
+ 
+ <select id="detailCust03"
+ 		resultType="custDto">
+ 		SELECT * from swc_custData03 where custNo=#{custNo} and attrib not like 'XXX%' order by custData03no DESC limit 1
+ </select>
+
+<select id="detailCust04" resultType="custDto">
+ 		SELECT * from swc_custData where custNo=#{custNo} and attrib not like 'XXX%' order by custdataNo DESC limit 1
+ </select>
+
+ <select id="detailsCust"
+ 		resultType="custDto">
+ 		select * from swc_custdata where custNo=#{custNo} 
+ </select>
+ 
+ <select id="listCustmember"
+ 		resultType="custDto">
+ 		select * from swc_custData03 where custNo=#{custNo} and attrib not like 'XXX%'
+ </select>
+ 
+ <select id="sessionSelectCust" resultType="custDto">
+ 	select * from swc_cust where custCompNo = #{custCompNo} and attrib not like 'XXX%'
+ </select>
+ 
+ <insert id="insertCust">
+ insert into swc_cust (compNo, custName,custVatno, custEmail, custVatemail, custBossname,attrib)
+ values (#{compNo},#{custName},#{custVatno}, #{custEmail}, #{custVatemail}, #{custBossname},'10000')
+	 <selectKey keyProperty="custNo" resultType="integer"  order="AFTER">
+		 SELECT LAST_INSERT_ID()
+	 </selectKey>
+ </insert>
+
+ <insert id="insertCust02">
+ update swc_custData02 set attrib = "XXXXX" where custNo=#{custNo};
+ insert into swc_custData02 (custNo,custPostno,custAddr,custAddr2,custTel,custFax,custMemo,attrib)
+ values
+ (#{custNo},#{custPostno},#{custAddr},#{custAddr2},#{custTel},#{custFax},#{custMemo},'10000');
+ </insert>
+
+ <insert id="insertCust03">
+ update swc_custData03 set attrib = "XXXXX" where custNo=#{custNo} and custMname=#{custMname};
+ insert into swc_custData03 (custNo,custMname,custMrank,custMmobile,custMtel,custMemail,custMmemo,attrib)
+ values
+ (#{custNo},#{custMname},#{custMrank},#{custMmobile},#{custMtel},#{custMemail},#{custMmemo},'10000');
+ </insert>
+
+ <insert id="insertCust04">
+ update swc_custdata set attrib = "XXXXX" where custNo=#{custNo};
+ insert into swc_custdata (custNo, compNo, custByear, custCRbalance, custDRbalance, custVatno, custVatemail, custVattype, custVatbiz, custVatmemo, regDatetime, attrib)
+ values
+ (#{custNo}, #{compNo}, #{custByear}, #{custCRbalance}, #{custDRbalance}, #{custVatno}, #{custVatemail}, #{custVattype}, #{custVatbiz}, #{custVatmemo}, now(), '10000');
+ </insert>
+ 
+ <insert id="tempSelectCustInsert">
+ 		insert into swc_cust 
+ 		(
+ 		compNo, custName,custVatno, custBossname, attrib
+ 		)
+ 		values 
+ 		(
+ 		#{compNo},#{custName},#{custVatno}, #{custBossname},'10000'
+ 		)
+ </insert>
+
+ <update id="updateCust">
+	update swc_cust 
+	set custName=#{custName}
+	,custBossname=#{custBossname}
+	,custVatno=#{custVatno}
+	,custEmail=#{custEmail}
+	,custVatemail=#{custVatemail}
+	where custNo=#{custNo}
+ </update>
+ 
+ <update id="updateCust01">
+	update swc_cust 
+	set custName=#{custName}
+	,custBossname=#{custBossname}
+	,custVatno=#{custVatno}
+	,custEmail=#{custEmail}
+	,custVatemail=#{custVatemail}
+	where custNo=#{custNo}
+ </update>
+
+ <update id="updateCust05">
+	update swc_cust 
+	set suppYn=#{suppYn}
+	, custYn=#{custYn}
+	, ptncYn=#{ptncYn}
+	, buyrYn=#{buyrYn}
+	, compType=#{compType}
+	, saleType=#{saleType}
+	where custNo=#{custNo}
+ </update>
+
+ <delete id="deleteCust">
+	update swc_cust 
+	set attrib = 'XXXXX'
+	where custNo=#{custNo}
+ </delete>
+ 
+ <select id="custCheck" resultType="int">
+ 		select count(*) from swc_cust where custVatno=#{custVatno}
+</select>
+
+<select id="listCustNameCheck" resultType="custDto">
+	select *
+	from swc_cust
+	where attrib not like 'XXX%' and compNo = #{compNo} and custName = #{custName}
+	order by custNo
+</select>
+
+<select id="listCustNameSimilarCheck" resultType="custDto">
+	select *
+	from swc_cust
+	where attrib not like 'XXX%' and compNo = #{compNo} and custName like CONCAT('%',#{custName},'%')
+	and custNo NOT IN
+	(
+		select custNo
+		from swc_cust
+		where attrib not like 'XXX%' and compNo = #{compNo} and custName = #{custName}
+		order by custNo
+	)
+	order by custNo
+</select>
+
+</mapper>

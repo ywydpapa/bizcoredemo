@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+
+<select id="loginCheck" resultType="String">
+ 		select u.userName 
+ 		from swc_user u
+ 		    left join swc_company c on u.compNo = c.compNo
+ 		where u.userId=#{userId} and u.userPasswd=PASSWORD(#{userPasswd}) and c.compId=#{compId} and u.attrib not like 'XXX%'
+</select>
+
+<select id="userSessionCheck" resultType="userDto">
+		select * from swc_user where userNo = #{userNo} and attrib not like 'XXX%'
+</select>
+
+<select id="viewUser"
+ 		resultType="userDto">
+ 		select a.*, b.dataStr userRank, c.dataStr userDept
+ 		from swc_user a
+ 		left join swc_userData b on a.userNo=b.userNo and b.catNo='100003' and b.attrib not like 'XXX%'
+ 		left join swc_userData c on a.userNo=c.userNo and c.catNo='100002' and c.attrib not like 'XXX%'
+		left join swc_company d on a.compNo = d.compNo
+ 		where d.compId = (select compId from swc_company where compId = #{compId})
+			<choose>
+				<when test="userId != null and userId != ''"> and a.userId = #{userId}</when>
+				<when test="userNo > 0"> and a.userNo = #{userNo}</when>
+			</choose>
+ </select>
+ 
+ <select id="userList"
+ 		resultType="userDto">
+ 		select * from swc_user where compNo = #{compNo} and attrib not like 'XXX%' order by userNo
+ </select>
+ 
+ <select id="userListWithOrgId" resultType="userDto">
+ 		select userNo, CompNo, userId, userName, userRole, userName title from swc_user where org_id = #{orgId} and attrib not like 'XXX%'
+ </select>
+ 
+ <update id="updateUserpass">
+ 		update swc_user set 
+ 		<!-- userName=#{userName}, --> 
+ 		<choose>
+ 			<when test="userChangePasswd != '' and userChangePasswd != null">
+ 				userPasswd=PASSWORD(#{userChangePasswd})
+ 			</when>
+ 			<otherwise>
+ 				userPasswd=PASSWORD(#{userPasswd})
+ 			</otherwise>
+ 		</choose>
+ 		<if test="listDateFrom != '' and listDateFrom != null">
+ 			, listDateFrom = #{listDateFrom}
+ 		</if>
+ 		<!-- userRole=#{userRole} -->
+ 		where userId=#{userId}
+ 		and userPasswd=PASSWORD(#{userPasswd})
+ </update>
+ 
+  <update id="updateUser">
+ 		update swc_user set 
+ 		userName = #{userName}, 
+ 		userRole = #{userRole},
+ 		userEmail = #{userEmail},
+ 		userTel = #{userTel},
+ 		userOtp=#{userOtp},
+ 		org_id = #{org_id},
+ 		userKey = #{userKey},
+		<if test="userPasswd > 0"> 
+			userPasswd = PASSWORD('1234'), 
+		</if>
+ 		attrib = #{attrib}
+ 		where userNo=#{userNo}
+  </update>
+ 
+  
+ <insert id="insertUser">
+ 	insert into swc_user 
+ 	(compNo,userId,userName,userPasswd,userRole,org_id,attrib) 
+ 	values 
+ 	(#{compId},#{userId},#{userName},PASSWORD(#{userPasswd}),#{userRole},#{org_id},'10000');
+ </insert>
+ 
+ <insert id="insertUserdata">
+  	<selectKey resultType="int" keyProperty="userNo" order="BEFORE">
+ 	select userNo from swc_user where userId=#{userId};
+ 	</selectKey>
+ 	insert into swc_userData
+ 	(catNo,userNo,compNo,dataStr,attrib)
+ 	values
+ 	('100003',#{userNo},#{compId},#{userRank},'10000');
+ 	insert into swc_userData
+ 	(catNo,userNo,compNo,dataStr,attrib)
+ 	values
+ 	('100002',#{userNo},#{compId},#{userDept},'10000');
+ </insert>
+
+<select id="userCheck" resultType="int">
+ 		select count(*) from swc_user where userId=#{userId}
+</select>
+
+<update id="updateOtp">
+	<selectKey resultType="string" keyProperty="userOtp" order="BEFORE">
+		SELECT FLOOR((RAND()*(99999999-10000000)+10000000)) OTP from dual;
+	</selectKey>
+	update swc_user set
+		userOtp=#{userOtp}
+		where userId=#{userId}
+</update>
+
+<select id="allList" resultType="userDto">
+	select * from swc_user
+	where attrib not like 'XXX' and compNo = #{compNo}
+</select>
+<select id="listuser_data" resultType="userDto">
+	SELECT b.attStart, b.attEnd, b.attDesc, b.attType FROM swc_user a
+	LEFT JOIN swc_userattend b ON a.userNo = b.userNo
+	WHERE a.userName = #{userName} AND b.attStatus = 5 AND b.attrib NOT LIKE "XXX%"
+</select>
+</mapper>

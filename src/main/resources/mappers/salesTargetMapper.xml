@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="salesTarget">
+
+<select id="listSalesTarget"	resultType="SalesTargetDTO">
+ 		select sst.userNo, su.userName, sst.deptNo, sst.targetType,
+				sst.mm01, sst.mm02, sst.mm03, sst.mm04, sst.mm05,
+				sst.mm06, sst.mm07, sst.mm08, sst.mm09, sst.mm10,
+				sst.mm11, sst.mm12
+		from swc_sales_target sst
+		left join swc_user su on sst.userNo = su.userNo
+		where sst.compNo = #{compNo} and sst.targetYear = #{targetYear}
+		and sst.targetType = #{targetType} and sst.userNo IN
+		<foreach collection="userDtoList" item="item" open="(" close=")" separator=",">
+			#{item.userNo}
+		</foreach>
+</select>
+
+<select id="listViewGraphData01CompnayMonth" resultType="SalesTargetDTO">
+	select
+		group_concat(MonthDate) monthDate_Group,
+		group_concat(fee) salesTarget_Group,
+		group_concat(targetTotal) profitTarget_Group,
+		group_concat(percent) percent_Group,
+		group_concat(overTarget) overTarget_Group,
+		group_concat(cnt01) cnt01_Group,
+		group_concat(cnt01_SUM) cnt01_SUM_Group,
+		group_concat(cnt02) cnt02_Group,
+		group_concat(cnt02_SUM) cnt02_SUM_Group,
+		group_concat(cnt03) cnt03_Group,
+		group_concat(cnt03_SUM) cnt03_SUM_Group,
+		group_concat(cnt04) cnt04_Group,
+		group_concat(cnt04_SUM) cnt04_SUM_Group,
+		group_concat(cnt05) cnt05_Group,
+		group_concat(cnt05_SUM) cnt05_SUM_Group,
+		group_concat(cnt06) cnt06_Group,
+		group_concat(cnt06_SUM) cnt06_SUM_Group
+	from grpah_data01_sum_company_month
+	<where>
+		<if test="targetYear != null and targetYear != ''">
+			YearDate = #{targetYear}
+		</if>
+		<if test="compNo != null and compNo != 0">
+			and compNo = #{compNo}
+		</if>
+	</where>
+</select>
+
+ <update id="updateSalesTarget">
+ 	update swc_sales_target 
+ 	set mm01 = #{mm01},
+ 		mm02 = #{mm02},
+ 		mm03 = #{mm03},
+ 		mm04 = #{mm04},
+ 		mm05 = #{mm05},
+ 		mm06 = #{mm06},
+ 		mm07 = #{mm07},
+ 		mm08 = #{mm08},
+ 		mm09 = #{mm09},
+ 		mm10 = #{mm10},
+ 		mm11 = #{mm11},
+ 		mm12 = #{mm12}
+ 	where userNo = #{userNo} 
+ 		and deptNo = #{deptNo}
+ 		and targetYear = #{targetYear}
+ 		and targetType = #{targetType}
+ 		and compNo = #{compNo}
+ </update>
+ 
+ <delete id="deleteSalesTarget">
+ </delete>
+ 		<select id="gradata" resultType="SalesTargetDTO">
+ 			SELECT * FROM swc_sales_target
+			WHERE targetYear = "2022" and compNo = #{compNo};
+ 		</select>
+ 		<select id="nomalgradata" resultType="SalesTargetDTO">
+ 			<choose>
+ 				<when test="Num == 1">
+ 					SELECT mm01 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 2">
+ 					SELECT mm02 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 3">
+ 					SELECT mm03 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 4">
+ 					SELECT mm04 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 5">
+ 					SELECT mm05 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 6">
+ 					SELECT mm06 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 7">
+ 					SELECT mm07 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 8">
+ 					SELECT mm08 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 9">
+ 					SELECT mm09 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 10">
+ 					SELECT mm10 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 11">
+ 					SELECT mm11 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 12">
+ 					SELECT mm12 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 			</choose>
+ 		</select>
+ 		<select id="user_sales_target" resultType="AccountDTO">
+ 			select * from swc_sales_target
+ 			where userNo = #{userNo} and targetYear like CONCAT('%', #{selectYear}, '%')
+ 		</select>
+</mapper>

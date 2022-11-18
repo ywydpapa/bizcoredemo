@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bcode">
+
+<select id="listCode03"
+ 		resultType="bcodeDto">
+ 		select code02, code03,desc03,value03,sortNo from swc_code where attrib not like 'XXX%' and code02 ='SUPP01' and code03 is not null 
+</select>
+
+</mapper>

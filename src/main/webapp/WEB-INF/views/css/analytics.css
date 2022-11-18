@@ -1,0 +1,20 @@
+.mbo-wrapper-content .tab-content .ibox {
+    border:1px solid #efefef;
+}
+.mbo-wrapper-content .tab-content .ibox-title {
+    border:0px;
+}
+.mbo-wrapper-content {
+    padding:5px;
+}
+.mbo-wrapper-content .panel-body .row {
+    margin:5px 0px;
+}
+.anal-list-table {
+    table-layout:fixed;
+}
+.anal-list-table td {
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    overflow:hidden;
+}

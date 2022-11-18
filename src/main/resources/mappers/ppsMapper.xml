@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pps">
+    <select id="ppsList" resultType="PpsDTO">
+        SELECT a.*, c.userName from swc_pps a
+		LEFT JOIN swc_sopp b ON a.soppNo = b.soppNo
+		LEFT JOIN swc_user c ON b.userNo = c.userNo
+        WHERE a.attrib not like 'XXX%' and a.compNo = #{compNo}
+        <if test="listDateFrom != null and listDateFrom != ''">
+ 			and a.contractDate Between #{listDateFrom} and now()
+ 		</if>
+ 		ORDER BY a.contractDate DESC;
+    </select>
+    
+    <select id="ppsStatusList" resultType="PpsDTO">
+        SELECT a.*, b.* FROM swc_pps a
+        LEFT JOIN swc_pps_detail b ON a.ppsId = b.ppsId AND b.attrib not like 'XXX%'
+        WHERE a.attrib not like 'XXX%' and a.compNo = #{compNo}
+        <if test="listDateFrom != null and listDateFrom != ''"> 
+ 			and a.contractDate Between #{listDateFrom} and now()
+ 		</if>  
+ 		order by a.contractDate desc;
+    </select>
+
+	<select id="mppsStatusList" resultType="PpsDTO">
+		select a.*, b.* from swc_pps a left join swc_pps_detail b on a.ppsId = b.ppsId and b.attrib not like 'XXX%'
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		<if test="listDateFrom != null and listDateFrom != ''">
+			and contractDate Between #{listDateFrom} and now()
+		</if>
+		order by contractDate desc;
+	</select>
+
+    <select id="ppsDetail" resultType="PpsDTO">
+        select * from swc_pps where ppsID = #{ppsId};
+    </select>
+    
+    <select id="checkPps" resultType="PpsDTO">
+		select count(*) as resultCount from swc_pps where reqNo = #{reqNo}
+	</select>
+
+    <insert id="ppsInsert">
+        insert into swc_pps
+	(
+	    compNo,
+	    buyerCode,
+	    buyerName,
+	    buyerArea,
+	    buyerAreacode,
+	    reqNo,
+	    reqItemcode,
+	    reqItem,
+	    itemNetprice,
+	    itemQty,
+	    itemUnit,
+	    itemAmount,
+	    contractTitle,
+	    modQty,
+	    modAmount,
+	    contractDate,
+	    deliveryDate,
+	    deliveryPlace,
+	    regDate,
+	    attrib 
+	    ) 
+	    values
+		(
+	    #{compNo},
+	    #{buyerCode},
+	    #{buyerName},
+	    #{buyerArea},
+	    #{buyerAreacode},
+	    #{reqNo},
+	    #{reqItemcode},
+	    #{reqItem},
+	    #{itemNetprice},
+	    #{itemQty},
+	    #{itemUnit},
+	    #{itemAmount},
+	    #{contractTitle},
+	    #{modQty},
+	    #{modAmount},
+	    #{contractDate},
+	    #{deliveryDate},
+	    #{deliveryPlace},
+	    now(),
+	    '10000'
+	);
+    </insert>
+    
+    <insert id="mppsInsert">
+    	insert into swc_pps_detail
+    	(
+    		ppsId,
+    		compNo,
+    		storeAmount,
+    		ordAmount,
+    		makerName,
+    		sellerName,
+    		ordDate,
+    		confDate,
+    		vatDate,
+    		billingDate,
+    		ppsincomeDate,
+    		storeDate,
+    		payDate,
+    		regDate,
+    		attrib
+    	) values (
+    		#{ppsId},
+    		#{compNo},
+    		#{storeAmount},
+    		#{ordAmount},
+    		#{makerName},
+    		#{sellerName},
+    		#{ordDate},
+    		#{confDate},
+    		#{vatDate},
+    		#{billingDate},
+    		#{ppsincomeDate},
+    		#{storeDate},
+    		#{payDate},
+    		now(),
+    		'10000'
+    	);
+    </insert>
+    
+    <update id="mppsUpdate">
+    	update swc_pps_detail set modDate = now(), attrib = 'XXXXX' where compNo = #{compNo} and ppsId = #{ppsId};
+    </update>
+    
+    <update id="assignUpdate">
+    	update swc_pps set	
+    	soppNo = #{soppNo}
+    	where ppsId = #{ppsId};
+    </update>
+</mapper>

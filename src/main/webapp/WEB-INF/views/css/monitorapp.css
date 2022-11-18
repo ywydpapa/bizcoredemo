@@ -1,0 +1,40 @@
+.monitorapp-account-warning {
+    padding-top:10px;
+    padding-left:10px;
+}
+.monitorapp-account-box {
+    position:absolute;
+    background-color:#fff;
+    z-index:999;
+    border:1px solid #bec8d8;
+    display:none;
+}
+.monitorapp-account-box-body {
+    height:auto;
+    overflow-y:auto;
+}
+.monitorapp-account-box-body ul {
+    overflow:hidden;
+    padding:8px 0 6px;
+    zoom:1;
+    list-style:none;
+}
+.monitorapp-account-box-body li {
+    position:relative;
+    overflow:hidden;
+    line-height:29px;
+    height:27px;
+    zoom:1;
+    list-style:none;
+    cursor:pointer;
+    padding:0 15px;
+}
+.monitorapp-account-box-body li:hover {
+    background-color:#f9fafc;
+}
+.monitorapp-account-box-bottom {
+    background-color:#f9fafc;
+    height:auto;
+    padding:10px;
+    border-top:1px solid #bec8d8;
+}

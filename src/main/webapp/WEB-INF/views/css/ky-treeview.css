@@ -1,0 +1,30 @@
+.ky-tree {
+    background-color:#fff;
+    padding:10px 20px;
+}
+.ky-tree ul,
+.ky-tree li {
+    list-style:none;
+}
+.ky-tree ul {
+    padding-left:15px;
+}
+.ky-tree li {
+    line-height:24px;
+}
+.ky-tree .checkbox label::before {
+    content:none;
+}
+.ky-tree .checkbox {
+    margin:0px;
+}
+.ky-tree .checkbox input[type=checkbox] {
+    opacity:1;
+}
+.ky-tree .checkbox i {
+    position:absolute;
+    left:-2.3em;
+    top:.34em;
+    cursor:pointer;
+    color:#ECC849;
+}

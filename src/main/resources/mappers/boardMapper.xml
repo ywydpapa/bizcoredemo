@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+<select id="listBoard" resultType="boardDto">
+ 		select * from swc_board where attrib not like 'XXX%' and compNo = #{compNo}
+ </select>
+
+<insert id="insert">
+ insert into swc_board (
+boardDept,
+boardCode,
+boardNum,
+boardOpen,
+boardAdmin,
+boardTitle,
+boardType,
+boardRead,
+boardWrite,
+boardReply,
+boardDownyn,
+regDatetime,
+attrib,
+compNo )
+ values (
+#{boardDept},
+#{boardCode},
+#{boardNum},
+#{boardOpen},
+#{boardAdmin},
+#{boardTitle},
+#{boardType},
+#{boardRead},
+#{boardWrite},
+#{boardReply},
+#{boardDownyn},
+now(),
+'100001', <!-- 테이블 접근권한 컬럼 -->
+#{compNo}
+ )
+ </insert>
+
+
+</mapper>

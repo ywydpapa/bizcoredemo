@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="calendar">
+
+<!-- <select id="listEvent"
+ 		resultType="calendarDto">
+		select concat(d.userName," : ", a.schedTitle) title,  
+ 		concat(left(a.schedFrom,10),"T",substring(a.schedFrom,12,9)) start,
+ 		concat(left(a.schedTo,10),"T",substring(a.schedTo,12,9)) end,
+ 		a.schedNo id
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ </select> -->
+ 
+ <select id="listEvent"
+ 		resultType="calendarDto">
+		select concat(d.userName," : ", a.schedTitle) title,  
+ 		concat(left(a.schedFrom,10),"T",substring(a.schedFrom,12,9)) start,
+ 		concat(left(a.schedTo,10),"T",substring(a.schedTo,12,9)) end,
+ 		a.schedNo id,
+ 		'기타일정' schedType,
+ 		e.org_color color
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		left join swc_organiz e on d.org_id = e.org_id 
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test = "userNoList != null">
+ 			and a.userNo in
+ 			<foreach collection="userNoList" item="item" separator="," open="(" close=")">
+ 				#{item}
+ 			</foreach>
+ 		</if>
+ 		
+ 		UNION 
+ 		
+ 		select concat(d.userName," : ", a.salesTitle) title,  
+ 		concat(left(a.salesFrdatetime,10),"T",substring(a.salesFrdatetime ,12,9)) start,
+ 		concat(left(a.salesTodatetime,10),"T",substring(a.salesTodatetime ,12,9)) end,
+ 		a.salesNo id,
+ 		'영업일정' schedType,
+ 		e.org_color color
+ 		from swc_sales a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		left join swc_organiz e on d.org_id = e.org_id 
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test = "userNoList != null">
+ 			and a.userNo in
+ 			<foreach collection="userNoList" item="item" separator="," open="(" close=")">
+ 				#{item}
+ 			</foreach>
+ 		</if>
+ 		
+ 		UNION 
+ 		
+ 		select concat(d.userName," : ", a.techdTitle) title,  
+ 		concat(left(a.techdFrom,10),"T",substring(a.techdFrom,12,9)) start,
+ 		concat(left(a.techdTo,10),"T",substring(a.techdTo,12,9)) end,
+ 		a.techdNo id,
+ 		'기술지원' schedType,
+ 		e.org_color color
+ 		from swc_techd a 
+ 		left join swc_user d on a.userNo=d.userNo
+ 		left join swc_organiz e on d.org_id = e.org_id 
+ 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		<if test = "userNoList != null">
+ 			and a.userNo in
+ 			<foreach collection="userNoList" item="item" separator="," open="(" close=")">
+ 				#{item}
+ 			</foreach>
+ 		</if>
+ </select>
+
+
+<select id="detailEvent"
+ 		resultType="calendarDto">
+ 		select a.*, b.custName, c.soppTitle, d.userName  
+ 		from swc_sched a 
+ 		left join swc_cust b on a.custNo=b.custNo
+ 		left join swc_sopp c on a.soppNo=c.soppNo
+ 		left join swc_user d on a.userNo=d.userNo
+ 		where  a.attrib not like 'XXX%' and a.schedNo=#{schedNo}
+ </select>
+ 
+ <delete id="deleteEvent">
+ update swc_sched set attrib='XXXXX' where schedNo=#{schedNo}
+ </delete>
+ 		
+</mapper>

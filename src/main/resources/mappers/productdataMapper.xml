@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="productdata">
+<!--  -->
+<select id="listProductdata" resultType="productdataDto">
+	select * from swc_productData
+	where compNo = #{compNo} and attrib not like 'XXX%'
+		<if test="productDataNo != 0">and productDataNo=#{productDataNo}</if>
+		<if test="custNo != 0">and custNo=#{custNo}</if>
+		<if test="productNo != 0">and productNo=#{productNo}</if>
+		<if test="productModel != null and productModel != ''">and productModel=#{productModel}</if>
+		<if test="productPrice != null and productPrice != ''">and productPrice=#{productPrice}</if>
+		<if test="productType != null and productType != ''">and productType=#{productType}</if>
+		<if test="regUser != null and regUser != ''">and regUser=#{regUser}</if>
+	order by productModel
+</select>
+
+<insert id="insertProductdata">
+	insert into swc_productData(compNo, custNo, productNo, productModel, productPrice, productType, regUser, regDatetime, attrib, parrentId)
+	values (#{compNo}, #{custNo}, #{productNo}, #{productModel}, #{productPrice}, #{productType}, #{regUser}, now(), '100000', #{parrentId})
+</insert>
+
+<update id="updateProductdata">
+	update swc_productData
+	<trim prefix="SET" prefixOverrides=",">
+		<if test="custNo != 0">, custNo=#{custNo}</if>
+		<if test="productNo != 0">, productNo=#{productNo}</if>
+		<if test="productModel != null and productModel != ''">, productModel=#{productModel}</if>
+		<if test="productPrice != null and productPrice != ''">, productPrice=#{productPrice}</if>
+		<if test="productType != null and productType != ''">, productType=#{productType}</if>
+		<if test="regUser != null and regUser != ''">, regUser=#{regUser}</if>
+		, regDatetime = now()
+	</trim>
+	where productNo=#{productNo}
+	and compNo = #{compNo}
+	and attrib not like 'XXX%'
+</update>
+
+<delete id="deleteProductdata">
+	update swc_productData
+	set attrib = 'XXXXX'
+	where productDataNo=#{productDataNo}
+	  and compNo=#{compNo}
+</delete>
+
+<delete id="deleteProductdataWithProductNo">
+	update swc_productData set attrib = 'XXXXX' where compNo=#{compNo} and productNo=#{productNo}
+</delete>
+
+</mapper>

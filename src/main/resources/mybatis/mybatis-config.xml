@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+ 
+    <typeAliases>
+	    <typeAlias alias="userDto" type="kr.swcore.sderp.user.dto.UserDTO"/>
+	    <typeAlias alias="productDto" type="kr.swcore.sderp.product.dto.ProductDTO"/>
+	    <typeAlias alias="productdataDto" type="kr.swcore.sderp.product.dto.ProductdataDTO"/>
+	    <typeAlias alias="custDto" type="kr.swcore.sderp.cust.dto.CustDTO"/>
+	    <typeAlias alias="schedDto" type="kr.swcore.sderp.sched.dto.SchedDTO"/>
+	    <typeAlias alias="calendarDto" type="kr.swcore.sderp.calendar.dto.CalendarDTO"/>
+	    <typeAlias alias="soppDto" type="kr.swcore.sderp.sopp.dto.SoppDTO"/>
+	    <typeAlias alias="salesDto" type="kr.swcore.sderp.sales.dto.SalesDTO"/>
+	    <typeAlias alias="salesTargetDTO" type="kr.swcore.sderp.salesTarget.dto.SalesTargetDTO"/>
+	    <typeAlias alias="contDto" type="kr.swcore.sderp.cont.dto.ContDTO"/>
+	    <typeAlias alias="contFileDataDTO" type="kr.swcore.sderp.cont.dto.ContFileDataDTO"/>
+	    <typeAlias alias="codeDto" type="kr.swcore.sderp.code.dto.CodeDTO"/>
+	    <typeAlias alias="bcodeDto" type="kr.swcore.sderp.bcode.dto.BcodeDTO"/>
+	    <typeAlias alias="techdDto" type="kr.swcore.sderp.techd.dto.TechdDTO"/>
+	    <typeAlias alias="soppdataDto" type="kr.swcore.sderp.sopp.dto.SoppdataDTO"/>
+	    <typeAlias alias="boardDto" type="kr.swcore.sderp.board.dto.BoardDTO"/>
+	    <typeAlias alias="organizDto" type="kr.swcore.sderp.organiz.dto.OrganizDTO"/>
+	    <typeAlias alias="soppFileDataDTO" type="kr.swcore.sderp.sopp.dto.SoppFileDataDTO"/>
+	    <typeAlias alias="deptToPlanTblDTO" type="kr.swcore.sderp.common.dto.DeptToPlanTblDTO"/>
+	    <typeAlias alias="noticeDto" type="kr.swcore.sderp.notice.dto.NoticeDTO"/>
+	    <typeAlias alias="gwDto" type="kr.swcore.sderp.gw.dto.GwDTO"/>
+	    <typeAlias alias="gwFileDataDTO" type="kr.swcore.sderp.gw.dto.GwFileDataDTO"/>
+	    <typeAlias alias="board_fileDto" type="kr.swcore.sderp.board_file.dto.Board_fileDTO"/>
+	    <typeAlias alias="board_fileDataDTO" type="kr.swcore.sderp.board_file.dto.Board_fileDataDTO"/>
+	    <typeAlias alias="accountDto" type="kr.swcore.sderp.account.dto.AccountDTO"/>
+	    <typeAlias alias="ppsDto" type="kr.swcore.sderp.pps.dto.PpsDTO"/>
+	    <typeAlias alias="allimDto" type="kr.swcore.sderp.allim.dto.AllimDTO"/>
+		<typeAlias alias="misDto" type="kr.swcore.sderp.mis.dto.MisDTO"/>
+    </typeAliases>
+ 
+</configuration>
