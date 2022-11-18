@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import kr.swcore.sderp.sopp.dto.SoppDTO;
 import kr.swcore.sderp.sopp.dto.SoppdataDTO;
 
 @Repository
@@ -37,6 +38,66 @@ public class SoppdataDAOImpl implements SoppdataDAO {
 	public List<SoppdataDTO> listSoppdata02(int soppNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("sopp.listSoppdata02",soppNo);
+	}
+
+	@Override
+	public List<SoppdataDTO> listIOsum(SoppdataDTO dto) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listIOsum",dto);
+	}
+	
+	@Override
+	public List<SoppdataDTO> listSearchIO(SoppdataDTO dto) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSearchIO",dto);
+	}
+
+	@Override
+	public List<SoppdataDTO> listIO(SoppdataDTO dto) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listIO",dto);
+	}
+
+	@Override
+	public List<SoppdataDTO> listSoppdata011(int soppNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSoppdata011", soppNo);
+	}
+
+	@Override
+	public List<SoppdataDTO> listSoppdata011_1(int soppNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSoppdata011_1", soppNo);
+	}
+
+	@Override
+	public List<SoppdataDTO> listSoppdata011_2(int soppNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSoppdata011_2", soppNo);
+	}
+
+	@Override
+	public List<SoppdataDTO> listContdata(int contNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listContdata", contNo);
+	}
+
+	@Override
+	public List<SoppdataDTO> listSoppdata01_08(SoppDTO data) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSoppdata01_08", data);
+	}
+
+	@Override
+	public List<SoppdataDTO> listSoppdata01_showdetail(int soppNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("sopp.listSoppdata01_showdetail", soppNo);
+	}
+
+	@Override
+	public int insertdata01_defalut(SoppdataDTO dto) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("sopp.insertdata01_defalut",dto);
 	}
 
 }

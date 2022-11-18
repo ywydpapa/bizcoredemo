@@ -10,6 +10,13 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import kr.swcore.sderp.cont.dto.ContDTO;
+import kr.swcore.sderp.cont.service.ContService;
+import kr.swcore.sderp.cust.service.CustService;
+import kr.swcore.sderp.sales.service.SalesService;
+import kr.swcore.sderp.sopp.dto.SoppDTO;
+import kr.swcore.sderp.sopp.service.SoppService;
+import kr.swcore.sderp.sopp.service.SoppdataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.swcore.sderp.code.service.CodeService;
 import kr.swcore.sderp.techd.dto.TechdDTO;
 import kr.swcore.sderp.techd.service.TechdService;
+import kr.swcore.sderp.user.service.UserService;
 
 @Controller
 
@@ -32,6 +40,24 @@ public class TechdController {
 	
 	@Inject
 	CodeService codeService;
+
+	@Inject
+	ContService contService;
+
+	@Inject
+	SalesService salesService;
+
+	@Inject
+	SoppService soppService;
+
+	@Inject
+	SoppdataService soppdataService;
+	
+	@Inject
+	CustService custService;
+	
+	@Inject
+	UserService userService;
 	
 	@RequestMapping("list.do")
 	public ModelAndView list(HttpSession session, ModelAndView mav) {
@@ -39,6 +65,49 @@ public class TechdController {
 		mav.addObject("techdSteps", codeService.listTechdSteps(session));
 		mav.addObject("contractType",codeService.listContractType(session));
 		mav.addObject("list", techdService.listTechd(session, null));
+		mav.addObject("listUser", userService.userList(session));
+		mav.addObject("listCust", custService.listCust(session));
+		mav.addObject("first","Y");
+		return mav;
+	}
+
+	@RequestMapping("contlist.do")
+	public ModelAndView listcont3m(HttpSession session, ModelAndView mav) {
+		mav.setViewName("techd/listcont");
+		mav.addObject("list", contService.listCont3m());
+		mav.addObject("first","Y");
+		return mav;
+	}
+
+	@RequestMapping("/contextdetail/{soppNo}/{contNo}")
+	public ModelAndView detail(HttpSession session, @PathVariable("contNo") int contNo, @PathVariable("soppNo") int soppNo, SoppDTO data, ModelAndView mav) {
+		mav.setViewName("techd/contextdetail");
+		ContDTO contDTO = new ContDTO();
+		contDTO = contService.detailCont(contNo);
+		mav.addObject("contDto", contDTO);
+		mav.addObject("dto", soppService.detailSopp(soppNo));
+		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
+		mav.addObject("dtodata02", soppdataService.listSoppdata011(soppNo));
+		mav.addObject("dtodata02", soppdataService.listSoppdata02(soppNo));
+		mav.addObject("contType", codeService.listContType(session));
+		mav.addObject("contractType", codeService.listContractType(session));
+		mav.addObject("saleslist", codeService.listSalestype(session));
+		mav.addObject("sstatuslist", codeService.listSstatus(session));
+		mav.addObject("salesinsopp",salesService.listSalesinsopp(session, soppNo, contNo));
+		mav.addObject("techdinsopp",techdService.listTechdinsopp(session, soppNo, contNo));
+		mav.addObject("contFiles", contService.listFile(contNo));
+		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
+		mav.addObject("dtodata02", soppdataService.listSoppdata011(soppNo));
+		data.setContNo(contNo);
+		data.setSoppNo(soppNo);
+		mav.addObject("dtodata01", soppdataService.listSoppdata01_08(data));
+		return mav;
+	}
+
+	@RequestMapping("bbuycontlist.do")
+	public ModelAndView bbuycont(HttpSession session, ModelAndView mav) {
+		mav.setViewName("techd/listbbuycont");
+		mav.addObject("list", contService.listCont3m());
 		mav.addObject("first","Y");
 		return mav;
 	}

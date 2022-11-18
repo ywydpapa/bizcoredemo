@@ -574,7 +574,7 @@
       position: absolute;
       right: 0;
       transform: translateY(30px);
-      transition: all 0.3s ease-in-out;
+      transition: all 0.2s ease-in-out;
       visibility: hidden;
       width: 24rem; }
       .header-navbar .navbar-wrapper .navbar-container .header-notification .show-notification li, .header-navbar .navbar-wrapper .navbar-container .mega-menu-top .show-notification li, .header-navbar .navbar-wrapper .navbar-container .header-notification .profile-notification li, .header-navbar .navbar-wrapper .navbar-container .mega-menu-top .profile-notification li {

@@ -3,6 +3,7 @@ package kr.swcore.sderp.salesTarget.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.swcore.sderp.HomeController;
+import kr.swcore.sderp.account.dto.AccountDTO;
 import kr.swcore.sderp.organiz.Service.OrganizService;
 import kr.swcore.sderp.organiz.dto.OrganizDTO;
 import kr.swcore.sderp.salesTarget.dao.SalesTargetDAO;
@@ -249,7 +250,7 @@ public class SalesTargetServiceImpl implements SalesTargetService {
 				String[] profitArr = resultDto.getProfitTarget_Group().split(",");
 				BigDecimal[] profit = StringToBigDecimalDivCurreny(profitArr);
 				BigDecimal[] profitOrgin = StringToBigDecimal(profitArr);
-
+				
 				String[] overArr = resultDto.getOverTarget_Group().split(",");
 				BigDecimal[] over = StringToBigDecimalDivCurreny(overArr);
 				BigDecimal[] overOrgin = StringToBigDecimal(overArr);
@@ -322,7 +323,7 @@ public class SalesTargetServiceImpl implements SalesTargetService {
 			returnMap.put("code", 20001);
 			returnMap.put("data", null);
 		}
-
+		
 		return returnMap;
 	}
 
@@ -405,4 +406,119 @@ public class SalesTargetServiceImpl implements SalesTargetService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<SalesTargetDTO> gradata(SalesTargetDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata(dto);
+	}
+
+	@Override
+	public List<SalesTargetDTO> gradata01(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata01(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata02(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata02(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata03(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata03(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata04(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata04(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata05(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata05(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata06(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata06(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata07(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata07(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata08(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata08(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata09(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata09(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata10(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata11(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata11(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata11(dto);
+	}
+	
+	@Override
+	public List<SalesTargetDTO> gradata12(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.gradata12(dto);
+	}
+
+	@Override
+	public List<SalesTargetDTO> nomalgradata(SalesTargetDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.nomalgradata(dto);
+	}
+
+	@Override
+	public List<AccountDTO> user_sales_target(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.user_sales_target(dto);
+	}
+
+	@Override
+	public List<AccountDTO> cnt_mouth_data(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.cnt_mouth_data(dto);
+	}
+
+	@Override
+	public List<AccountDTO> cnt_mouth_data_last(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.cnt_mouth_data_last(dto);
+	}
+
+	@Override
+	public List<AccountDTO> user_chart_target(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.user_chart_target(dto);
+	}
+
+	@Override
+	public List<AccountDTO> user_now_graph(AccountDTO dto) {
+		// TODO Auto-generated method stub
+		return salesTargetDAO.user_now_graph(dto);
+	}
+	
 }

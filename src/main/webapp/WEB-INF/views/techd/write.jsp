@@ -30,10 +30,14 @@
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
-								<col width="15%" />
-								<col width="35%" />
-								<col width="15%" />
-								<col width="35%" />
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
 							</colgroup>
 							<tbody>
 								<tr>
@@ -42,7 +46,7 @@
 										<div class="form-radio">
 											<form>
 												<div class="radio radio-inline">
-													<label> <input type="radio" name="contractType" value="NEW" checked="checked"> <i class="helper"></i>신규영업지원
+													<label style="margin-top: 10px;"> <input type="radio" name="contractType" value="NEW" checked="checked"> <i class="helper"></i>신규영업지원
 													</label>
 												</div>
 												<div class="radio radio-inline">
@@ -55,7 +59,6 @@
 								<tr>
 									<th scope="row" class="requiredTextCss">기술지원 요청명</th>
 									<td><input type="text" class="form-control form-control-sm" id="techdTitle" name="techdTitle" placeholder="기술지원 요청명을 입력하십시오" required></td>
-
 									<th scope="row" class="techdDetailSopp requiredTextCss">영업기회</th>
 									<td class="techdDetailSopp">
 										<div class="input-group input-group-sm mb-0">
@@ -97,9 +100,10 @@
 									<td class="techdDetailCont">
 										<div class="input-group input-group-sm mb-0">
 											<input type="text" class="form-control" name="contTitle"
-												   id="contTitle" value="${dto.contTitle}" readonly /> <input type="hidden"
-																											  name="contNo" id="contNo" value="" /> <span
-												class="input-group-btn">
+												   id="contTitle" value="${dto.contTitle}" readonly /> 
+												   <input type="hidden" id="contSoppNo" />
+												   <input type="hidden" name="contNo" id="contNo" value="" /> 
+												   <span class="input-group-btn">
 												<button class="btn btn-primary sch-opportunity2"
 														data-remote="${path}/modal/popup.do?popId=cont"
 														type="button" data-toggle="modal" data-target="#contModal">
@@ -131,38 +135,56 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<tr>
 									<th scope="row" class="requiredTextCss">엔드유저</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="custName" readonly id="custName" value="" />
-											<input type="hidden" name="custNo" id="custNo" value="" /> <span class="input-group-btn">
-												<button class="btn btn-primary sch-company"
-													data-remote="${path}/modal/popup.do?popId=cust"
-													type="button" data-toggle="modal" data-target="#custModal">
+											<input type="text" class="form-control" name="endCustName" readonly id="endCustName" value="" />
+											<input type="hidden" name="endCustNo" id="endCustNo" value="" /> <span class="input-group-btn">
+												<button class="btn btn-primary sch-company" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
 													<i class="icofont icofont-search"></i>
 												</button>
 											</span>
-											<div class="modal fade " id="custModal" tabindex="-1"
+											<div class="modal fade " id="endCustModal" tabindex="-1"
 												role="dialog">
 												<div class="modal-dialog modal-80size" role="document">
 													<div class="modal-content modal-80size">
 														<div class="modal-header">
-															<h4 class="modal-title">거래처 검색</h4>
-															<button type="button" class="close" onclick="$('#custModal').modal('hide');"
+															<h4 class="modal-title">엔드유저검색</h4>
+															<button type="button" class="close" onclick="$('#endCustModal').modal('hide');"
 																aria-label="Close">
 																<span aria-hidden="true">&times;</span>
 															</button>
 														</div>
 														<div class="modal-body">
-															<h5>거래처목록</h5>
+															<h5>엔드유저목록</h5>
 															<p>Loading!!!</p>
 														</div>
 														<div class="modal-footer">
 															<button type="button"
 																class="btn btn-default waves-effect "
-																onclick="$('#custModal').modal('hide');">Close</button>
+																onclick="$('#endCustModal').modal('hide');">Close</button>
+															<button type="button" class="btn btn-success waves-effect" id="custRegSimple">간편추가</button>
+														</div>
+														<div style="display: none; border: solid; width: 80%; margin: auto; margin-bottom: 5px;" id="custRegSimple_div">
+															<table>
+																<colgroup>
+																	<col width="10%">
+																	<col width="75%">
+																	<col width="15%">
+																</colgroup>
+																<tbody>
+																	<tr>
+																		<th>엔드유저명*</th>
+																		<td><input type="text" value="" id="custRegSimple_custName" style="width: 100%;"> </td>
+																		<td><button type="button" class="btn-sm btn-dark" id="custRegSimple_custName_check">중복확인</button></td>
+																	</tr>
+																	<tr>
+																		<th>담당자</th>
+																		<td><input type="text" value="" id="custRegSimple_custMemerName" style="width: 100%;" placeholder="미입력시 미정으로 세팅됩니다."></td>
+																		<td><button type="button" class="btn-sm btn-success" id="custRegSimple_custName_register">등록</button></td>
+																	</tr>
+																</tbody>
+															</table>
 														</div>
 													</div>
 												</div>
@@ -216,8 +238,6 @@
 									<th>버전</th>
 									<td><input type="text" class="form-control form-control-sm"
 										id="techdItemversion" name="techdItemversion" placeholder=""></td>
-								</tr>
-								<tr>
 									<th scope="row">장소</th>
 									<td><input type="text" class="form-control form-control-sm" id="techdPlace" name="techdPlace" placeholder=""></td>
 									<th scope="row" class="requiredTextCss">담당사원</th>
@@ -257,23 +277,20 @@
 											</div>
 										</div>
 									</td>
-
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">지원일자</th>
 									<td colspan="3">
 										<!-- <div class="col-sm-9 f-left m-b-0 p-l-0"> -->
 											<div class="input-group input-group-sm mb-0 mr-1">
-												<input class="form-control form-control-sm col-md-4 m-r-10" type="date" id="techdFrom" name="techdFrom" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)">
+												<input class="form-control form-control-sm col-md-4 m-r-10" type="date" max="9999-12-30" id="techdFrom" name="techdFrom" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)">
 												<select id="startTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)"></select>
-												<span> ~ </span>
-												<input class="form-control form-control-sm col-md-4 m-r-10" type="date" id="techdTo" name="techdTo" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)">
+												<span style="line-height:30px;">&nbsp;~&nbsp;</span>
+												<input class="form-control form-control-sm col-md-4 m-r-10" type="date" max="9999-12-31" id="techdTo" name="techdTo" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)">
 												<select id="endTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#techdFrom').val(), $('#startTime').val()), setDateHourMinute($('#techdTo').val(), $('#endTime').val()),this)"></select>
 											</div>
 										<!-- </div> -->
 									</td>
-								</tr>
-								<tr>
 									<th scope="row">지원형태</th>
 									<td><select name="techdType" id="techdType" class="form-control form-control-sm">
 									<option value="">선택</option>
@@ -293,7 +310,7 @@
 								</tr>
 								<tr>
 									<th scope="row">설명</th>
-									<td colspan="3"><textarea name="techdDesc" id="techdDesc" rows="8"
+									<td colspan="7"><textarea name="techdDesc" id="techdDesc" rows="8"
 											class="form-control"></textarea></td>
 								</tr>
 							</tbody>
@@ -312,7 +329,7 @@
 
 
 	<script>
-	$('#custModal').on('show.bs.modal', function(e) {
+	$('#endCustModal').on('show.bs.modal', function(e) {
 		var button = $(e.relatedTarget);
 		var modal = $(this);
 		modal.find('.modal-body').load(button.data("remote"));
@@ -327,7 +344,7 @@
 
 
 	$('#custmemberModal').on('show.bs.modal', function(e) {
-		var custNo = $("#custNo").val();
+		var custNo = $("#endCustNo").val();
 		var url = '${path}/modal/popup.do?popId=custmem&compNo=' + custNo;
 		$("#custmemberModalbtn").data("remote",url);
 
@@ -350,18 +367,18 @@
 
 
 
-	function fnSetCustData(a, b) {
-		$("#custNo").val(b);
-		$("#custName").val(a);
+	/* function fnSetCustData(a, b) {
+		$("#endCustNo").val(b);
+		$("#endCustName").val(a);
 		$(".modal-backdrop").remove();
-		$("#custModal").modal("hide");
-		/*
+		$("#endCustModal").modal("hide");
+		
 		$("#custmemberModalbtn").attr('disabled', false);
 		$("#custmemberModalbtn").removeClass("btn-danger");
 		$("#custmemberModalbtn").addClass("btn-primary");
 		// 고객검색 아이콘을 danger
-		*/
-	}
+		
+	} */
 
 	function fnSetUserData(a, b) {
 		$("#userName").val(b);
@@ -379,16 +396,49 @@
 
 	function fnSetSoppData(a, b) {
 		$("#soppNo").val(b);
+		$.ajax({
+			url: "${path}/acc/endusernamelist.do/" + b,
+			method: "post",
+			dataType: "json"
+		})
+		.done(function(result){
+			$("#endCustNo").val(result.data[0].buyrNo);
+			$("#endCustName").val(result.data[0].custName);
+		});
 		$("#soppTitle").val(a);
 		$(".modal-backdrop").remove();
 		$("#soppModal").modal("hide");
 	}
 
-	function fnSetContData(a, b) {
+	function fnSetContData(a, b, c, d, e) {
 		$("#contNo").val(b);
+		$.ajax({
+			url: "${path}/acc/endusernamelist_cont.do/" + b,
+			method: "post",
+			dataType: "json"
+		})
+		.done(function(result){
+			if(result.data[0].buyrNo == '' || result.data[0].buyrNo == null){
+				alert("해당 계약은 엔드유저가 등록되어있지 않습니다.");
+			}else if(result.data[0].buyrNo != '' || result.data[0].buyrNo != null){
+				$("#endCustNo").val(result.data[0].buyrNo);
+				$("#endCustName").val(result.data[0].custName);
+				$('#custmemberName').val(result.data[0].custMname);
+				$('#custmemberNo').val(result.data[0].buyrMemberNo);
+			}
+		});
 		$("#contTitle").val(a);
+		$("#contSoppNo").val(e);
 		$(".modal-backdrop").remove();
 		$("#contModal").modal("hide");
+	}
+	
+	function fnSetEndCustData(a, b) {
+		$("#endCustNo").val(b);
+		$("#endCustName").val(a);
+		$("#endCustmemberModalbtn").data('whatever', b);
+		$(".modal-backdrop").remove();
+		$("#endCustModal").modal("hide");
 	}
 
 	function fn_sprtInsert() {
@@ -399,7 +449,8 @@
 			sprtData.exContNo				= 0;							// 기존계약
 			sprtData.cntrctMth				= ${contractType[0].codeNo};
 		} else {
-			sprtData.soppNo					= 0;							// 영업기회
+			console.log($("#contSoppNo").val());
+			sprtData.soppNo					= $("#contSoppNo").val();							// 영업기회
 			sprtData.exContNo				= $("#contNo").val();			// 기존계약
 			sprtData.cntrctMth				= ${contractType[1].codeNo};
 		}
@@ -414,11 +465,48 @@
 		sprtData.techdTo			= setDateHourMinute($("#techdTo").val(), $("#endTime").val());						// 지원일자 종료
 		sprtData.techdType			= $("#techdType").val();					// 지원형태
 		sprtData.techdSteps			= $("#techdSteps").val();					// 진행단계
-		sprtData.techdDesc			= $("#techdDesc").val();					// 설명
-		sprtData.soppNo				= $("#soppNo").val() ? $("#soppNo").val() : 0; // 영업기회번호
+		sprtData.endCustNo 			= $("#endCustNo").val();
+		
+		if($("textarea").attr("style") === "display: none;"){
+			sprtData.techdDesc			= tinyMCE.get("techdDesc").getContent();
+		}else{
+			sprtData.techdDesc 		= $("#techdDesc").val();
+		}
+		
+		/* sprtData.soppNo				= $("#soppNo").val() ? $("#soppNo").val() : 0; // 영업기회번호 */
 		sprtData.contNo				= $("#contNo").val() ? $("#contNo").val() : 0; // 계약번호
-
-
+		
+		console.log(sprtData.techdFrom);
+		
+		if(!sprtData.techdTitle){
+			alert("기술지원 요청명을 입력하십시오.");
+			return;
+		} else if(sprtData.techdFrom === null || sprtData.techdTo === null){
+			alert("지원일자를 선택하십시오.");
+			return;
+		} else if($("#endCustName").val() === ""){
+			alert("엔드유저를 선택하십시오.");
+			return;
+		} else if(!contractType) {
+			alert("영업기회(신규 영업지원) 및 계약을 입력하십시오.");
+			return;
+		} else if(contractType != undefined) {
+			if(contractType == 'NEW'){
+				if ($("#soppTitle").val() == "" || $("#soppTitle").val() == "0"){
+					alert("영업기회을 입력하십시오.");
+					return;
+				}
+			} else if (contractType == 'ING'){
+				if ($("#contTitle").val() == "" || $("#contTitle").val() == "0"){
+					alert("계약을 입력하십시오.");
+					return;
+				}
+			}
+		} else if(!sprtData.userNo){
+			alert("유저를 선택하십시오.");
+			return;
+		}
+		
 		$.ajax({ url: "${path}/techd/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 					data: sprtData , // HTTP 요청과 함께 서버로 보낼 데이터
 					method: "POST", // HTTP 요청 메소드(GET, POST 등)
@@ -459,6 +547,101 @@
 
 		setTimeComboBox(['#startTime', '#endTime']);
 	});
+	
+	$("#custRegSimple").on("click",function (event) {
+		if($("#custRegSimple_div").is(':visible') == false){
+			$("#custRegSimple_div").show();
+			$("#custRegSimple").html("간편등록 취소");
+		} else {
+			$("#custRegSimple_div").hide();
+			$("#custRegSimple").html("간편등록");
+		}
+	});
+	
+	$("#custRegSimple_custName_check").on("click", function (event) {
+		var custRegSimple_custName = $("#custRegSimple_custName").val();
+		var obj = new Object();
+		obj.custName = custRegSimple_custName;
+		$.ajax({
+			url: "${path}/cust/custNameCheck", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+			data: obj , // HTTP 요청과 함께 서버로 보낼 데이터
+			method: "POST", // HTTP 요청 메소드(GET, POST 등)
+			dataType: "json" // 서버에서 보내줄 데이터의 타입
+		}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+		.done(function(data) {
+			// console.dir(data);
+			if(data.code == 10001){
+				// console.log("응답 성공");
+				var html= "";
+				if(data.result1.length > 0){
+					var tempArr = data.result1;
+					html += "같은 결과) \n";
+					for(var i=0; i<tempArr.length; i++){
+						html += "번호 : " + tempArr[i].custNo + " / 매출처 : " + tempArr[i].custName + "\n";
+					}
+				}
+
+				if(data.result2.length > 0){
+					var tempArr = data.result2;
+					html += "\n유사 결과) \n";
+					for(var i=0; i<tempArr.length; i++){
+						html += "번호 : " + tempArr[i].custNo + " / 매출처 : " + tempArr[i].custName + "\n";
+					}
+				}
+
+				if(data.result1.length == 0 && data.result2.length == 0){
+					html += "일치검색, 유사검색결과가 존재하지 않습니다.\n";
+				}
+
+				html += "\n등록하시겠습니까?";
+				var result = confirm(html);
+
+				if(result){
+					// console.log("등록진행");
+				} else {
+					// console.log("등록거부");
+				}
+			}else{
+				alert("응답 실패");
+			}
+		}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+		.fail(function(xhr, status, errorThrown) {
+			alert("통신 실패");
+		});
+	});
+
+	$("#custRegSimple_custName_register").on("click", function (event) {
+		var custRegSimple_custName = $("#custRegSimple_custName").val();
+		var custRegSimple_custMemerName = $("#custRegSimple_custMemerName").val();
+
+		var obj = new Object();
+		obj.custName = custRegSimple_custName;
+		obj.custMemberName = custRegSimple_custMemerName;
+
+		$.ajax({
+			url: "${path}/cust/simpleRegister", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+			data: obj , // HTTP 요청과 함께 서버로 보낼 데이터
+			method: "POST", // HTTP 요청 메소드(GET, POST 등)
+			dataType: "json" // 서버에서 보내줄 데이터의 타입
+		}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+		.done(function(result) {
+			// console.dir(result);
+			if(result.code == 10001){
+				alert("저장 성공");
+				$('#endCustModal').modal('hide');
+				$("#endCustName").val(result.data.custName);
+				$("#endCustNo").val(result.data.custNo);
+			}else{
+				alert("저장 실패");
+			}
+		}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+		.fail(function(xhr, status, errorThrown) {
+			alert("통신 실패");
+		});
+	});
+	
+	setTimeComboBox(['#startTime', '#endTime']);
+	
 	</script>
 <c:if test="${empty simple}">
 </div>

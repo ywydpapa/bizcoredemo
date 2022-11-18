@@ -48,12 +48,9 @@
 	<session-config>
 		<session-timeout>1440</session-timeout>
 	</session-config>
-	
-	<error-page>
+
+	<!-- <error-page>
 	<error-code>500</error-code>
 	<location>/WEB-INF/views/user/login500.jsp</location>
-	</error-page>
-	
-
-
+	</error-page> -->
 </web-app>

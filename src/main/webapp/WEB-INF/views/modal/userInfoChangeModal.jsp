@@ -30,6 +30,14 @@
                         <label for="checkedUserChangePasswd">비밀번호 확인</label>
                         <input type="password" class="form-control" id="checkedUserChangePasswd">
                     </div>
+                    <div class="form-group">
+				    	<label class="col-form-label">리스트 default 기간 설정</label>
+                        <p class="input_inline">
+                        	<input class="form-control" type="date" max="9999-12-30" id="listDateFrom" value="${sessionScope.listDateFrom}"/>
+                        	~
+                        	<input class="form-control" type="text" placeholder="현재날짜까지(기본) 자동 조회됩니다." readonly />
+                        </p>
+				  	</div>
                 </form>
             </div>
             <div class="modal-footer">

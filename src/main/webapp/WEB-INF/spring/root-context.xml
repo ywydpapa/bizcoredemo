@@ -8,13 +8,26 @@
 	<!-- DB -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-        <!-- <property name="url" value="jdbc:log4jdbc:mysql://vtek.swcore.kr:15157/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC"> -->
-        <property name="url" value="jdbc:log4jdbc:mysql://ep.vtek.co.kr:3345/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>
+        
+        <!-- 예전 서버 -->
+        <!-- <property name="url" value="jdbc:log4jdbc:mysql://vtek.swcore.kr:15157/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC"></property> -->
+        <!-- <property name="url" value="jdbc:log4jdbc:mysql://ep.vtek.co.kr:3345/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property> -->
+        <!-- <property name="url" value="jdbc:log4jdbc:mysql://localhost:3306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property> -->
         <!-- <property name="url" value="jdbc:log4jdbc:mysql://192.168.1.177:3306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property> -->
-        <property name="username" value="swcore"></property>
-        <property name="password" value="core2020"></property>
-<!--        <property name="username" value="root"></property>-->
-<!--        <property name="password" value="root"></property>-->
+        
+        <!-- 외부서버 -->
+       	<!-- <property name="url" value="jdbc:log4jdbc:mysql://61.39.104.28:13306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property> -->
+       	
+       	<!-- 내부서버 -->
+       	<property name="url" value="jdbc:log4jdbc:mysql://192.168.1.72:3306/swcore?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>
+       	
+        <property name="username" value="ljh0113"></property>
+        <property name="password" value="vTek17!*"></property>
+        
+        <!-- 데모 -->
+		<!-- <property name="url" value="jdbc:log4jdbc:mysql://demo.biz-core.co.kr:15157/demo?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=Asia/Seoul"></property>
+        <property name="username" value="demo"></property>
+        <property name="password" value="demo2022!"></property> -->
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -26,5 +39,4 @@
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
     </bean>
-
 </beans>

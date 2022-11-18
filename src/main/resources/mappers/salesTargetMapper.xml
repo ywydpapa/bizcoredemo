@@ -48,9 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</where>
 </select>
 
-<insert id="insertSalesTarget">
- </insert>
-
  <update id="updateSalesTarget">
  	update swc_sales_target 
  	set mm01 = #{mm01},
@@ -74,5 +71,64 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  
  <delete id="deleteSalesTarget">
  </delete>
- 		
+ 		<select id="gradata" resultType="SalesTargetDTO">
+ 			SELECT * FROM swc_sales_target
+			WHERE targetYear = "2022" and compNo = #{compNo};
+ 		</select>
+ 		<select id="nomalgradata" resultType="SalesTargetDTO">
+ 			<choose>
+ 				<when test="Num == 1">
+ 					SELECT mm01 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 2">
+ 					SELECT mm02 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 3">
+ 					SELECT mm03 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 4">
+ 					SELECT mm04 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 5">
+ 					SELECT mm05 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 6">
+ 					SELECT mm06 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 7">
+ 					SELECT mm07 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 8">
+ 					SELECT mm08 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 9">
+ 					SELECT mm09 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 10">
+ 					SELECT mm10 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 11">
+ 					SELECT mm11 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 				<when test="Num == 12">
+ 					SELECT mm12 as price FROM swc_sales_target
+					WHERE targetYear = "2022" and compNo = #{compNo};
+ 				</when>
+ 			</choose>
+ 		</select>
+ 		<select id="user_sales_target" resultType="AccountDTO">
+ 			select * from swc_sales_target
+ 			where userNo = #{userNo} and targetYear like CONCAT('%', #{selectYear}, '%')
+ 		</select>
 </mapper>

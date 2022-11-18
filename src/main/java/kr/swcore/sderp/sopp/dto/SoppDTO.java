@@ -18,6 +18,7 @@ public class SoppDTO extends PageDTO {
 	private int compNo;
 	private int userNo;
 	private int custNo;
+	private int contNo;
 	private int custMemberNo;
 	private int ptncNo;
 	private int ptncMemberNo;
@@ -56,7 +57,13 @@ public class SoppDTO extends PageDTO {
 	private String targetDateto2;
 
 	private String businessType;	// TODO : 영업타입 -> 삭제예정
+	
+	private int getNo;
+	private String listDateFrom;
 
+	private String maintenance_S;
+	private String maintenance_E;
+	
 	public SoppDTO() {
 		super();
 		// TODO Auto-generated constructor stub

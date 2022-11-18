@@ -16,7 +16,7 @@
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
-					<div class="d-inline">영업기회조회</div>
+					<div class="d-inline">수주판매보고승인</div>
 				</div>
 			</div>
 		</div>
@@ -45,21 +45,22 @@
 										<div class="table-responsive">
 											<table class="table table-sm bst02">
 												<colgroup>
-													<col width="15%" />
-													<col width="35%" />
-													<col width="15%" />
-													<col width="35%" />
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
 												</colgroup>
 												<tbody>
 												<tr>
 													<th scope="row" class="requiredTextCss">영업기회명</th>
-													<td colspan="3"><input type="text"
-																		   class="form-control form-control-sm" id="soppTitle"
-																		   name="soppTitle" value="${dto.soppTitle}"> <input
-															type="hidden" id="soppNo" name="soppNo"
-															value="${dto.soppNo}"></td>
-												</tr>
-												<tr>
+													<td>
+														<input type="text" class="form-control form-control-sm" id="soppTitle" name="soppTitle" value="${dto.soppTitle}"> 
+														<input type="hidden" id="soppNo" name="soppNo" value="${dto.soppNo}">
+													</td>
 													<th scope="row" class="requiredTextCss">담당사원</th>
 													<td>
 														<div class="input-group input-group-sm mb-0">
@@ -136,8 +137,6 @@
 															</div>
 														</div>
 													</td>
-												</tr>
-												<tr>
 													<th scope="row">매출처 담당자</th>
 													<td>
 														<div class="input-group input-group-sm mb-0">
@@ -171,6 +170,8 @@
 															</div>
 														</div>
 													</td>
+												</tr>
+												<tr>
 													<th scope="row">엔드유저</th>
 													<td>
 														<div class="input-group input-group-sm mb-0">
@@ -202,8 +203,6 @@
 															</div>
 														</div>
 													</td>
-												</tr>
-												<tr>
 													<th scope="row" class="requiredTextCss">진행단계</th>
 													<td><select name="soppStatus" id="soppStatus" class="form-control form-control-sm" onchange="javascript:changeProbability()">
 														<c:forEach var="sstatuslist" items="${sstatuslist}">
@@ -211,29 +210,33 @@
 														</c:forEach>
 													</select></td>
 													<th scope="row">가능성</th>
-													<td><span class="input_inline"><input
-															type="text" class="form-control form-control-sm"
-															id="soppSrate" name="soppSrate" value="${dto.soppSrate}"></span>
-														%</td>
-												</tr>
-												<tr>
+													<td class="text-right">
+														<span class="input_inline">
+															<input type="text" style="text-align:right;" class="form-control form-control-sm" id="soppSrate" name="soppSrate" value="${dto.soppSrate}">
+														</span>
+														%
+													</td>
 													<th scope="row">계약구분</th>
 													<td>
 														<select name="cntrctMth" id="cntrctMth" class="form-control form-control-sm">
-														<option value="">선택</option>
-														<option value="10247" <c:if test="${dto.cntrctMth eq 10247}">selected</c:if> >판매계약</option>
-														<option value="10248" <c:if test="${dto.cntrctMth eq 10248}">selected</c:if> >유지보수</option>
-														<option value="10254" <c:if test="${dto.cntrctMth eq 10254}">selected</c:if> >임대계약</option>
-													</select>
+															<option value="">선택</option>
+															<option value="10247" <c:if test="${dto.cntrctMth eq 10247}">selected</c:if> >판매계약</option>
+															<option value="10248" <c:if test="${dto.cntrctMth eq 10248}">selected</c:if> >유지보수</option>
+															<option value="10254" <c:if test="${dto.cntrctMth eq 10254}">selected</c:if> >임대계약</option>
+														</select>
 													</td>
-													<th scope="row">매출예정일</th>
-													<td><input class="form-control form-control-sm col-md-8" name="soppTargetDate" id="soppTargetDate" type="date" value="${dto.soppTargetDate}"></td>
 												</tr>
 												<tr>
+													<th scope="row">매출예정일</th>
+													<td>
+														<input class="form-control form-control-sm" name="soppTargetDate" id="soppTargetDate" type="date" max="9999-12-30" value="${dto.soppTargetDate}">
+													</td>
 													<th scope="row">판매방식</th>
 													<td>
-														<select name="soppType" id="soppType" class="form-control form-control-sm col-md-4">
-														<option value="">선택</option>
+														<select name="soppType" id="soppType" class="form-control form-control-sm">
+														<option value="">
+															선택
+														</option>
 														<c:forEach var="saleslist" items="${saleslist}">
 															<option value="${saleslist.codeNo}"
 																<c:if test="">selected</c:if>>${saleslist.desc03}</option>
@@ -241,7 +244,7 @@
 														</select>
 													</td>
 													<th scope="row">예상매출</th>
-													<td>
+													<td class="text-right">
 														<span class="input_inline">
 														<input
 															style="text-align: right" type="text"
@@ -250,15 +253,21 @@
 															value="<fmt:formatNumber value="${dto.soppTargetAmt}" pattern="#,###"/>">
 														</span>원
 													</td>
+													<th class="requiredTextCss" id="Maintenance_name" style="display: none;">유지보수 기간</th>
+													<td id="Maintenance_input" style="display: none; line-height: 30px;">
+														<div class="input-group input-group-sm mb-0">
+															<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30" id="maintenance_S" value="${dto.maintenance_S}"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31" id="maintenance_E" value="${dto.maintenance_E}">
+														</div>
+													</td>	
 												</tr>
 												<tr>
 													<th scope="row">설명</th>
-													<td colspan="3"><textarea name="soppDesc" id="soppDesc" rows="8" class="form-control">${dto.soppDesc}</textarea></td>
+													<td colspan="7"><textarea name="soppDesc" id="soppDesc" rows="8" class="form-control">${dto.soppDesc}</textarea></td>
 												</tr>
 												<c:if test="${dto.sopp2regDatetime == null}">
 												<tr>
 													<th scope="row">의견</th>
-													<td colspan="3"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control"></textarea></td>
+													<td colspan="7"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control"></textarea></td>
 												</tr>
 												</c:if>
 												<c:if test="${dto.sopp2regDatetime != null}">
@@ -268,7 +277,7 @@
 															<fmt:formatDate value="${sopp2regDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 															)
 														</th>
-														<td colspan="3"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control">${dto.sopp2Desc}</textarea></td>
+														<td colspan="7"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control">${dto.sopp2Desc}</textarea></td>
 													</tr>
 												</c:if>
 												</tbody>
@@ -327,11 +336,13 @@
 											<col width="10%" />
 										</colgroup>
 										<thead>
-										<th class="text-center">일자</th>
-										<th class="text-center">지원형태</th>
-										<th class="text-center">장소</th>
-										<th class="text-center">담당자</th>
-										<th class="text-center">비고</th>
+										<tr>
+											<th class="text-center">일자</th>
+											<th class="text-center">지원형태</th>
+											<th class="text-center">장소</th>
+											<th class="text-center">담당자</th>
+											<th class="text-center">비고</th>
+										</tr>
 										</thead>
 										<tbody>
 										<c:forEach var="row2" items="${techdinsopp}">
@@ -399,6 +410,12 @@
 	</div>
 	<!--영업기회등록-->
 	<script>
+	
+		if($("#cntrctMth").val() == '10248'){
+			$('#Maintenance_name').show();
+			$('#Maintenance_input').show();
+		};
+	
 		$("#tablist > li:nth-child(1)").click(function (){
 			$("#tab01_bottom").show();
 			$("#tab_common_bottom").hide();
@@ -544,7 +561,20 @@
 			if($("#soppTargetDate").val() != "") soppData.soppTargetDate	= $("#soppTargetDate").val();
 			if($("#soppTargetAmt").val() != "") soppData.soppTargetAmt 	= $("#soppTargetAmt").val().replace(/[\D\s\._\-]+/g, "");
 			if($("#soppDesc").val() != "") soppData.soppDesc 		= $("#soppDesc").val();
-
+			
+			if($("#cntrctMth").val() == '10248'){
+				if($('#maintenance_S').val() == '' || $('#maintenance_S').val() == null){
+					alert("유지보수 시작일을 확인하십시오.");
+					return;
+				}else if($('#maintenance_E').val() == '' || $('#maintenance_E').val() == null){
+					alert("유지보수 마감일을 확인하십시오.");
+					return;
+				}else{
+					if($("#maintenance_S").val() != "") soppData.maintenance_S 		= $("#maintenance_S").val();
+					if($("#maintenance_E").val() != "") soppData.maintenance_E 		= $("#maintenance_E").val();
+				}
+			}
+			
 			$.ajax({ url: "${path}/sopp/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 				data: soppData , // HTTP 요청과 함께 서버로 보낼 데이터
 				method: "POST", // HTTP 요청 메소드(GET, POST 등)
@@ -586,8 +616,6 @@
 			});
 		}
 
-
-
 		function fn_data02delete(soppdataNo) {
 			var msg = "선택한 건을 삭제하시겠습니까?";
 			if( confirm(msg) ){
@@ -625,7 +653,15 @@
 			.done(function(data) {
 				if(data.code == 10001){
 					alert("승인되었습니다.");
-					location.herf="/sopp/list2.do";
+					/* var msg = "자동 계약서 생성을 진행할까요?";
+					if (confirm(msg)){
+						autocontCr();
+						alert("자동으로 계약이 생성되었습니다. ");
+					}else{
+						alert("계약등록을 별도로 진행해야 합니다. ");
+					} */
+					autocontCr();
+					location.href="${path}/sopp/list2.do";
 				}else{
 					alert("승인 실패");
 				}
@@ -634,23 +670,87 @@
 				alert("통신 실패");
 			});
 		}
+		
+		function autocontCr(){
+			var contData = {};
+			contData.contTitle = $("#soppTitle").val()+"(자동생성)";
+			contData.soppNo = $("#soppNo").val();
+			contData.userNo = $("#userNo").val();
+			contData.custNo = $("#custNo").val();
+			contData.compNo = ${compNo};
+			contData.contType = $("#soppType").val();
+			contData.cntrctMth = $("#cntrctMth").val();
+			contData.buyrNo =$('#endCustNo').val();
+			contData.contAmt = $("#soppTargetAmt").val().replace(/[\D\s\._\-]+/g, "");
+			contData.net_profit = $("#product01DiffSum").html().replace(/[\D\s\._\-]+/g, "");
+			contData.vatYn = "N";
+			console.log(contData);		
+			
+			//유상 유지보수에 한하여 별개 쿼리
+			if($('#cntrctMth').val() == "10248"){
+				
+				contData.paymaintSdate = $('#maintenance_S').val();
+				contData.paymaintEdate = $('#maintenance_E').val();
+				
+				$.ajax({ url: "${path}/cont/insert_maintenance.do",
+					data: contData ,
+					method: "POST", 
+					dataType: "json" 
+				}) 
+			};
+			//유상 유지보수에 한하여 별개 쿼리
+			
+			if($('#cntrctMth').val() != "10248"){
+				$.ajax({ url: "${path}/cont/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소 
+					data: contData , // HTTP 요청과 함께 서버로 보낼 데이터 
+					method: "POST", // HTTP 요청 메소드(GET, POST 등) 
+					dataType: "json" // 서버에서 보내줄 데이터의 타입 
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+				.done(function(data) {
+					if(data.code == 10001){
+					}else{
+						alert("계약 저장 실패");
+					}
+				}) 
+				.fail(function(xhr, status, errorThrown) { 
+					alert("통신 실패");
+				});
+			}
+		}
+		
+		function fn_sopp2Reject(){
+			var role = '${sessionScope.userRole}';
+			if(role != 'ADMIN'){
+				alert("관리자만 접근이 가능합니다.");
+				return false;
+			}
 
-		function fn_sopp2Reject() {
 			var soppData = {};
-			soppData.soppNo 		= $("#soppNo").val();
-			soppData.sopp2Desc 		= $("#sopp2Desc").val();
-			soppData.soppStatus 	= '${sstatuslist[7].codeNo}'; 		//수주단계로 변경
-			$.ajax({ url: "${path}/sopp/insert2.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
-				data: soppData , // HTTP 요청과 함께 서버로 보낼 데이터
+			var soppDataDTOList = new Array();
+			var obj = new Object();
+			obj.soppNo = $("#soppNo").val();
+			obj.sopp2Desc = "";
+			soppDataDTOList.push(obj);
+			soppData.soppDTOList = soppDataDTOList;
+			soppData.soppStatus = '${sstatuslist[7].codeNo}'; 		//수주단계로 변경
+
+			$.ajax({
+				url: "${path}/sopp/Aprv.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+				data: JSON.stringify(soppData) , // HTTP 요청과 함께 서버로 보낼 데이터
 				method: "POST", // HTTP 요청 메소드(GET, POST 등)
+				contentType:"application/json",
 				dataType: "json" // 서버에서 보내줄 데이터의 타입
 			}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
 			.done(function(data) {
 				if(data.code == 10001){
-					alert("반려처리 되었습니다.");
-					location.herf="/sopp/list2.do";
+					if(data.msg != undefined){
+						alert(data.msg);
+					} else {
+						alert("반려처리되었습니다.");
+						location.href = "${path}/sopp/list2.do";
+					}
 				}else{
-					alert("승인 실패");
+					alert("반려 실패");
 				}
 			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
 			.fail(function(xhr, status, errorThrown) {

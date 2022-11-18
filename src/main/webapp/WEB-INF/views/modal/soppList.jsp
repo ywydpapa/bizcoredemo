@@ -12,20 +12,57 @@
 				<th>영업기회명</th>
 				<th>거래처명</th>
 				<th>담당자</th>
+				<th>리스트</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach var="row" items="${list}">
 				<tr align="center">
 					<td>${row.soppNo}</td>
-					<td><a
-						href="javascript:fnSetSoppData('${row.soppTitle}','${row.soppNo}','${row.userNo}','${row.custNo}');" title="${row.soppTitle}">${row.soppTitle}</a></td>
+					<td><a href="javascript:fnSetSoppData('${row.soppTitle}','${row.soppNo}','${row.userNo}','${row.custNo}');" title="${row.soppTitle}">${row.soppTitle}</a></td>
 					<td title="${row.custName}">${row.custName}</td>
 					<td>${row.userName}</td>
+					<td><button type="button" class="btn btn-sm btn-primary" onclick="javascript:mouseClick('${row.soppNo}');">보기</button></td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
+	<table>
+		<colgroup>
+			<col width="25%" />
+			<col width="45%" />
+			<col width="20%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th class="text-center">영업기회명</th>
+				<th class="text-center">예상매출</th>
+				<th class="text-center">매출예정일</th>
+			</tr>
+		</thead>
+	<tbody id="ItemFilelist">
+		
+	</tbody>
+	</table>
+	
+	<table>
+		<colgroup>
+			<col width="25%" />
+			<col width="45%" />
+			<col width="20%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th class="text-center">매입항목</th>
+				<th class="text-center">매입금액</th>
+				<th class="text-center">매입처</th>
+			</tr>
+		</thead>
+	<tbody id="ItemFilelist2">
+		
+	</tbody>
+	</table>
+	
 </div>
 <style>
 	#soppTable > tbody > tr > td:nth-child(1){
@@ -54,5 +91,28 @@ $(function(){
 		searching: true
     });
 });
-</script>
 
+function mouseClick(soppNo){
+	$("#ItemFilelist").empty();
+	$("#ItemFilelist2").empty();
+	
+	$.ajax({
+		url: "${path}/sopp/hovermodaldetail/" + soppNo,
+		method: "post",
+		dataType: "json",
+		success:function(result){
+			if(result.data.soppTargetDate != null){
+				$("#ItemFilelist").append('<tr class="item1">' + '<td class="text-center">' + result.data.soppTitle + '</td>' + '<td class="text-center">' + parseInt(result.data.soppTargetAmt).toLocaleString("en-US") + '</td>' + '<td class="text-center">' + result.data.soppTargetDate + '</td>' + '</tr>');
+			}else{
+				$("#ItemFilelist").append('<tr class="item1">' + '<td class="text-center">' + result.data.soppTitle + '</td>' + '<td class="text-center">' + parseInt(result.data.soppTargetAmt).toLocaleString("en-US") + '</td>' + '<td class="text-center">미정</td>' + '</tr>');
+			}
+			
+			if(result.data2.length > 0 ){
+				for(var i=0; i<result.data2.length; i++){
+					$("#ItemFilelist2").html('<tr class="item2">' + '<td class="text-center">' + result.data2[i].dataTitle + '</td>' + '<td class="text-center">' + parseInt(result.data2[i].dataTotal).toLocaleString("en-US") + '</td>' + '<td class="text-center">' + result.data2[i].salesCustNoN + '</td>' + '</tr>');
+				}
+			}
+		}
+	});
+}
+</script>

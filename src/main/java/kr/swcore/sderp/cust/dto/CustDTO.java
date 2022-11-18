@@ -3,6 +3,9 @@ package kr.swcore.sderp.cust.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.math.BigDecimal;
+
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -12,6 +15,7 @@ public class CustDTO {
 	
 	private int custNo;
 	private int compNo;
+	private int custCompNo;
 	private String custName;
 	private String custVatno;
 	private String custEmail;
@@ -53,6 +57,9 @@ public class CustDTO {
 	private int custData02no;
 	private int custData03no;
 	private int custData04no;
+	private String custByear;
+	private BigDecimal custCRbalance;
+	private BigDecimal custDRbalance;
 
 	public CustDTO() {
 		super();

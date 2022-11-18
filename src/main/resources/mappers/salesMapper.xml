@@ -4,8 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sales">
 
-<select id="listSales"
- 		resultType="salesDto">
+<select id="listSales" resultType="salesDto">
 	select subquery1.*
 	from
 		(
@@ -41,6 +40,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="regEDate != null and regEDate != ''">
 			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
 		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and salesFrdatetime == null or salesFrdatetime == '' and salesTodatetime == null or salesTodatetime == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
 		) subquery1
 	<if test="sSearch != null and sSearch != ''">
 	where
@@ -66,8 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</if>
 </select>
 
-<select id="listSalesCnt"
-		resultType="_integer">
+<select id="listSalesCnt" resultType="_integer">
 select count(*)
 from
 (
@@ -106,6 +107,9 @@ from
 		<if test="regEDate != null and regEDate != ''">
 			and date_format(a.regDatetime, '%Y-%m-%d') <![CDATA[<=]]> #{regEDate}
 		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and salesFrdatetime == null or salesFrdatetime == '' and salesTodatetime == null or salesTodatetime == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
 		) subquery1
 	<if test="sSearch != null and sSearch != ''">
 	where
@@ -129,25 +133,18 @@ from
 ) t
 </select>
 
-<!--
-<select id="listSales"
-		resultType="salesDto">
+<select id="listSalesbycust" resultType="salesDto">
 	select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a
 	left join swc_user b on a.userNo = b.userNo
 	left join swc_cust c on a.custNo = c.custNo
 	left join swc_sopp d on a.soppNo = d.soppNo
 	left join swc_cust e on a.ptncNo = e.custNo
 	left join swc_code f on a.salesType = f.codeNo
-	where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+	where a.attrib not like 'XXX%' and a.custNo = #{custNo}
 	order by salesFrdatetime desc
-	<if test="limit > 0">
-		limit  #{limit} offset #{offset}
-	</if>
 </select>
--->
- 
- <select id="listconSales"
- 		resultType="salesDto">
+
+ <select id="listconSales" resultType="salesDto">
  		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a  
 		left join swc_user b on a.userNo = b.userNo
 		left join swc_cust c on a.custNo = c.custNo
@@ -176,21 +173,19 @@ from
 		order by salesFrdatetime desc
  </select>
 
-<select id="listSalesinsopp"
- 		resultType="salesDto">
+<select id="listSalesinsopp" resultType="salesDto">
  		select a.*, b.userName , c.custName, d.soppTitle, e.custName ptncName, f.desc03 salesTypeN from swc_sales a  
 		left join swc_user b on a.userNo = b.userNo
 		left join swc_cust c on a.custNo = c.custNo
 		left join swc_sopp d on a.soppNo = d.soppNo
 		left join swc_cust e on a.ptncNo = e.custNo
 		left join swc_code f on a.salesType = f.codeNo
-		where a.attrib not like 'XXX%' and a.soppNo = #{soppNo} and a.compNo = #{compNo}
+		where a.attrib not like 'XXX%' and a.soppNo = #{soppNo} and a.compNo = #{compNo} and a.soppNo != 10005223
 		order by salesNo 
  </select>
 
 
-<select id="detailSales"
- 		resultType="salesDto">
+<select id="detailSales" resultType="salesDto">
 select a.*, b.userName , c.custName, d.custName ptncName, concat(left(a.salesFrdatetime,10),'T',substring(a.salesFrdatetime,12,9)) salesStime, CONCAT(left(a.salesTodatetime,10),'T',substring(a.salesTodatetime,12,9)) 
 salesEtime, e.soppTitle  from swc_sales a  
 		left join swc_user b on a.userNo = b.userNo

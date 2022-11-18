@@ -309,10 +309,21 @@
 		<div class="page-header2">
 			<div class="row align-items-end">
 				<div class="col-lg-12">
-					<div class="page-header-title">
-						<div class="d-inline">
-							영업기회조회
+					<div class="page-header-title" style="float:left;">
+						<div style="margin-top:15px;">
+							<h6 style="font-weight:600;">수주판매보고</h6>
 						</div>
+					</div>
+					<div class="btn_wr" style="float:right;">
+						<!-- hide and show -->
+						<button class="btn btn-sm btn-success" id="fold"
+							onclick="acordian_action()">펼치기</button>
+						<button class="btn btn-sm btn-success" id="fold2"
+							onclick="acordian_action1()" style="display: none;">접기</button>
+						<!-- hide and show -->
+						<button class="btn btn-sm btn-inverse" onClick="javascript:fnClearall()"><i class="icofont icofont-spinner-alt-3"></i>초기화</button>
+						<button class="btn btn-sm btn-primary" onClick="javascript:fnListcon()"><i class="icofont icofont-search"></i>검색</button>
+						<button class="btn btn-sm btn-outline" onClick="javascript:location='${path}/sopp/write.do'"><i class="icofont icofont-pencil-alt-2"></i>등록</button>
 					</div>
 				</div>
 			</div>
@@ -320,25 +331,25 @@
 		<!--Page-header end 페이지 타이틀 -->
 
 		<!--영업기회조회-->
-		<div class="cnt_wr">
+		<div class="cnt_wr" id="acordian" style="display:none;">
 			<div class="row">
 				<form id="searchForm" method="post" onsubmit="return false;" class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="card_box sch_it">
-							<div class="btn_wr text-right">
-								<button class="btn btn-sm btn-inverse" onClick="javascript:fnClearall()"><i class="icofont icofont-spinner-alt-3"></i>초기화</button>
-								<button class="btn btn-sm btn-primary" onClick="javascript:fnListcon()"><i class="icofont icofont-search"></i>검색</button>
-								<button class="btn btn-sm btn-outline" onClick="javascript:location='${path}/sopp/write.do'"><i class="icofont icofont-pencil-alt-2"></i>등록</button>
-							</div>
 							<!--row-->
 							<div class="form-group row">
 								<!--담당자-->
 								<div class="col-sm-12 col-xl-2">
 									<label class="col-form-label" for="userName">담당자</label>
 									<div class="input-group input-group-sm mb-0">
-										<input type="text" class="form-control" name="userName" id="userName" value="${sessionScope.userName}"  readonly />
-										<input type="hidden" name="userNo" 	id="userNo" value="${sessionScope.userNo}" />
-										<span class="input-group-btn">
+										<input type="text" class="form-control" name="userName" id="userName" list="userName_list" onchange="dataListChange(this);" autocomplete="off"> 
+										<datalist id="userName_list">
+											<c:forEach var="listUser" items="${listUser}">
+												<option data-value="${listUser.userNo}" value="${listUser.userName}">${listUser.userName}</option>
+											</c:forEach>
+										</datalist>
+										<input type="hidden" name="userNo" id="userNo" value="" /> 
+										<%-- <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
 														data-remote="${path}/modal/popup.do?popId=user"
 														type="button" data-toggle="modal" data-target="#userModal">
@@ -367,7 +378,7 @@
 													</div>
 												</div>
 											</div>
-										</div>
+										</div> --%>
 										<!--//modal-->
 									</div>
 								</div>
@@ -376,9 +387,14 @@
 								<div class="col-sm-12 col-xl-2">
 									<label class="col-form-label" for="custName">거래처</label>
 									<div class="input-group input-group-sm">
-										<input type="text" class="form-control" name="custName" id="custName" value="" readonly/>
+										<input type="text" class="form-control" name="custName" id="custName" list="custName_list" onchange="dataListChange(this);" autocomplete="off">
+										<datalist id="custName_list">
+											<c:forEach var="listCust" items="${listCust}">
+												<option data-value="${listCust.custNo}" value="${listCust.custName}">${listCust.custName}</option>
+											</c:forEach>
+										</datalist>
 										<input type="hidden" name="custNo" id="custNo" value="" />
-										<span class="input-group-btn">
+										<%-- <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
 														data-remote="${path}/modal/popup.do?popId=cust"
 														type="button" data-toggle="modal" data-target="#custModal">
@@ -408,7 +424,7 @@
 													</div>
 												</div>
 											</div>
-										</div>
+										</div> --%>
 										<!--//modal-->
 									</div>
 								</div>
@@ -416,9 +432,14 @@
 								<div class="col-sm-12 col-xl-2">
 									<label class="col-form-label" for="custmemberName">엔드유저</label>
 									<div class="input-group input-group-sm mb-0">
-										<input type="text" class="form-control" name="buyrName" id="custmemberName" value="" readonly />
+										<input type="text" class="form-control" name="buyrName" id="buyrName" list="buyrName_list" onchange="dataListChange(this);" autocomplete="off">
+										<datalist id="buyrName_list">
+											<c:forEach var="listCust" items="${listCust}">
+												<option data-value="${listCust.custNo}" value="${listCust.custName}">${listCust.custName}</option>
+											</c:forEach>
+										</datalist>
 										<input type="hidden" name="custmemberNo" id="buyrNo" value="" />
-										<span class="input-group-btn">
+										<%-- <span class="input-group-btn">
 											<button class="btn btn-dark sch-company" data-remote="${path}/modal/popup.do?popId=custmem&compNo=" type="button" data-toggle="modal" data-target="#custmemberModal" disabled>
 												<i class="icofont icofont-search"></i>
 											</button>
@@ -444,15 +465,15 @@
 													</div>
 												</div>
 											</div>
-										</div>
+										</div> --%>
 									</div>
 								</div>
 								<!--매출예정일-->
 								<div class="col-sm-12 col-xl-6">
 									<label class="col-form-label">매출예정일</label>
 									<p class="input_inline mb-0">
-										<input class="form-control form-control-sm col-xl-6" type="date" id="targetDatefrom" onChange="javascript:inputDate($('#targetDatefrom').val(), $('#targetDateto').val(),this)"> ~
-										<input class="form-control form-control-sm col-xl-6" type="date" id="targetDateto" onChange="javascript:inputDate($('#targetDatefrom').val(), $('#targetDateto').val(),this)">
+										<input class="form-control form-control-sm col-xl-6" type="date" max="9999-12-30" id="targetDatefrom"> ~
+										<input class="form-control form-control-sm col-xl-6" type="date" max="9999-12-31" id="targetDateto">
 									</p>
 								</div>
 								<!--//매출예정일-->
@@ -482,7 +503,7 @@
 									<select class="form-control form-control-sm" name="soppStatus" id="soppStatus" title="선택">
 										<option value>선택</option>
 										<c:forEach var = "sstatuslist" items="${sstatuslist}">
-											<option value="${sstatuslist.codeNo}">${sstatuslist.desc03}</option>
+											<option value="${sstatuslist.codeNo}" <c:if test="${sstatuslist.codeNo eq '10182'}">selected</c:if> >${sstatuslist.desc03}</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -526,7 +547,9 @@
 							</colgroup>
 							<thead>
 							<tr>
-								<th>기능</th>
+								<th>
+									<input type="checkbox" class="form-control" id="allCheck" onclick="allCheck(this);" />
+								</th>
 								<th>등록/수정일</th>
 								<th>판매방식</th>
 								<th>계약구분</th>
@@ -543,7 +566,7 @@
 							</tbody>
 						</table>
 					</div>
-					<button class="btn btn-md btn-primary" onclick="fn_sopp2_PartAprv()">승인</button>
+					<button class="btn btn-md btn-primary" onclick="fn_soppListInsert()">승인</button>
 					<button class="btn btn-md btn-danger" onclick="fn_sopp2_PartReject()">반려</button>
 					<button class="btn btn-md btn-dark" onclick="fn_sopp2_PartHolding()">보류</button>
 				</div>
@@ -551,7 +574,161 @@
 		</div>
 	</div>
 	<!--//리스트 table-->
+	
 	<script>
+	function acordian_action(){
+		if($("#acordian").css("display") == "none"){
+		    $("#acordian").show();
+		    $("#fold").hide();
+		    $("#fold2").show();
+
+		} else {
+		    $("#acordian").hide();
+		    $("#fold").show();
+		}
+	}
+	function acordian_action1(){
+		if($("#acordian").css("display") != "none"){
+		    $("#acordian").hide();
+		    $("#fold").show();
+		    $("#fold2").hide();
+
+		} else {
+		    $("#acordian").show();
+		    $("#fold").hide();
+		}
+	}
+</script>
+	
+	<script>
+		$("#targetDatefrom").change(function(){
+			var dateValue = $(this).val();
+			var dateValueArr = dateValue.split("-");
+			var dateValueCom = new Date(dateValueArr[0], parseInt(dateValueArr[1])-1, dateValueArr[2]);
+			var EdateValue = $("#targetDateto").val();
+			var EdateDateArr = EdateValue.split("-");
+			var EdateDateCom = new Date(EdateDateArr[0], parseInt(EdateDateArr[1])-1, EdateDateArr[2]);
+			
+			if(EdateValue == ""){
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else if(dateValueCom.getTime() > EdateDateCom.getTime()){
+				alert("시작일이 종료일보다 클 수 없습니다.");
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else{
+				return null;
+			}
+			
+			var year = dateValueCom.getFullYear();
+			var month = dateValueCom.getMonth()+1;
+			var day = dateValueCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#targetDateto").val(year + "-" + month + "-" + day);
+		});
+		
+		$("#targetDateto").change(function(){
+			var SdateValue = $("#targetDatefrom").val();
+			var SdateValueArr = SdateValue.split("-");
+			var SdateValueCom = new Date(SdateValueArr[0], parseInt(SdateValueArr[1])-1, SdateValueArr[2]);
+			var thisDateValue = $(this).val();
+			var thisDateArr = thisDateValue.split("-");
+			var thisDateCom = new Date(thisDateArr[0], parseInt(thisDateArr[1])-1, thisDateArr[2]);
+			
+			if(SdateValue == ""){
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else if(SdateValueCom.getTime() > thisDateCom.getTime()){
+				alert("종료일이 시작일보다 작을 수 없습니다.");
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else{
+				return null;
+			}
+			
+			var year = thisDateCom.getFullYear();
+			var month = thisDateCom.getMonth()+1;
+			var day = thisDateCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#targetDatefrom").val(year + "-" + month + "-" + day);
+		});
+		
+		$("#targetDatefrom2").change(function(){
+			var dateValue = $(this).val();
+			var dateValueArr = dateValue.split("-");
+			var dateValueCom = new Date(dateValueArr[0], parseInt(dateValueArr[1])-1, dateValueArr[2]);
+			var EdateValue = $("#targetDateto2").val();
+			var EdateDateArr = EdateValue.split("-");
+			var EdateDateCom = new Date(EdateDateArr[0], parseInt(EdateDateArr[1])-1, EdateDateArr[2]);
+			
+			if(EdateValue == ""){
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else if(dateValueCom.getTime() > EdateDateCom.getTime()){
+				alert("시작일이 종료일보다 클 수 없습니다.");
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else{
+				return null;
+			}
+			
+			var year = dateValueCom.getFullYear();
+			var month = dateValueCom.getMonth()+1;
+			var day = dateValueCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#targetDateto2").val(year + "-" + month + "-" + day);
+		});
+		
+		$("#targetDateto2").change(function(){
+			var SdateValue = $("#targetDatefrom2").val();
+			var SdateValueArr = SdateValue.split("-");
+			var SdateValueCom = new Date(SdateValueArr[0], parseInt(SdateValueArr[1])-1, SdateValueArr[2]);
+			var thisDateValue = $(this).val();
+			var thisDateArr = thisDateValue.split("-");
+			var thisDateCom = new Date(thisDateArr[0], parseInt(thisDateArr[1])-1, thisDateArr[2]);
+			
+			if(SdateValue == ""){
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else if(SdateValueCom.getTime() > thisDateCom.getTime()){
+				alert("종료일이 시작일보다 작을 수 없습니다.");
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else{
+				return null;
+			}
+			
+			var year = thisDateCom.getFullYear();
+			var month = thisDateCom.getMonth()+1;
+			var day = thisDateCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#targetDatefrom2").val(year + "-" + month + "-" + day);
+		});
+		
 		$('#custModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
@@ -590,8 +767,90 @@
 			$(".modal-backdrop").remove();
 			$("#custmemberModal").modal("hide");
 		}
+		
+		function allCheck(e){
+			if($(e).is(":checked") == true){
+				$("#soppTable tbody tr td").find("input[type='checkbox']").each(function(index, item){
+					$(item).prop("checked", true);
+				});
+			}else{
+				$("#soppTable tbody tr td").find("input[type='checkbox']").each(function(index, item){
+					$(item).prop("checked", false);
+				});
+			}
+		}
+		
+		function fn_soppListInsert(){
+			var checkboxes = $("#soppTable").find("input[type=checkbox]:checked");
+			var soppStatus = "${sstatuslist[5].codeNo}";
+			
+			checkboxes.each(function(index, item){
+				var insertData = {};
+				var soppTitle = $(item).parent().next().next().next().next().children().html();
+				insertData.soppNo = $(item).attr("id");
+				insertData.soppStatus = soppStatus;
+				insertData.soppTitle = soppTitle + "(자동생성)";
+				
+				$.ajax({
+					url: "${path}/sopp/beforeAppUpdate/" + insertData.soppNo,
+					method: "post",
+					async: false,
+					dataType: "json",
+					success:function(){
+						$.ajax({
+							url: "${path}/sopp/soppListApp.do",
+							method: "post",
+							async: false,
+							data: insertData,
+							dataType: "json",
+							success:function(data){
+								var getNo = data.getNo;
+								
+								$.ajax({
+									url: "${path}/sopp/selectSoppData/" + insertData.soppNo,
+									method: "post",
+									async: false,
+									dataType: "json",
+									success:function(selectData){
+										var updateData = {};
+										var amt1101 = 0;
+										var amt1102 = 0;
+										var dataAmt = 0;
+										
+										for(var i = 0; i < selectData.length; i++){
+											if(selectData[i].dataType === "1101"){
+												amt1101 += selectData[i].dataAmt;
+											}else if(selectData[i].dataType === "1102"){
+												amt1102 += selectData[i].dataAmt;
+											}
+										}
+										
+										dataAmt = amt1102 - amt1101;
+										updateData.contNo = getNo;
+										updateData.net_profit = dataAmt;
+										
+										$.ajax({
+											url: "${path}/sopp/soppListUpdate.do",
+											method: "post",
+											async: false,
+											data: updateData,
+											dataType: "json",
+										});
+									}
+								});
+							}
+						});
+					}
+				});
+			});
+			
+			setTimeout(() => {
+				alert("승인 완료되었습니다.");
+				location.reload();
+			}, 500);
+		}
 
-		function fn_sopp2_PartAprv(){
+		/* function fn_sopp2_PartAprv(){
 			var role = '${sessionScope.userRole}';
 			if(role != 'ADMIN'){
 				alert("관리자만 접근이 가능합니다.");
@@ -632,7 +891,7 @@
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
-		}
+		} */
 
 		function fn_sopp2_PartReject(){
 			var role = '${sessionScope.userRole}';
@@ -666,7 +925,7 @@
 						alert(data.msg);
 					} else {
 						alert("반려처리되었습니다.");
-						location.herf="/sopp/list2.do";
+						location.reload();
 					}
 				}else{
 					alert("반려 실패");

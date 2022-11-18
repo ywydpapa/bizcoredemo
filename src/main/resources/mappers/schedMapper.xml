@@ -56,6 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="schedType != null and schedType != ''">
 				and schedType = #{schedType}
 			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
+			</if>
 			) subquery1
 		<if test="sSearch != null and sSearch != ''">
 		where
@@ -110,6 +113,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="schedType != null and schedType != ''">
 				and schedType = #{schedType}
 			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
+			</if>
 			) subquery1
 		<if test="sSearch != null and sSearch != ''">
 			where
@@ -163,6 +169,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			<if test="schedType != null and schedType != ''">
 				and schedType = #{schedType}
+			</if>
+			<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+				and a.regDatetime Between #{listDateFrom} and now()
 			</if>
 			) subquery1
 		<if test="sSearch != null and sSearch != ''">
@@ -231,6 +240,9 @@ from
 	<if test="schedType != null and schedType != ''">
 		and schedType = #{schedType}
 	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
+	</if>
 	) subquery1
 	<if test="sSearch != null and sSearch != ''">
 		where
@@ -285,6 +297,9 @@ from
 	<if test="schedType != null and schedType != ''">
 		and schedType = #{schedType}
 	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
+	</if>
 	) subquery1
 	<if test="sSearch != null and sSearch != ''">
 		where
@@ -338,6 +353,9 @@ from
 	</if>
 	<if test="schedType != null and schedType != ''">
 		and schedType = #{schedType}
+	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and schedFrom == null or schedFrom == '' and schedTo == null or schedTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regDatetime Between #{listDateFrom} and now()
 	</if>
 	) subquery1
 	<if test="sSearch != null and sSearch != ''">
@@ -529,27 +547,27 @@ from
 <!-- 업무 일지 작성을 위해 전주,차주 일정 리스트업 -->  
  <select id="listSreport" resultType="schedDto">
 select 'p' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
-start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, yearweek(a.schedFrom) weekno, 'E' stype  
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype  
 from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
 c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
 d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
-#{userNo}) and yearweek(a.schedFrom) = yearweek(now())-1 
+#{userNo}) and yearweek(a.schedFrom) = yearweek(date_sub(now(), interval 7 day))
 union
 select 'p' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
 ,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
-a.salesNo id, a.salesDesc schedDesc, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
 a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
 = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in (#{userNo}) 
-and yearweek(a.salesTodatetime) = yearweek(now())-1
+and yearweek(a.salesTodatetime) = yearweek(date_sub(now(), interval 7 day))
 union
 select 'p' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
-start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, yearweek(a.techdFrom) weekno, 'T' stype  
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype  
 from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
 e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
-in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(now())-1
+in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(date_sub(now(), interval 7 day))
 union
 select 't' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
-start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc , yearweek(a.schedFrom) weekno, 'E' stype
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype
 from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
 c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
 d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
@@ -557,37 +575,37 @@ d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and 
 union
 select 't' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
 ,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
-a.salesNo id, a.salesDesc schedDesc, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
 a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
 = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( #{userNo} ) 
 and yearweek(a.salesTodatetime) = yearweek(now())
 union
 select 't' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
-start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, yearweek(a.techdFrom) weekno, 'T' stype 
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype 
 from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
 e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
 in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(now()) 
 union
 select 'n' weektype,dayofweek(a.schedFrom) weekdays,concat(" # ", a.schedTitle) title, concat(left(a.schedFrom,10)," ",substring(a.schedFrom,12,9)) 
-start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc , yearweek(a.schedFrom) weekno, 'E' stype
+start, concat(left(a.schedTo,10)," ",substring(a.schedTo,12,9)) end, a.schedNo id, a.schedDesc, a.schedCheck, d.userName, yearweek(a.schedFrom) weekno, 'E' stype
 from swc_sched a left join swc_cust b on a.custNo=b.custNo left join swc_sopp 
 c on a.soppNo=c.soppNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on 
 d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( 
-#{userNo}) and yearweek(a.schedFrom) = yearweek(now())+1 
+#{userNo}) and yearweek(a.schedFrom) = yearweek(date_add(now(), interval 7 day))
 union
 select 'n' weektype,dayofweek(a.salesTodatetime) weekdays,concat(" $ ", a.salesTitle) title, concat(left(a.salesFrdatetime,10)," ",substring(a.salesFrdatetime 
 ,12,9)) start, concat(left(a.salesTodatetime,10)," ",substring(a.salesTodatetime ,12,9)) end, 
-a.salesNo id, a.salesDesc schedDesc, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
+a.salesNo id, a.salesDesc schedDesc, a.salesCheck schedCheck, d.userName, yearweek(a.salesTodatetime) weekno, 'S' stype from swc_sales a left join swc_cust b on 
 a.custNo=b.custNo left join swc_user d on a.userNo=d.userNo left join swc_organiz e on d.org_id 
 = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo in ( #{userNo} ) 
-and yearweek(a.salesTodatetime) = yearweek(now())+1
+and yearweek(a.salesTodatetime) = yearweek(date_add(now(), interval 7 day))
 union
 select 'n' weektype,dayofweek(a.techdFrom) weekdays, concat(" @ ", a.techdTitle) title, concat(left(a.techdFrom,10)," ",substring(a.techdFrom,12,9)) 
-start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, yearweek(a.techdFrom) weekno, 'T' stype 
+start, concat(left(a.techdTo,10)," ",substring(a.techdTo,12,9)) end, a.techdNo id, a.techdDesc schedDesc, a.techdCheck schedCheck, d.userName, yearweek(a.techdFrom) weekno, 'T' stype 
 from swc_techd a left join swc_user d on a.userNo=d.userNo left join swc_organiz 
 e on d.org_id = e.org_id where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.userNo 
-in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(now())+1 
-order by weekno,weekdays 
+in ( #{userNo} ) and yearweek(a.techdFrom) = yearweek(date_add(now(), interval 7 day))
+order by weekno,weekdays,start
  </select>
  
  <insert id="insertSched">
@@ -648,6 +666,61 @@ order by weekno,weekdays
 	,'100000' )
  </insert>
 
+	<insert id="insertSchedauto">
+		insert into swc_sched (
+		userNo
+		,compNo
+		,soppNo
+		,custNo
+		,schedName
+		,schedFrom
+		,schedTo
+		,schedTitle
+		,schedDesc
+		,subschedNo
+		,schedActive
+		,schedAllday
+		,remindflag
+		,schedPlace
+		,schedType
+		,schedColor
+		,schedCat
+		,attrib )
+		values (
+		#{userNo}
+		,#{compNo}
+		<choose>
+			<when test="soppNo == 0">
+				,NULL
+			</when>
+			<otherwise>
+				,#{soppNo}
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="custNo == 0">
+				,NULL
+			</when>
+			<otherwise>
+				,#{custNo}
+			</otherwise>
+		</choose>
+		,#{schedName}
+		,#{schedFrom}
+		,#{schedTo}
+		,#{schedTitle}
+		,#{schedDesc}
+		,#{subschedNo}
+		,#{schedActive}
+		,#{schedAllday}
+		,#{remindflag}
+		,#{schedPlace}
+		,#{schedType}
+		,#{schedColor}
+		,#{schedCat}
+		,'100000' )
+	</insert>
+
  <update id="updateSched">
  update swc_sched set
  	<choose>
@@ -681,25 +754,55 @@ order by weekno,weekdays
  where schedNo=#{schedNo}
  </update>
  
+ <update id="updateSreport">
+ 	update swc_sched set schedCheck=#{schedCheck} where schedNo=#{schedNo}
+ </update>
+ 
+ <update id="updateSreport1">
+ 	update swc_sales set salesCheck=#{salesCheck} where salesNo=#{salesNo}
+ </update>
+ 
+  <update id="updateSreport2">
+ 	update swc_techd set techdCheck=#{techdCheck} where techdNo=#{techdNo}
+ </update>
+ 
  <insert id="insertSreport">
  insert into swc_sreport
- (userNo,compNo,weekNum,prComment,thComment,regDate)
- values(#{userNo},#{compNo},yearweek(CURDATE()),#{prComment},#{thComment},now())
+ (userNo,compNo,weekNum,prComment,prCheck,thComment,thCheck,regDate)
+ values(#{userNo},#{compNo},yearweek(CURDATE()),#{prComment},#{prCheck},#{thComment},#{thCheck},now())
+ </insert>
+ 
+ <insert id="insertSreport2">
+ insert into swc_sreport
+ (userNo,compNo,weekNum,prComment,prCheck,thComment,thCheck,regDate)
+ values(#{userNo},#{compNo},yearweek(CURDATE())+1,#{prComment},#{prCheck},#{thComment},#{thCheck},now())
  </insert>
  
  <select id="listMreport" resultType="schedDto">
 select so.org_title, su.userNo, su.userName, su.org_id ,max(ss.sreportNo) sreportNo, ss.weekNum from swc_user su 
 left join swc_sreport ss on su.userNo = ss.userNo and ss.weekNum = yearweek(curdate()) 
 left join swc_organiz so on su.org_id = so.org_id 
-where su.compNo = #{compNo} and su.attrib not like 'XXX%' group by userNo order by org_title
+where su.compNo = #{compNo} and su.attrib not like 'XXX%' group by userNo order by su.userOtp asc
  </select>
+ 
+  <select id="listMreport2" resultType="schedDto">
+select so.org_title, su.userNo, su.userName, su.org_id ,max(ss.sreportNo) sreportNo, ss.weekNum from swc_user su 
+left join swc_sreport ss on su.userNo = ss.userNo and ss.weekNum = yearweek(date_add(now(), interval 7 day))
+left join swc_organiz so on su.org_id = so.org_id 
+where su.compNo = #{compNo} and su.attrib not like 'XXX%' group by userNo order by su.userOtp asc
+ </select>
+ 
  
 <select id="detailAddtext" resultType="schedDto">
 select * from swc_sreport where sreportNo=#{sreportNo}
 </select>
 
 <select id="myAddtext" resultType="schedDto">
-select * from swc_sreport where userNo=#{userNo} order by sreportNo desc limit 1
+select * from swc_sreport where userNo=#{userNo} and weekNum = yearweek(curdate()) order by sreportNo desc limit 1
+</select>
+
+<select id="myAddtextNx" resultType="schedDto">
+select * from swc_sreport where userNo=#{userNo} and weekNum = yearweek(curdate())-1 order by sreportNo desc limit 1
 </select>
   
  <delete id="deleteSched">

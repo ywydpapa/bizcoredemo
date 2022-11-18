@@ -17,16 +17,18 @@
 				<col width="10%" />
 			</colgroup>
 			<thead>
-				<th class="text-center">일자</th>
-				<th class="text-center">파일명</th>
-				<th class="text-center">파일설명</th>
-				<th class="text-center">삭제</th>
+				<tr>
+					<th class="text-center">일자</th>
+					<th class="text-center">파일명</th>
+					<th class="text-center">파일설명</th>
+					<th class="text-center">삭제</th>
+				</tr>
 			</thead>
 			<tbody id="ItemFilelist">
 				<c:forEach var="row2" items="${soppFiles}">
 					<tr class="item1">
 						<td>${row2.uploadDate}</td>
-						<td><a href="javascript:downloadFile('${row2.fileId}');">${row2.fileName}</a></td>
+						<td><a href="javascript:downloadFile('${row2.fileId}','${row2.fileName}');">${row2.fileName}</a></td>
 						<td>${row2.fileDesc}</td>
 						<td style="text-align: center;"><button class="btn btn-sm btn-inverse" onclick="javascript:deleteFile('${row2.fileId}');">삭제</button></td>
 					</tr>
@@ -38,6 +40,75 @@
 </div>
 
 <script>
+
+$(document).ready(function (e){
+    $("input[type='file']").change(function(e){
+
+      //div 내용 비워주기
+      $('#preview').empty();
+      var files = e.target.files;
+      var arr =Array.prototype.slice.call(files);
+      
+      //업로드 가능 파일인지 체크
+      for(var i=0;i<files.length;i++){
+        if(!checkExtension(files[i].name,files[i].size)){
+          return false;
+        }
+      }
+      
+      preview(arr);
+      
+      
+    });//file change
+    
+    function checkExtension(fileName,fileSize){
+
+      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+      var maxSize = 20971520;  //20MB
+      
+      if(fileSize >= maxSize){
+        alert('파일 사이즈 초과');
+        $("input[type='file']").val("");  //파일 초기화
+        return false;
+      }
+      
+      if(regex.test(fileName)){
+        alert('업로드 불가능한 파일이 있습니다.');
+        $("input[type='file']").val("");  //파일 초기화
+        return false;
+      }
+      return true;
+    }
+    
+    function preview(arr){
+      arr.forEach(function(f){
+        
+        //파일명이 길면 파일명...으로 처리
+        var fileName = f.name;
+        //var fileName2 = 'X';
+        if(fileName.length > 10){
+          fileName = fileName.substring(0,12)+"...";
+        }
+        
+        //div에 이미지 추가
+        var str = '<div style="display: inline-flex; padding: 10px;"><li>';
+        str += '<span>'+fileName+'</span><br>';
+        //이미지 파일 미리보기
+        if(f.type.match('image.*')){
+          var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+          reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+        	str += '<input type="text" name="fileDesc" class="form-control" id="fileDesc" />'
+            $(str).appendTo('#preview');
+          } 
+          reader.readAsDataURL(f);
+        }else{
+        	str += '<input type="text" name="fileDesc" class="form-control" id="fileDesc" />'
+          	$(str).appendTo('#preview');
+
+        }
+      });
+    }
+});
 
 	function fileTableCreate(data) {
 		var html = '';
@@ -55,34 +126,67 @@
 	}
 
 	function uploadFile() {
-		var uploadForm = $('#uploadForm')[0];
-		var uploadData = new FormData(uploadForm);
+		
+		//각 파일 설명.
+	    var list = new Array();
+	    $("input[name=fileDesc]").each(function(index, item) {
+	    	list.push($(item).val());
+	    });
+		
+	    //파일 데이터 배열화
+	    var filesTempArr = [];
+	    var fileInput = document.getElementById("fileUpload");
+	    var files = fileInput.files;
+	    var arr =Array.prototype.slice.call(files);
+	    
+	    filesTempArr = arr;
+	    
+		var filesArrLen = arr.length;
+		var filesTempArrLen = filesTempArr.length;
 
-		if(!uploadData.get('file').name) {
-			alert('파일을 선택해주세요');
-		}else {
-			uploadData.append('fileDesc', $('#fileDesc').val());
-			$.ajax({
-				url : "${path}/sopp/uploadfile/"+$("#soppNo").val(),
-				method : "POST",
-				data : uploadData,
-				contentType : false,
-				processData : false
-			}).done(function(result){
-				if(result.code == 10001){
-					alert('파일 업로드 완료');
-					$("#fileUploadModal").modal("hide");
-					var html = fileTableCreate(result.data);
-					$("#ItemFilelist").empty();
-					$("#ItemFilelist").html(html);
-					$("#tablist > li:nth-child(4) > a")[0].innerText = "파일첨부("+result.data.length+")";
-				}else {
-					alert('파일 업로드 실패');
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert("통신 실패");
-			});
+		var uploadData = new FormData();
+		for(var i=0, filesTempArrLen = filesTempArr.length; i<filesTempArrLen; i++) {
+	    	uploadData.append('file', arr[i]);
+	    	//파일 확장자명
+	    	var file_name = arr[i].name.split(".").pop();
+	    	//파일 크기
+	    	var file_size = arr[i].size;
+	    	uploadData.append('fileSize', file_size);
+	    	uploadData.append('fileExtention', file_name);
+	    	uploadData.append('fileDesc', list[i]);
+		
+		//var uploadForm = $('#uploadForm')[0];
+		//var uploadData = new FormData(uploadForm);
+
+			if(!uploadData.get('file').name) {
+				alert('파일을 선택해주세요');
+			}else {
+				uploadData.append('fileDesc', $('#fileDesc').val());
+				$.ajax({
+					url : "${path}/sopp/uploadfile/"+$("#soppNo").val(),
+					method : "POST",
+					data : uploadData,
+					contentType : false,
+					processData : false
+				}).done(function(result){
+					if(result.code == 10001){
+						$("#fileUploadModal").modal("hide");
+						var html = fileTableCreate(result.data);
+						$("#ItemFilelist").empty();
+						$("#ItemFilelist").html(html);
+						$("#tablist > li:nth-child(4) > a")[0].innerText = "파일첨부("+result.data.length+")";
+					}else {
+						alert('파일 업로드 실패');
+					}
+				}).fail(function(xhr, status, errorThrown) {
+				});
+			}
+			//for문 당 배열 초기화
+	    	var uploadData = new FormData();
 		}
+		alert("파일 업로드 완료");
+		localStorage.setItem('lastTab', '#tab04');
+		location.href = $("#soppNo").val();
 	}
 
 	function deleteFile(fileId) {
@@ -114,7 +218,7 @@
 	}
 
 
-	function downloadFile(fileId) {
+	function downloadFile(fileId, fileName) {
 		var downloadData = {};
 		downloadData.soppNo = $("#soppNo").val();
 		downloadData.fileId = fileId;
@@ -127,7 +231,7 @@
 				responseType: 'blob'
 			},
 		}).done(function(data, status, xhr){
-			var fileName = xhr.getResponseHeader('content-disposition');
+			/* var fileName = xhr.getResponseHeader('content-disposition'); */
 			var link = document.createElement('a');
 			link.href = window.URL.createObjectURL(data);
 			link.download = fileName;

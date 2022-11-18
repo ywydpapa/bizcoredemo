@@ -33,20 +33,24 @@
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
-								<col width="15%" />
-								<col width="35%" />
-								<col width="15%" />
-								<col width="35%" />
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
 							</colgroup>
 							<tbody>
 								<tr>
 									<th scope="row" class="requiredTextCss">활동일</th>
 									<td colspan="3">
 										<div class="input-group input-group-sm mb-0 mr-1">
-											<input id="salesFrdatetime" class="form-control form-control form-control-sm col-md-4 m-r-10" type="date" value ="" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)">
+											<input id="salesFrdatetime" style="width:400px" class="form-control col-xl-2" type="date" max="9999-12-30" value ="" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)">
 											<select id="startTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)"></select>
-											<span> ~ </span>
-											<input id="salesTodatetime" class="form-control form-control form-control-sm col-md-4 m-r-10" type="date" value ="" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)">
+											<span style="line-height:30px;">&nbsp;~&nbsp;</span>
+											<input id="salesTodatetime" class="form-control col-xl-2" type="date" max="9999-12-31" value ="" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)">
 											<select id="endTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()), this)"></select>
 										</div>
 									</td>
@@ -54,18 +58,16 @@
 								<tr>
 									<th scope="row">장소</th>
 									<td><input type="text" class="form-control form-control-sm" id="salesPlace" name="salesPlace" value="${dto.salesPlace}"></td>
-									<th>활동형태</th>
+									<th class="requiredTextCss">활동형태</th>
 									<td><select name="salesType" id="salesType" class="form-control form-control-sm">
 										<c:forEach var="acttype" items="${acttype}">
 										<option value="${acttype.codeNo}" <c:if test="${acttype.codeNo == dto.salesType}">selected</c:if>>${acttype.desc03}</option>
 										</c:forEach>
 									</select></td>
-								</tr>
-								<tr>
 									<th class="requiredTextCss">담당사원</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="userName" id="userName" value="${dto.userName}" />
+											<input type="text" class="form-control" name="userName" id="userName" value="${dto.userName}" readonly>
 											<input type="hidden" class="form-control" name="userNo" id="userNo" value="${dto.userNo}" />
 											 <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
@@ -102,7 +104,7 @@
 									<th scope="row">영업기회</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="soppTitle" id="soppTitle" value="${dto.soppTitle}" />
+											<input type="text" class="form-control" name="soppTitle" id="soppTitle" value="${dto.soppTitle}" readonly>
 											<input type="hidden" class="form-control" name="soppNo" id="soppNo" value="${dto.soppNo }" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-opportunity2"
@@ -134,10 +136,13 @@
 									</td>
 								</tr>
 								<tr>
+									
+								</tr>
+								<tr>
 									<th scope="row">매출처</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="custName" id="custName" value="${dto.custName}" />
+											<input type="text" class="form-control" name="custName" id="custName" value="${dto.custName}" readonly>
 											 <input type="hidden" name="custNo" id="custNo" value="${dto.custNo}" /> <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
 													data-remote="${path}/modal/popup.do?popId=cust"
@@ -170,7 +175,7 @@
 									<th scope="row">엔드유저</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" id="endCustName" value="${dto.ptncName}" />
+											<input type="text" class="form-control" id="endCustName" value="${dto.ptncName}" readonly>
 											<input type="hidden" id="endCustNo" value="${dto.ptncNo}" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
@@ -198,17 +203,20 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<tr>
 									<th scope="row" class="requiredTextCss">제목</th>
-									<td colspan="3"><input type="text"
+									<td><input type="text"
 										class="form-control form-control-sm" id="salesTitle" name="salesTitle"
 										value="${dto.salesTitle}"></td>
+									<th></th>
+									<td></td>
 								</tr>
 								<tr>
-									<th scope="row">내용</th>
-									<td colspan="3"><textarea name="salesDesc" id="salesDesc" rows="8"
-											class="form-control">${dto.salesDesc}</textarea></td>
+									<th scope="row">
+										내용
+									</th>
+									<td colspan="7">
+										<textarea name="salesDesc" id="salesDesc" rows="7" class="form-control form-control-sm">${dto.salesDesc}</textarea>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -304,7 +312,33 @@
 			salesData.soppNo 		= $("#soppName").val() != "" ? Number($("#soppNo").val()) : 0;
 			salesData.ptncNo 		= $("#endCustName").val() != "" ? Number($("#endCustNo").val()) : 0;
 			salesData.salesType 		= $("#salesType").val();
-			salesData.salesDesc 		= $("#salesDesc").val();
+			
+			if($("textarea").attr("style") === "display: none;"){
+				salesData.salesDesc			= tinyMCE.get("salesDesc").getContent();
+			}else{
+				salesData.salesDesc 		= $("#salesDesc").val();
+			}
+			
+			if (!salesData.salesFrdatetime){
+				alert("영업활동의 시작일을 선택해 주십시오.");
+				return;
+			}
+			else if (!salesData.salesTodatetime){
+				alert("영업활동의 종료일을 선택해 주십시오.");
+				return;
+			}
+			else if (!salesData.salesType){
+				alert("활동형태를 선택해주십시오.");
+				return;
+			}
+			else if (!salesData.userNo){
+				alert("담당사원을 선택해 주십시오.");
+				return;
+			}
+			else if (!salesData.salesTitle) {
+				alert("영업활동 제목을 입력해 주십시오.");		
+				return;
+			}
 			
 			$.ajax({
 				url: "${path}/sales/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소

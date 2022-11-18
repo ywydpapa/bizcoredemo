@@ -116,7 +116,7 @@
 			</table>
 
 			<div class="col-lg-12 pull-right" style="margin-bottom:15px;margin-top:5px">
-				<c:if test="${userRole =='ADMIN'}">
+				<c:if test="${userRole =='PUSER'}">
 				<button class="btn btn-success config-save" type="button" onclick="fn_update();" style="float:right;">저장</button>
 				</c:if>
 				<!-- <button class="btn btn-primary pop-close" type="button">닫기</button> -->

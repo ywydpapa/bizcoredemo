@@ -6,22 +6,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <select id="listCont"
  		resultType="contDto">
- 		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN
+		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN, t.vatStatus
  		from swc_cont a
 		left join swc_user b on a.userNo = b.userNo
 		left join swc_cust c on a.custNo = c.custNo
 		left join swc_code d on a.contType = d.codeNo
  		left join swc_code g on a.cntrctMth = g.codeNo
-		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+ 		LEFT JOIN
+		 (
+		 	SELECT * FROM swc_vat 
+		 	WHERE attrib NOT LIKE "XXX%" AND compNo = #{compNo} ORDER BY vatIssueDate DESC LIMIT 0, 1
+		 )AS t
+		 ON a.contNo = t.contNo
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo} 
+		<if test="listDateFrom != null and listDateFrom != ''">
+		and a.regDatetime BETWEEN #{listDateFrom} and now()
+		</if>
 		order by regDatetime desc
 		<if test="limit > 0">
 			limit  #{limit} offset #{offset}
 		</if>
+		
+		
  </select>
+
+	<select id="listcont3m" resultType="contDto">
+		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN
+		from swc_cont a
+				 left join swc_user b on a.userNo = b.userNo
+				 left join swc_cust c on a.custNo = c.custNo
+				 left join swc_code d on a.contType = d.codeNo
+				 left join swc_code g on a.cntrctMth = g.codeNo
+		WHERE a.attrib not like 'upup%' AND a.attrib not like 'XXX%' AND (a.paymaintEdate BETWEEN NOW() and DATE_ADD(NOW(), INTERVAL +3 MONTH ) or a.freemaintEdate BETWEEN NOW() and DATE_ADD(NOW(), INTERVAL +3 MONTH )) order by contNo desc;
+	</select>
+
+	<select id="listContbycust"
+			resultType="contDto">
+		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN
+		from swc_cont a
+		left join swc_user b on a.userNo = b.userNo
+		left join swc_cust c on a.custNo = c.custNo
+		left join swc_code d on a.contType = d.codeNo
+		left join swc_code g on a.cntrctMth = g.codeNo
+		where a.attrib not like 'XXX%' and a.custNo = #{custNo}
+		order by regDatetime desc
+	</select>
+	
+	<select id="listSumCont" resultType="contDto">
+		select sum(contAmt) as sumAmt, sum(net_profit) as sumProfit FROM swc_cont where attrib not like 'XXX%' and compNo = #{compNo}
+	</select>
  
  <select id="listconCont"
  		resultType="contDto">
- 		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN
+ 		select a.*, b.userName , c.custName, d.desc03 contTypeN, g.desc03 cntrctMthN, t.vatStatus
 		from
 			 <choose>
 				 <when test="freemaintSdate != null and freemaintSdate != '' and freemaintEdate != null and freemaintEdate != ''">
@@ -30,14 +67,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 					 from swc_cont
 					 where (
 					 date_format(freemaintEdate, '%Y-%m-%d') <![CDATA[>=]]> #{freemaintSdate} and
-					 date_format(freemaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate}
+					 date_format(freemaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate} or
+					 date_format(paymaintEdate, '%Y-%m-%d') <![CDATA[>=]]> #{freemaintSdate} and
+					 date_format(paymaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate}
 					 )
 					 UNION
 					 select *
 					 from swc_cont
 					 where (
 					 date_format(freemaintEdate, '%Y-%m-%d') <![CDATA[>=]]> #{freemaintSdate} and
-					 date_format(freemaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate}
+					 date_format(freemaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate} or
+					 date_format(paymaintEdate, '%Y-%m-%d') <![CDATA[>=]]> #{freemaintSdate} and
+					 date_format(paymaintSdate, '%Y-%m-%d') <![CDATA[<=]]> #{freemaintEdate}
 					 )
 					 ) a
 				 </when>
@@ -49,6 +90,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left join swc_cust c on a.custNo = c.custNo
 		left join swc_code d on a.contType = d.codeNo
 		left join swc_code g on a.cntrctMth = g.codeNo
+		LEFT JOIN
+		 (
+		 	SELECT * FROM swc_vat 
+		 	WHERE attrib NOT LIKE "XXX%" AND compNo = #{compNo} ORDER BY vatIssueDate DESC LIMIT 0, 1
+		 )AS t
+		 ON a.contNo = t.contNo
 		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
 		<choose>
 			<when test="soppNo != 0">and a.soppNo != 0</when>
@@ -96,6 +143,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		<if test="businessType != null and businessType != ''">
  		 	and a.businessType = #{businessType}
  		</if>
+ 		<if test="listDateFrom != null and listDateFrom != '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regDatetime Between #{listDateFrom} and now()
+		</if>
 		 order by regDatetime desc
  </select>
 
@@ -108,16 +158,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	       e.desc03 as cntrctMthN,
 	       (select custName from swc_cust where custNo = a.custNo) custName,
 		   (select q.custMname from swc_custData03 q where q.custData03no = a.custMemberNo) custMemberName,
-	       (select custName from swc_cust where custNo = a.buyrNo) buyrName,
+	       <!-- (select custName from swc_cust where custNo = c.buyrNo) buyrName, -->
+	       (select custNo from swc_cust where custNo = c.buyrNo) buyrNo_second,
 	       (select q.custMname from swc_custData03 q where q.custData03no = a.buyrMemberNo) buyrMemberName,
 		   (select custName from swc_cust where custNo = a.ptncNo) ptncName,
 		   (select custName from swc_cust where custNo = a.supplyNo) supplyName,
-		   (select contTitle from swc_cont where contNo = a.exContNo) exContName
+		   (select contTitle from swc_cont where contNo = a.exContNo) exContName,
+		   f.custVatno as custVatno,
+		   f.custBossname as custBossname,
+		   f.custEmail as custEmail,
+		   g.userName as secondUserName,
+		   h.custName as buyrName
 	from swc_cont a
 			 left join swc_user b on a.userNo = b.userNo
 			 left join swc_sopp c on a.soppNo = c.soppNo
 			 left join swc_custData03 d on a.custmemberNo = d.custData03no
 			 left join swc_code e on a.cntrctMth = e.codeNo
+			 left join swc_cust f on a.custNo = f.custNo
+			 left join swc_user g on a.secondUserNo = g.userNo
+			 left join swc_cust h on a.buyrNo = h.custNo
 	where a.attrib not like 'XXX%' and a.contNo=#{contNo} order by a.contNo
 </select>
 
@@ -135,16 +194,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
  
  <insert id="insertCont">
- insert into swc_cont (contTitle, contDesc, compNo, soppNo, exContNo, userNo, custNo, custmemberNo, ptncNo, supplyNo, contOrddate,
-                       supplyDate, delivDate, contAmt, freemaintSdate, freemaintEdate, paymaintSdate, paymaintEdate, vatYn, contArea, cntrctMth,
-                       contType,net_profit ,attrib, buyrNo, buyrMemberNo
-                       )
- values (#{contTitle}, #{contDesc}, #{compNo}, #{soppNo}, #{exContNo}, #{userNo}, #{custNo}, #{custmemberNo}, #{ptncNo}, #{supplyNo}, #{contOrddate},
-         #{supplyDate}, #{delivDate}, #{contAmt}, #{freemaintSdate}, #{freemaintEdate}, #{paymaintSdate}, #{paymaintEdate}, #{vatYn}, #{contArea}, #{cntrctMth},
-         #{contType}, #{net_profit},'100000', #{buyrNo}, #{buyrMemberNo}
+ insert into swc_cont (contTitle, contDesc, compNo, soppNo, exContNo, userNo, secondUserNo, custNo, custmemberNo, ptncNo, supplyNo, contOrddate,
+                       supplyDate, delivDate, contAmt, freemaintSdate, freemaintEdate, vatYn, contArea, cntrctMth,
+                       contType,net_profit ,attrib, buyrNo, buyrMemberNo, paymaintSdate, paymaintEdate
+                       ) 
+ values (#{contTitle}, #{contDesc}, #{compNo}, #{soppNo}, #{exContNo}, #{userNo}, #{secondUserNo}, #{custNo}, #{custmemberNo}, #{ptncNo}, #{supplyNo}, #{contOrddate},
+         #{supplyDate}, #{delivDate}, #{contAmt}, #{freemaintSdate}, #{freemaintEdate}, #{vatYn}, #{contArea}, #{cntrctMth},
+         #{contType}, #{net_profit},'100000', #{buyrNo}, #{buyrMemberNo}, #{paymaintSdate}, #{paymaintEdate}
          )
  </insert>
-
+<insert id="insert_maintenance">
+	insert into swc_cont (contTitle, contDesc, compNo, soppNo, exContNo, userNo, custNo, custmemberNo, ptncNo, supplyNo, contOrddate,
+                       supplyDate, delivDate, contAmt, freemaintSdate, freemaintEdate, vatYn, contArea, cntrctMth,
+                       contType,net_profit ,attrib, buyrNo, buyrMemberNo, paymaintSdate, paymaintEdate
+                       )
+ values (#{contTitle}, #{contDesc}, #{compNo}, #{soppNo}, #{exContNo}, #{userNo}, #{custNo}, #{custmemberNo}, #{ptncNo}, #{supplyNo}, #{contOrddate},
+         #{supplyDate}, #{delivDate}, #{contAmt}, #{freemaintSdate}, #{freemaintEdate}, #{vatYn}, #{contArea}, #{cntrctMth},
+         #{contType}, #{net_profit},'100000', #{buyrNo}, #{buyrMemberNo}, #{paymaintSdate}, #{paymaintEdate})
+         <selectKey keyProperty="contNo" resultType="int" order="AFTER">
+         	SELECT LAST_INSERT_ID()
+         </selectKey>
+</insert>
+<update id="update_maintenance">
+	update swc_cont set 
+	exContNo = #{contNo}
+	where contNo = #{contNo}
+</update>
  <update id="updateCont">
 	update swc_cont 
 	set 
@@ -152,7 +227,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	contDesc=#{contDesc}, 
 	soppNo=#{soppNo}, 
 	userNo=#{userNo}, 
-	custNo=#{custNo}, 
+	custNo=#{custNo},
+	buyrNo=#{buyrNo}, 
+	exContNo = #{exContNo},
 	custmemberNo=#{custmemberNo}, 
 	ptncNo=#{ptncNo}, 
 	supplyNo=#{supplyNo}, 
@@ -173,11 +250,196 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	where contNo=#{contNo}
 	
  </update>
+ <update id="updateSopp_buyrno">
+ 	update swc_sopp a
+ 	set 
+ 	buyrNo=#{buyrNo}
+ 	where a.soppNo=#{soppNo} and a.attrib not like "xxx%";
+ </update>
+ <update id="soppListUpdate">
+	update swc_cont 
+	set net_profit = #{net_profit}
+	where contNo=#{contNo}
+ </update>
+ 
+ <update id="extAttUpdate">
+ 	update swc_cont
+ 	set modDatetime = now(),
+ 	attrib = 'UPUPX'
+ 	where contNo = #{contNo}
+ </update>
+ 
+ <update id="contAmtUpdate">
+ 	update swc_cont set contAmt = #{contAmt}, net_profit = #{net_profit} where compNo = #{compNo} and contNo = #{contNo};
+ </update>
  
  <delete id="deleteCont">
 	update swc_cont 
 	set attrib = 'XXXXX'
 	where contNo=#{contNo}
  </delete>
+ 
+ <select id="listFile" resultType="contFileDataDTO">
+ 	select *
+ 	from swc_contfiledata
+ 	where contNo=#{contNo}
+ 	and attrib not like 'XXX%'
+	order by uploadDate desc
+</select>
+
+<insert id="uploadFile">
+	insert into swc_contFileData
+	(
+		fileId,
+		fileName,
+		fileDesc,
+		uploadDate,
+		fileContent,
+		fileExtention,
+		fileSize,
+		contNo,
+		userNo,
+		regDatetime,
+		attrib
+	)
+ 	values 
+ 	(
+ 		#{fileId},
+ 		#{fileName},
+ 		#{fileDesc},
+ 		now(),
+ 		#{fileContent},
+ 		#{fileExtention},
+ 		#{fileSize},
+ 		#{contNo},
+ 		#{userNo},
+ 	 	now(),
+		10000
+ 	)
+ </insert>
+ 
+<insert id="extInsert">
+	insert into swc_cont
+	(
+		compNo, 
+		soppNo,
+		cntrctMth,
+		contType,
+		exContNo,
+		userNo,
+		custNo,
+		custMemberNo,
+		contTitle,
+		contDesc,
+		buyrNo,
+		buyrMemberNo,
+		ptncNo,
+		supplyNo,
+		supplyMemberNo,
+		contOrddate,
+		supplyDate,
+		delivDate,
+		contAmt,
+		vatYn,
+		net_profit,
+		freemaintSdate,
+		freemaintEdate,
+		paymaintSdate,
+		paymaintEdate,
+		contArea,
+		businessType,
+		regDatetime,
+		modDatetime,
+		attrib
+	) 
+	select 
+		#{compNo}, 
+		soppNo,
+		cntrctMth,
+		contType,
+		#{contNo},
+		userNo,
+		custNo,
+		custMemberNo,
+		#{contTitle},
+		contDesc,
+		buyrNo,
+		buyrMemberNo,
+		ptncNo,
+		supplyNo,
+		supplyMemberNo,
+		<choose>
+			<when test="contOrddate != null and contOrddate != ''">
+				#{contOrddate},
+			</when>
+			<otherwise>
+				contOrddate,
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="supplyDate != null and supplyDate != ''">
+				#{supplyDate},
+			</when>
+			<otherwise>
+				supplyDate,
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="delivDate != null and delivDate != ''">
+				#{delivDate},
+			</when>
+			<otherwise>
+				delivDate,
+			</otherwise>
+		</choose>
+		contAmt,
+		vatYn,
+		net_profit,
+		freemaintSdate,
+		freemaintEdate,
+		<choose>
+			<when test="paymaintSdate != null and paymaintSdate != ''">
+				#{paymaintSdate},
+			</when>
+			<otherwise>
+				paymaintSdate,
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="paymaintEdate != null and paymaintEdate != ''">
+				#{paymaintEdate},
+			</when>
+			<otherwise>
+				paymaintEdate,
+			</otherwise>
+		</choose>
+		contArea,
+		businessType,
+		now(),
+		now(),
+		'10000'
+	from swc_cont 
+	where contNo = #{contNo};
+</insert>
  		
+<select id="downloadFile" resultType="contFileDataDTO">
+	select *
+	from swc_contFileData  
+	where fileId = #{fileId} and contNo=#{contNo}
+</select>
+
+<delete id="deleteFile">
+	update swc_contFileData
+	set attrib = 'XXXXX',
+		modDatetime = now()
+	where fileId = #{fileId} and contNo=#{contNo}
+</delete>		
+ 
+ <select id="defaultgradata01" resultType="contDto">
+ 	SELECT * FROM swc_cont 
+	where date_format(regDatetime, '%Y') = '2022'
+	AND attrib NOT LIKE 'XXX%'
+	AND (DATE_FORMAT(paymaintSdate, '%Y') = 2022 OR paymaintSdate IS NULL);
+ </select>
+ 
 </mapper>

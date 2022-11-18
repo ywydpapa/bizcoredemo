@@ -5,7 +5,7 @@
 <!DOCTYPE html> 
 <html>
 <head>
-<title>SDERP</title>
+<title>BizCore</title>
 <meta name="format-detection" 		content="telephone=no" />
 <meta http-equiv="X-UA-Compatible" 	content="IE=edge" />
 <meta http-equiv="Content-Type" 	content="text/html; charset=utf-8"/>
@@ -154,7 +154,7 @@
 	// 	}
 	// }
 	
-	function fnChangeInfo() {
+	/* function fnChangeInfo() {
 		var userId = $("#userInfoForm").find("input[name=userId]").val();
 		var currentPassword = $("#userPasswd").val();
 		var changePassword = $("#userChangePasswd").val();
@@ -189,7 +189,7 @@
 			alert("통신 실패");
 		});
 		
-	}
+	} */
 	
 	function fnIsNullOrEmpty(value) {
 		if(value == null || value == undefined || value == '') {
@@ -296,7 +296,9 @@
 								<ul>
 									<li><a class="menuLink on" href="${path}/sidemenu/menu1.do">업무관리</a></li>
 									<li><a class="menuLink" href="${path}/sidemenu/menu2.do">그룹웨어</a></li>
-									<li><a class="menuLink" href="${path}/sidemenu/menu3.do">회계관리</a></li>
+									<c:if test="${sessionScope.userRole === 'ADMIN'}">
+										<li><a class="menuLink" href="${path}/sidemenu/menu3.do">회계관리</a></li>
+									</c:if>
 									<li><a class="menuLink" href="${path}/sidemenu/menu4.do">경영정보</a></li>
 								</ul>
 							</div>
@@ -419,9 +421,7 @@
 									</div>
 								</div>
 								<!-- main_contents Start -->
-								<div id="main_content">
-
-								</div>
+								<div id="main_content"></div>
 							<!-- main_contents end -->
 							</div>
 							<!-- Page-body end -->
@@ -454,13 +454,6 @@
 $( document ).ready(function() {
 	var url ='${path}/myboard.do';
 	location.herf = url;
-});
-
-$(".header-notification")
-.mouseout(function () {
-	$(".show-notification").css("display","none");
-}).mouseover(function() {
-	$(".show-notification").css("display","block");
 });
 </script>
 </body>

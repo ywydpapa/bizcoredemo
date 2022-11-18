@@ -31,13 +31,5 @@
 
 <script src="${path}/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="${path}/assets/js/script.js"></script>
-<script type="text/javascript">
-$(".header-notification")
-.mouseout(function () {
-	$(".show-notification").css("display","none");
-}).mouseover(function() {
-	$(".show-notification").css("display","block");
-});
-</script>
 </body>
 </html>

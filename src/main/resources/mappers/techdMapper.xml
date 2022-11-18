@@ -4,8 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="techd">
 
-<select id="listTechd"
-		resultType="TechdDto">
+<select id="listTechd" resultType="TechdDto">
 	select subquery1.*
 	from
 		(
@@ -47,6 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="cntrctMth != null and cntrctMth != ''">
 			and a.cntrctMth = #{cntrctMth}
 		</if>
+		<if test="listDateFrom != null and listDateFrom != '' and techdFrom == null or techdFrom == '' and techdTo == null or techdTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+			and a.regdatetime Between #{listDateFrom} and now()
+		</if>
 		) subquery1
 	<if test="sSearch != null and sSearch != ''">
 	where
@@ -71,8 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</if>
 </select>
 
-<select id="listTechdCnt"
-		resultType="_integer">
+<select id="listTechdCnt" resultType="_integer">
 select count(*)
 from
 (
@@ -117,6 +118,9 @@ from
 	<if test="cntrctMth != null and cntrctMth != ''">
 		and a.cntrctMth = #{cntrctMth}
 	</if>
+	<if test="listDateFrom != null and listDateFrom != '' and techdFrom == null or techdFrom == '' and techdTo == null or techdTo == '' and regSDate == null or regSDate == '' and regEDate == null or regEDate == ''">
+		and a.regdatetime Between #{listDateFrom} and now()
+	</if>
 	) subquery1
 	<if test="sSearch != null and sSearch != ''">
 		where
@@ -139,8 +143,7 @@ from
 ) t
 </select>
 
-<!--<select id="listTechd"
- 		resultType="TechdDto">
+<select id="listTechdbycust" resultType="TechdDto">
  		select a.*, b.userName , c.custName, f.desc03 techdStepsN 
  		from swc_techd a  
 		left join swc_user b on a.userNo = b.userNo
@@ -148,15 +151,11 @@ from
 		left join swc_sopp d on a.soppNo = d.soppNo
 		left join swc_cont e on a.contNo = e.contNo
 		left join swc_code f on a.techdSteps = f.codeNo 
-		where a.attrib not like 'XXX%' and a.compNo = #{compNo}
+		where a.attrib not like 'XXX%' and a.custNo = #{custNo}
  		order by techdFrom desc
-		<if test="limit > 0">
-			limit  #{limit} offset #{offset}
-		</if>
- </select>-->
+ </select>
  
- <select id="listconTechd"
- 		resultType="TechdDto">
+ <select id="listconTechd" resultType="TechdDto">
  		select a.*, b.userName , c.custName, f.desc03 techdStepsN 
  		from swc_techd a  
 		left join swc_user b on a.userNo = b.userNo
@@ -189,21 +188,25 @@ from
 		order by techdFrom desc
  </select>
  
- <select id="listTechdinsopp"
- 		resultType="TechdDto">
+ <select id="listTechdinsopp" resultType="TechdDto">
  		select a.*, b.userName , c.custName, f.desc03 techdTypeN from swc_techd a  
 		left join swc_user b on a.userNo = b.userNo
 		left join swc_cust c on a.custNo = c.custNo
 		left join swc_sopp d on a.soppNo = d.soppNo
 		left join swc_cont e on a.contNo = e.contNo
 		left join swc_code f on a.techdType = f.codeNo 
-		where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.soppNo = #{soppNo} 
+		where a.attrib not like 'XXX%' and a.compNo = #{compNo} and a.soppNo != 10005223
+		<if test="soppNo != 0">
+			and a.soppNo = #{soppNo}
+		</if>
+		<if test="soppNo == 0">
+			and a.contNo = #{contNo}
+		</if>
 		order by techdNo 
  </select>
 
-<select id="detailTechd"
- 		resultType="techdDto">
- 		select a.*, b.userName , c.custName, d.soppTitle, e.contTitle, f.custMname custmemberName, g.desc03 cntrctMthN,
+<select id="detailTechd" resultType="techdDto">
+	select a.*, b.userName , c.custName as endCustName, d.soppTitle, e.contTitle, f.custMname custmemberName, g.desc03 cntrctMthN, h.custName,
  		       CONCAT(left(a.techdFrom,10),'T',substring(a.techdFrom,12,9)) targetDatefrom,
  		       CONCAT(left(a.techdTo,10),'T',substring(a.techdTo,12,9)) targetDateto
  		from swc_techd a  
@@ -213,6 +216,7 @@ from
 		left join swc_cont e on a.contNo = e.contNo
 		left join swc_code g on a.cntrctMth = g.codeNo
 		left join swc_custData03 f on a.custmemberNo = f.custData03No 
+		left join swc_cust h on a.endCustNo = h.custNo
 		where a.attrib not like 'XXX%' and techdNo=#{techdNo} order by techdNo
  </select>
  
@@ -222,6 +226,7 @@ from
 	compNo,
 	custNo,
 	custmemberNo,
+	endCustNo,
 	cntrctMth,
 	techdTitle,
 	techdDesc,
@@ -243,8 +248,9 @@ from
  values 
  (
 	#{compNo},
-	#{custNo},
+	#{endCustNo},
 	#{custmemberNo},
+	#{compNo},
 	#{cntrctMth},
 	#{techdTitle},
 	#{techdDesc},
@@ -268,7 +274,9 @@ from
  <update id="updateTechd">
 	update swc_techd 
 	set 
+	<if test="custNo != 100002">
 	custNo = #{custNo},
+	</if>
 	soppNo = #{soppNo},
 	contNo = #{contNo},
 	custmemberNo = #{custmemberNo},

@@ -2,7 +2,12 @@ package kr.swcore.sderp.sopp;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import kr.swcore.sderp.code.service.CodeService;
+import kr.swcore.sderp.cont.dto.ContDTO;
+import kr.swcore.sderp.cont.service.ContService;
+import kr.swcore.sderp.cust.service.CustService;
+import kr.swcore.sderp.gw.service.GwService;
 import kr.swcore.sderp.sales.service.SalesService;
 import kr.swcore.sderp.sopp.dto.SoppDTO;
 import kr.swcore.sderp.sopp.dto.SoppFileDataDTO;
@@ -11,6 +16,8 @@ import kr.swcore.sderp.sopp.service.SoppService;
 import kr.swcore.sderp.sopp.service.SoppdataService;
 import kr.swcore.sderp.techd.service.TechdService;
 import kr.swcore.sderp.user.dto.UserDTO;
+import kr.swcore.sderp.user.service.UserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -53,12 +61,27 @@ public class SoppController {
 	@Inject
 	TechdService techdService;
 	
+	@Inject
+	GwService gwService;
+	
+	@Inject
+	ContService contService;
+	
+	@Inject
+	CustService custService;
+	
+	@Inject
+	UserService userService;
+	
+	
 	@RequestMapping("list.do")
 	public ModelAndView list(HttpSession session, ModelAndView mav) {
 		mav.setViewName("sopp/list");
 		mav.addObject("saleslist", codeService.listSalestype(session));
 		mav.addObject("sstatuslist", codeService.listSstatus(session));
 		mav.addObject("contractType", codeService.listContractType(session));
+		mav.addObject("listUser", userService.userList(session));
+		mav.addObject("listCust", custService.listCust(session));
 		mav.addObject("list", soppService.listSopp(session, null));
 		mav.addObject("first","Y");
 		return mav;
@@ -85,6 +108,8 @@ public class SoppController {
 		mav.addObject("saleslist", codeService.listSalestype(session));
 		mav.addObject("sstatuslist", codeService.listSstatus(session));
 		mav.addObject("contractType", codeService.listContractType(session));
+		mav.addObject("listUser", userService.userList(session));
+		mav.addObject("listCust", custService.listCust(session));
 		mav.addObject("list", soppService.listSopp2(session));
 		mav.addObject("first","Y");
 		return mav;
@@ -115,25 +140,37 @@ public class SoppController {
 	@RequestMapping("/detail/{soppNo}")
 	public ModelAndView detail(@PathVariable("soppNo") int soppNo, ModelAndView mav, HttpSession session) {
 		mav.addObject("dto", soppService.detailSopp(soppNo));
-		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
 		mav.addObject("dtodata02", soppdataService.listSoppdata02(soppNo));
 		mav.addObject("saleslist", codeService.listSalestype(session));
 		mav.addObject("sstatuslist", codeService.listSstatus(session));
-		mav.addObject("salesinsopp",salesService.listSalesinsopp(session, soppNo));
-		mav.addObject("techdinsopp",techdService.listTechdinsopp(session, soppNo));
+		mav.addObject("salesinsopp",salesService.listSalesinsopp(session, soppNo, 0));
+		mav.addObject("techdinsopp",techdService.listTechdinsopp(session, soppNo, 0));
 		mav.addObject("soppFiles",soppService.listFile(soppNo));
+		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
+		mav.addObject("estList", gwService.getEstSopp(session, soppNo));
 		mav.setViewName("sopp/detail");
 		return mav;
+	}
+	
+	@RequestMapping("hovermodaldetail/{soppNo}") 
+	public ResponseEntity<?> hovermodaldetail(@PathVariable("soppNo") int soppNo, HttpSession session, @ModelAttribute SoppDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("data", soppService.detailSopp(soppNo));
+		param.put("data2", soppdataService.listSoppdata01_showdetail(soppNo));
+		return ResponseEntity.ok(param);
 	}
 
 	@RequestMapping("/detail2/{soppNo}")
 	public ModelAndView detail2(@PathVariable("soppNo") int soppNo, ModelAndView mav, HttpSession session) {
 		mav.addObject("dto", soppService.detailSopp(soppNo));
-		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
 		mav.addObject("dtodata02", soppdataService.listSoppdata02(soppNo));
 		mav.addObject("saleslist", codeService.listSalestype(session));
 		mav.addObject("sstatuslist", codeService.listSstatus(session));
-		mav.addObject("salesinsopp",salesService.listSalesinsopp(session, soppNo));
+		mav.addObject("salesinsopp",salesService.listSalesinsopp(session, soppNo, 0));
+		mav.addObject("techdinsopp",techdService.listTechdinsopp(session, soppNo, 0));
+		mav.addObject("soppFiles",soppService.listFile(soppNo));
+		mav.addObject("dtodata01", soppdataService.listSoppdata01(soppNo));
+		mav.addObject("estList", gwService.getEstSopp(session, soppNo));
 		mav.setViewName("sopp/detail2");
 		return mav;
 	}
@@ -237,6 +274,7 @@ public class SoppController {
 	@RequestMapping("insertdata01.do")
 	public ResponseEntity<?> insertdata01(HttpSession session, @ModelAttribute SoppdataDTO dto) {
 		Map<String, Object> param = new HashMap<>();
+		
 		int soppdataInsert = soppdataService.insertSoppdata01(session, dto);
 		if (soppdataInsert >0) {
 			param.put("code","10001"); 
@@ -245,7 +283,19 @@ public class SoppController {
 		}
 		return ResponseEntity.ok(param);
 	}
-
+	
+	@RequestMapping("insertdata01_defalut.do")
+	public ResponseEntity<?> insertdata01_defalut(HttpSession session, @ModelAttribute SoppdataDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		
+		int soppdataInsert = soppdataService.insertdata01_defalut(session, dto);
+		if (soppdataInsert >0) {
+			param.put("code","10001"); 
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
 	
 	@RequestMapping("insertdata02.do")
 	public ResponseEntity<?> insertdata02(HttpSession session,@ModelAttribute SoppdataDTO dto) {
@@ -260,9 +310,9 @@ public class SoppController {
 	}
 
 	@RequestMapping("updatedata01.do")
-	public ResponseEntity<?> updatedata01(HttpSession session, @ModelAttribute SoppdataDTO dto, HttpServletRequest servletRequest) {
+	public ResponseEntity<?> updatedata01(HttpSession session, @ModelAttribute SoppdataDTO dto) {
 		Map<String, Object> param = new HashMap<>();
-		int soppdataInsert = soppdataService.updateSoppdata01(session, dto, servletRequest);
+		int soppdataInsert = soppdataService.updateSoppdata01(session, dto);
 		if (soppdataInsert >0) {
 			param.put("code","10001");
 		}
@@ -313,6 +363,18 @@ public class SoppController {
 			}
 			return ResponseEntity.ok(param);
 		}
+
+	@RequestMapping("updateSoppStatus.do")
+	public ResponseEntity<?> updSStatus(@ModelAttribute SoppDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		int soppUpdate = soppService.updateSoppStatus(dto);
+		if (soppUpdate >0) {
+			param.put("code","10001");
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
 			
 	@RequestMapping("deletedata01.do")
 	public ResponseEntity<?> delete(@ModelAttribute SoppdataDTO dto) {
@@ -338,6 +400,71 @@ public class SoppController {
 	}
 	return ResponseEntity.ok(param);
 }
+	
+	@RequestMapping("soppListApp.do")
+	public ResponseEntity<?> soppListApp(HttpSession session, @ModelAttribute SoppDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		
+		List<SoppDTO> selectSoppdetail = soppService.selectSoppdetail(session, dto);
+		
+		if(selectSoppdetail.get(0).getMaintenance_S() != null || !selectSoppdetail.get(0).getMaintenance_S().isEmpty()) {
+			dto.setMaintenance_S(selectSoppdetail.get(0).getMaintenance_S());
+			dto.setMaintenance_E(selectSoppdetail.get(0).getMaintenance_E());
+		}else {
+			dto.setMaintenance_S(null);
+			dto.setMaintenance_E(null);
+		}
 
-
+		int soppdataInsert = soppService.soppListApp(dto);
+		param.put("getNo", dto.getGetNo());
+		if (soppdataInsert >0) {
+			param.put("code","10001"); 
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
+	
+	@ResponseBody
+	@RequestMapping("selectSoppData/{soppNo}")
+	public List<SoppdataDTO> selectSoppData(@PathVariable("soppNo") int soppNo) {
+		List<SoppdataDTO> dataList = soppdataService.listSoppdata01(soppNo);
+		
+		return dataList;
+	}
+	
+	@RequestMapping("soppListUpdate.do")
+	public ResponseEntity<?> soppListUpdate(HttpSession session, @ModelAttribute ContDTO dto) {
+		logger.info("sopp logger : " + dto.toString());
+		
+		Map<String, Object> param = new HashMap<>();
+		int soppUpdate = contService.soppListUpdate(session, dto);
+		if (soppUpdate >0) {
+			param.put("code","10001"); 
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
+	
+	@RequestMapping("beforeAppUpdate/{soppNo}")
+	public ResponseEntity<?> beforeAppUpdate(@PathVariable("soppNo") int soppNo) {
+		Map<String, Object> param = new HashMap<>();
+		int soppUpdate = soppService.beforeAppUpdate(soppNo);
+		if (soppUpdate >0) {
+			param.put("code","10001"); 
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
+	
+	@RequestMapping("assignPps.do")
+	public ResponseEntity<?> assignPps(@ModelAttribute SoppDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		soppService.assignPps(dto);
+		param.put("getNo", dto.getGetNo());
+		return ResponseEntity.ok(param);
+	}
+	
 }

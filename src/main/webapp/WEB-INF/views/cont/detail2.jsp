@@ -287,7 +287,7 @@
 								<th scope="row">무상유지보수</th>
 								<td>
 									<div class="input-group input-group-sm mb-0">
-										<input class="form-control form-control-sm col-sm-6 m-r-5" type="date"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date">
+										<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31">
 									</div>
 								</td>
 								<th >VAT 포함여부</th>

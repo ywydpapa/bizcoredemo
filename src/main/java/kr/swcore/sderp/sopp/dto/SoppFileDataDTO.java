@@ -15,5 +15,6 @@ public class SoppFileDataDTO {
 	private byte[] fileContent;
 	private Integer soppNo;
 	private Integer userNo;
-	
+	private String fileExtention;
+	private String fileSize;
 }

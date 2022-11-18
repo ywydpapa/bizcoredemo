@@ -10,16 +10,35 @@
 
 <div id="main_content">
 	<script type="text/javascript">
-	<c:if test="${userInfo.userId == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
+	<c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
 		function fn_userUpdate() {
 			var userData = {};
+			//전화번도 유효성 검사
+			var regExp = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
+			var userTel		= $("#userTel").val();
+			
+			if( !regExp.test(userTel)) {
+			     alert("전화번호를 다시 입력해주세요.");
+			     return;
+			};
+			//전화번도 유효성 검사
 			userData.userNo 		= $("#userNo").val();
 			userData.userId 		= $("#userId").val();
-			userData.userPasswd 	= $("#userPasswd").val();
+			//이메일, 전화번호
+			userData.userEmail		= $("#userEmail").val();
+			userData.userTel		= $("#userTel").val();
+			
+			if($("[name='userPasswd']").attr("data-number") == 1){
+				userData.userPasswd 	= 1;
+			}else{
+				userData.userPasswd		= 0;
+			}
+			
 			userData.userName 		= $("#userName").val();
 			userData.userRole 		= $("#userRole").val();
 			userData.org_id 		= $("#userDept").val();
 			userData.attrib			= $("#userAttrib").val();
+			userData.userOtp		= $("#userOtp").val();
 			userData.userKey 		= $("#userRoleAA").val()+$("#userRoleBB").val()+$("#userRoleCC").val()+$("#userRoleDD").val()+$("#userRoleEE").val()+$("#userRoleFF").val()+$("#userRoleGG").val()+$("#userRoleHH").val()+$("#userRoleII").val()+$("#userRoleJJ").val()+$("#userRoleKK").val()+$("#userRoleLL").val()+$("#userRoleMM").val()+$("#userRoleNN").val();
 			$.ajax({ url: "${path}/user/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 						data: userData , // HTTP 요청과 함께 서버로 보낼 데이터
@@ -80,7 +99,7 @@
 								<tr>
 									<th scope="row">비밀번호</th>
 									<td>
-										<label><input type="checkbox" name="userPasswd" id="userPasswd" value = "init" class="form-control">암호 초기화</label>
+										<label><input type="checkbox" name="userPasswd" id="userPasswd" data-number="0" class="form-control">암호 초기화</label>
 									</td>
 								</tr>
 								<tr>
@@ -113,6 +132,26 @@
 										<option value="10000">로그인 가능</option>
 										<option value="XXXXX">로그인 금지</option>
 										</select></td>
+								</tr>
+								<!-- tel -->
+								<tr>
+									<td>전화번호</td>
+									<td><input type="text" class="form-control form-control-sm" id="userTel" name="userTel" value="${userInfo.userTel}" placeholder="000-0000-0000">
+									</td>
+								</tr>
+								<!-- tel value="${userInfo.userTel}"-->
+								<!-- e-mail -->
+								<tr>
+									<td>이메일</td>
+									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
+									</td>
+								</tr>
+								<!-- e-mail value="${userInfo.userEmail}"-->
+								<tr>
+									<td>표시 순서</td>
+									<td>
+										<input type="text" name="userOtp" id="userOtp" value="${userInfo.userOtp}">  
+									</td>
 								</tr>
 								<tr align="center">
 									<td rowspan="10">화면권한 설정</td>
@@ -256,3 +295,20 @@
 	</div>
 </div>
 <jsp:include page="../body-bottom.jsp"/>
+<script>
+	$("[name='userPasswd']").change(function(){
+		if($(this).attr("data-number") == 0){
+			$(this).attr("data-number", 1);
+		}else{
+			$(this).attr("data-number", 0);
+		}
+	});
+
+	$("[id^='userRole']").find("option").each(function(index, item){
+		var userKey = "${userInfo.userKey}";
+		
+		if(userKey.indexOf(item.value) != -1){
+			$(this).attr("selected", true);
+		}
+	})
+</script>

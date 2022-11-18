@@ -28,8 +28,10 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs  tabs" role="tablist" id="tablist">
 					<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab01" role="tab">기본정보</a></li>
-					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab02" role="tab" id="dataType01_tab02">매입매출 내역</a></li>
-					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab03" role="tab" id="dataType01_tab03">견적 내역</a></li>
+					<c:if test="${sessionScope.userNo eq  dto.userNo || sessionScope.userRole eq 'ADMIN'}">
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab02" role="tab" id="dataType01_tab02">매입매출 내역(${fn:length(dtodata01)})</a></li>
+					</c:if>
+					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab03" role="tab" id="dataType01_tab03">견적 내역(${fn:length(estList)})</a></li>
 					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab04" role="tab">파일첨부(${fn:length(soppFiles)})</a></li>
 					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab05" role="tab">기술지원 내역(${fn:length(techdinsopp)})</a></li>
 					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab06" role="tab">영업활동 내역(${fn:length(salesinsopp)})</a></li>
@@ -44,26 +46,28 @@
 										<div class="table-responsive">
 											<table class="table table-sm bst02">
 												<colgroup>
-													<col width="15%" />
-													<col width="35%" />
-													<col width="15%" />
-													<col width="35%" />
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
+													<col width="5%"/>
+													<col width="15%"/>
 												</colgroup>
 												<tbody>
 													<tr>
 														<th scope="row" class="requiredTextCss">영업기회명</th>
-														<td colspan="3"><input type="text"
+														<td><input type="text"
 															class="form-control form-control-sm" id="soppTitle"
 															name="soppTitle" value="${dto.soppTitle}"> <input
 															type="hidden" id="soppNo" name="soppNo"
 															value="${dto.soppNo}"></td>
-													</tr>
-													<tr>
-														<th scope="row" class="requiredTextCss">담당사원</th>
+															<th scope="row" class="requiredTextCss">담당사원</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
 																<input type="text" class="form-control" name="userName"
-																	id="userName" value="${dto.userName}" /> <input
+																	id="userName" value="${dto.userName}" readonly> <input
 																	type="hidden" name="userNo" id="userNo"
 																	value="${dto.userNo}" /> <span class="input-group-btn">
 																	<button class="btn btn-primary sch-company"
@@ -98,11 +102,11 @@
 																</div>
 															</div>
 														</td>
-														<th scope="row">매출처</th>
+														<th class="requiredTextCss" scope="row">매출처</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
 																<input type="text" class="form-control" name="custName"
-																	id="custName" value="${dto.custName}" /> <input
+																	id="custName" value="${dto.custName}" readonly> <input
 																	type="hidden" name="custNo" id="custNo"
 																	value="${dto.custNo}" /> <span class="input-group-btn">
 																	<button class="btn btn-primary sch-company"
@@ -135,12 +139,10 @@
 																</div>
 															</div>
 														</td>
-													</tr>
-													<tr>
 														<th scope="row">매출처 담당자</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" name="custmemberName" id="custmemberName" value="${dto.custMemberName}" />
+																<input type="text" class="form-control" name="custmemberName" id="custmemberName" value="${dto.custMemberName}" readonly>
 																<input type="hidden" name="custmemberNo" id="custmemberNo" value="${cto.custMemberNo}" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=custmem&compNo=" type="button" data-toggle="modal" data-target="#custmemberModal" id="custmemberModalbtn">
@@ -170,10 +172,13 @@
 																</div>
 															</div>
 														</td>
-														<th scope="row">엔드유저</th>
+													</tr>
+													
+													<tr>
+														<th class="requiredTextCss" scope="row">엔드유저</th>
 														<td>
 															<div class="input-group input-group-sm mb-0">
-																<input type="text" class="form-control" id="endCustName" value="${dto.buyrName}" />
+																<input type="text" class="form-control" id="endCustName" value="${dto.buyrName}" readonly>
 																<input type="hidden" id="endCustNo" value="${dto.buyrNo}" />
 																<span class="input-group-btn">
 																	<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
@@ -201,22 +206,26 @@
 																</div>
 															</div>
 														</td>
-													</tr>
-													<tr>
 														<th scope="row" class="requiredTextCss">진행단계</th>
-														<td><select name="soppStatus" id="soppStatus" class="form-control form-control-sm" onchange="javascript:changeProbability()">
-																<c:forEach var="sstatuslist" items="${sstatuslist}">
-																	<option value="${sstatuslist.codeNo}">${sstatuslist.desc03}</option>
-																</c:forEach>
+														<td><select name="soppStatus" id="soppStatus" class="form-control form-control-sm" <c:if test="${dto.soppStatus > 10185}">readonly</c:if>>
+																<c:if test="${dto.soppStatus >= 10182 && dto.soppStatus < 10185}">
+																	<option value="10292" selected>계약중</option>
+																</c:if>
+																<c:if test="${dto.soppStatus < 10182 || dto.soppStatus >= 10185}">
+																    <c:forEach var="sstatuslist" items="${sstatuslist}">
+																		<c:if test="${sstatuslist.codeNo < 10182}">
+																			<option value="${sstatuslist.codeNo}">${sstatuslist.desc03}</option>
+																		</c:if>
+																	</c:forEach>
+																</c:if>
 														</select></td>
 														<th scope="row">가능성</th>
-														<td><span class="input_inline"><input
-																type="text" class="form-control form-control-sm"
+														<td class="text-right">
+														<span class="input_inline">
+														<input type="text" class="form-control form-control-sm text-right"
 																id="soppSrate" name="soppSrate" value="${dto.soppSrate}"></span>
 															%</td>
-													</tr>
-													<tr>
-														<th scope="row">계약구분</th>
+															<th class="requiredTextCss" scope="row">계약구분</th>
 														<td><select name="cntrctMth" id="cntrctMth"
 															class="form-control form-control-sm">
 																<option value="">선택</option>
@@ -224,16 +233,17 @@
 																<option value="10248" <c:if test="${dto.cntrctMth eq 10248}">selected</c:if> >유지보수</option>
 																<option value="10254" <c:if test="${dto.cntrctMth eq 10254}">selected</c:if> >임대계약</option>
 														</select></td>
+													</tr>
+													
+													<tr>
 														<th scope="row">매출예정일</th>
 														<td><input
-															class="form-control form-control-sm col-md-8"
-															name="soppTargetDate" id="soppTargetDate" type="date"
+															class="form-control form-control-sm"
+															name="soppTargetDate" id="soppTargetDate" type="date" max="9999-12-30"
 															value="${dto.soppTargetDate}"></td>
-													</tr>
-													<tr>
-														<th scope="row">판매방식</th>
+															<th class="requiredTextCss" scope="row">판매방식</th>
 														<td><select name="soppType" id="soppType"
-															class="form-control form-control-sm col-md-4">
+															class="form-control form-control-sm">
 																<option value="">선택</option>
 																<c:forEach var="saleslist" items="${saleslist}">
 																	<option value="${saleslist.codeNo}"
@@ -241,15 +251,21 @@
 																</c:forEach>
 														</select></td>
 														<th scope="row">예상매출</th>
-														<td><span class="input_inline"><input
-																style="text-align: right" type="text"
-																class="form-control form-control-sm" id="soppTargetAmt"
-																name="soppTargetAmt"
-																value="<fmt:formatNumber value="${dto.soppTargetAmt}" pattern="#,###"/>"></span>원</td>
+														<td class="text-right">
+															<span class="input_inline">
+																<input style="text-align: right" type="text" class="form-control form-control-sm" id="soppTargetAmt" name="soppTargetAmt" onkeyup="moneyFormatInput(this);" value="<fmt:formatNumber value="${dto.soppTargetAmt}" pattern="#,###"/>">
+															</span>원
+														</td>
+														<th class="requiredTextCss" id="Maintenance_name" style="display: none;">유지보수 기간</th>
+														<td id="Maintenance_input" style="display: none; line-height: 30px;">
+															<div class="input-group input-group-sm mb-0">
+																<input class="form-control form-control-sm col-sm-6 m-r-5" type="date" max="9999-12-30" id="maintenance_S" value="${dto.maintenance_S}"> ~ <input class="form-control form-control-sm col-sm-6 m-l-5" type="date" max="9999-12-31" id="maintenance_E" value="${dto.maintenance_E}">
+															</div>
+														</td>	
 													</tr>
 													<tr>
 														<th scope="row">설명</th>
-														<td colspan="3"><textarea name="soppDesc"
+														<td colspan="7"><textarea name="soppDesc"
 																id="soppDesc" rows="8" class="form-control">${dto.soppDesc}</textarea></td>
 													</tr>
 													<c:if test="${dto.sopp2regDatetime != null}">
@@ -259,18 +275,23 @@
 																<fmt:formatDate value="${sopp2regDatetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 																)
 															</th>
-															<td colspan="3"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control" readonly>${dto.sopp2Desc}</textarea></td>
+															<td colspan="7"><textarea name="sopp2Desc" id="sopp2Desc" rows="8" class="form-control" readonly>${dto.sopp2Desc}</textarea></td>
 														</tr>
 													</c:if>
 												</tbody>
 											</table>
-
 										</div>
 									</div>
 									<div class="btn_wr text-right mt-3" id="tab01_bottom">
 										<button class="btn btn-md btn-success f-left" onClick="javascript:location='${path}/sopp/list.do'">목록</button>
-										<c:if test="${dto.userNo eq sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
+										<c:if test="${dto.userNo eq sessionScope.userNo && dto.soppStatus < 10182 && dto.cntrctMth ne 10248}">
+											<button class="btn btn-md btn-danger" onClick="fn_Contreq()">계약요청</button>
+											<button class="btn btn-md btn-danger" onClick="fn_Contfail()">계약실패</button>
+										</c:if>
+										<c:if test="${dto.userNo eq sessionScope.userNo}">
 											<button class="btn btn-md btn-danger" onClick="fn_soppDelete()">삭제</button>
+										</c:if>
+										<c:if test="${dto.userNo eq sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
 											<button class="btn btn-md btn-primary" onClick="fn_soppUpdate()">수정</button>
 											<button class="btn btn-md btn-inverse" onClick="javascript:location='${path}/sopp/list.do'">취소</button>
 										</c:if>
@@ -283,16 +304,16 @@
 					<div class="tab-pane " id="tab02" role="tabpanel">
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
-								<jsp:include page="/WEB-INF/views/module/inputSet/inputSetProductSalesInOut.jsp"/>
-								<jsp:include page="/WEB-INF/views/sopp/inoutlist.jsp"/>
+								<jsp:include page="/WEB-INF/views/module/inputSet/inputSetProductSalesInOut4.jsp"/>
+								<jsp:include page="/WEB-INF/views/sopp/inoutlist4.jsp"/>
 							</div>
 						</div>
 					</div>
 					<div class="tab-pane " id="tab03" role="tabpanel">
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
-								<jsp:include page="/WEB-INF/views/module/inputSet/inputSetProductSalesEstimate.jsp"/>
-								<jsp:include page="/WEB-INF/views/sopp/qutylist.jsp"/>
+								<jsp:include page="/WEB-INF/views/module/inputSet/inputSetProductSalesEstimate2.jsp"/>
+								<jsp:include page="/WEB-INF/views/sopp/qutylist2.jsp"/>
 							</div>
 						</div>
 					</div>
@@ -312,11 +333,13 @@
 											<col width="10%" />
 										</colgroup>
 										<thead>
-											<th class="text-center">일자</th>
-											<th class="text-center">지원형태</th>
-											<th class="text-center">장소</th>
-											<th class="text-center">담당자</th>
-											<th class="text-center">비고</th>
+											<tr>
+												<th class="text-center">일자</th>
+												<th class="text-center">지원형태</th>
+												<th class="text-center">장소</th>
+												<th class="text-center">담당자</th>
+												<th class="text-center">비고</th>
+											</tr>
 										</thead>
 										<tbody>
 											<c:forEach var="row2" items="${techdinsopp}">
@@ -343,18 +366,18 @@
 											<col width="10%" />
 											<col width="30%" />
 											<col width="20%" />
-											<col width="10%" />
-											<col width="10%" />
 											<col width="20%" />
+											<col width="10%" />
+											<col width="10%" />
 										</colgroup>
 										<thead>
 											<tr>
 												<th class="text-center">일자</th>
 												<th class="text-center">활동종류</th>
 												<th class="text-center">내역</th>
+												<th class="text-center">비고</th>
 												<th class="text-center">담당자</th>
 												<th class="text-center">장소</th>
-												<th class="text-center">비용</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -363,9 +386,9 @@
 													<td>${row2.salesFrdatetime}</td>
 													<td>${row2.salesTypeN}</td>
 													<td>${row2.salesDesc}</td>
+													<td>${row2.salesTitle}</td>
 													<td>${row2.userName}</td>
 													<td>${row2.salesPlace}</td>
-													<td>경비관련 연결예정</td>
 												</tr>
 											</c:forEach>
 										</tbody>
@@ -384,6 +407,84 @@
 	</div>
 	<!--영업기회등록-->
 	<script>
+		if($("#cntrctMth").val() == '10248'){
+			$('#Maintenance_name').show();
+			$('#Maintenance_input').show();
+		};
+		$("#cntrctMth").on('change', function(){
+			if($("#cntrctMth").val() == '10248'){
+				$('#Maintenance_name').show();
+				$('#Maintenance_input').show();
+			}else{
+				$('#Maintenance_name').hide();
+				$('#Maintenance_input').hide();
+			}
+		});
+		
+		$("#maintenance_S").change(function(){
+			var dateValue = $(this).val();
+			var dateValueArr = dateValue.split("-");
+			var dateValueCom = new Date(dateValueArr[0], parseInt(dateValueArr[1])-1, dateValueArr[2]);
+			var EdateValue = $("#maintenance_E").val();
+			var EdateDateArr = EdateValue.split("-");
+			var EdateDateCom = new Date(EdateDateArr[0], parseInt(EdateDateArr[1])-1, EdateDateArr[2]);
+			
+			if(EdateValue == ""){
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else if(dateValueCom.getTime() > EdateDateCom.getTime()){
+				alert("시작일이 종료일보다 클 수 없습니다.");
+				dateValueCom.setDate(dateValueCom.getDate()+1);
+			}else{
+				return null;
+			}
+			
+			var year = dateValueCom.getFullYear();
+			var month = dateValueCom.getMonth()+1;
+			var day = dateValueCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#maintenance_E").val(year + "-" + month + "-" + day);
+		});
+		
+		$("#maintenance_E").change(function(){
+			var SdateValue = $("#maintenance_S").val();
+			var SdateValueArr = SdateValue.split("-");
+			var SdateValueCom = new Date(SdateValueArr[0], parseInt(SdateValueArr[1])-1, SdateValueArr[2]);
+			var thisDateValue = $(this).val();
+			var thisDateArr = thisDateValue.split("-");
+			var thisDateCom = new Date(thisDateArr[0], parseInt(thisDateArr[1])-1, thisDateArr[2]);
+			
+			if(SdateValue == ""){
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else if(SdateValueCom.getTime() > thisDateCom.getTime()){
+				alert("종료일이 시작일보다 작을 수 없습니다.");
+				thisDateCom.setDate(thisDateCom.getDate()-1);
+			}else{
+				return null;
+			}
+			
+			var year = thisDateCom.getFullYear();
+			var month = thisDateCom.getMonth()+1;
+			var day = thisDateCom.getDate();
+			
+			if(month < 10){
+				month = "0" + month;
+			}
+			
+			if(day < 10){
+				day = "0" + day;
+			}
+			
+			$("#maintenance_S").val(year + "-" + month + "-" + day);
+		});
+	
 		$("#tablist > li:nth-child(1)").click(function (){
 			$("#tab01_bottom").show();
 			$("#tab_common_bottom").hide();
@@ -394,6 +495,13 @@
 			$("#tab_common_bottom").show();
 		});
 
+		function fnSetCustmereData(a, b) {
+			$("#custmemberNo").val(a);
+			$("#custmemberName").val(b);
+			$(".modal-backdrop").remove();
+			$("#custmemberModal").modal("hide");
+		}
+		
 		function fn_Reloaddata01(url, data){
 			$("#inoutlist").empty();
 			$("#inoutlistSum").remove();
@@ -412,6 +520,18 @@
 			});
 		}
 
+		$('#vatBModal').on('show.bs.modal', function(e) {
+			var button = $(e.relatedTarget);
+			var modal = $(this);
+			modal.find('.modal-body').load(button.data("remote"));
+		});
+		
+		$('#vatSModal').on('show.bs.modal', function(e) {
+			var button = $(e.relatedTarget);
+			var modal = $(this);
+			modal.find('.modal-body').load(button.data("remote"));
+		});
+		
 		$('#custModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
@@ -447,9 +567,9 @@
 			modal.find('.modal-body').load(button.data("remote"));
 		});
 
-		var soppStatusSelected = '${dto.soppStatus}';
+		/* var soppStatusSelected = '${dto.soppStatus}';
 		if (soppStatusSelected != '' && soppStatusSelected != '0') 	$('#soppStatus').val('${dto.soppStatus}').prop("selected",true);
-		else $('#soppStatus').val("").prop("selected",true);
+		else $('#soppStatus option:eq(0)').prop("selected",true); */
 
 		var soppTypeSelected = '${dto.soppType}';
 		if (soppTypeSelected != '' && soppTypeSelected != '0') $('#soppType').val('${dto.soppType}').prop("selected",true);
@@ -511,10 +631,11 @@
 			$(".modal-backdrop").remove();
 			$("#endCustModal").modal("hide");
 		}
-
-
-		function fn_soppUpdate() {
+		
+		function fn_soppUpdate(){
 			var soppData = {};
+			var soppStatus = "${dto.soppStatus}";
+			
 			soppData.soppNo 		= $("#soppNo").val();
 			soppData.soppTitle 		= $("#soppTitle").val();
 			if($("#userName").val() != "")  	soppData.userNo 	= Number($("#userNo").val());
@@ -524,12 +645,50 @@
 			if($("#soppType").val() != "")	soppData.soppType 		= Number($("#soppType").val());
 			if($("#cntrctMth").val() != "")	soppData.cntrctMth 		= Number($("#cntrctMth").val());
 			if($("#custmemberName").val() != "") soppData.custMemberNo = Number($("#custmemberNo").val());
-			if($("#soppStatus").val() != "") soppData.soppStatus 	= $("#soppStatus").val();
+			
+			if($("#soppStatus").val() != ""){
+				if($("#soppStatus").val() === "10292"){
+					soppData.soppStatus  = 	soppStatus;
+				}else{
+					soppData.soppStatus  =  $("#soppStatus").val();
+				}
+			}
+			
+			if($("#cntrctMth").val() == '10248'){
+				if($('#maintenance_S').val() == '' || $('#maintenance_S').val() == null){
+					alert("유지보수 시작일을 확인하십시오.");
+					return;
+				}else if($('#maintenance_E').val() == '' || $('#maintenance_E').val() == null){
+					alert("유지보수 마감일을 확인하십시오.");
+					return;
+				}else{
+					soppData.maintenance_S = $('#maintenance_S').val();
+					soppData.maintenance_E = $('#maintenance_E').val();	
+				}
+			}
+			
 			if($("#soppSource").val() != "") soppData.soppSource 	= $("#soppSource").val();
 			if($("#soppTargetDate").val() != "") soppData.soppTargetDate	= $("#soppTargetDate").val();
 			if($("#soppTargetAmt").val() != "") soppData.soppTargetAmt 	= $("#soppTargetAmt").val().replace(/[\D\s\._\-]+/g, "");
-			if($("#soppDesc").val() != "") soppData.soppDesc 		= $("#soppDesc").val();
+			if(tinyMCE.get("soppDesc").getContent() != "") soppData.soppDesc 		= tinyMCE.get("soppDesc").getContent();
 
+			if (!soppData.soppTitle) {
+				alert("영업기회명을 입력하십시오.");
+				return;
+			} else if(!soppData.custNo){
+				alert("매출처를 선택해주십시오.");
+				return;
+			} else if(!soppData.buyrNo){
+				alert("엔드유저를 선택해주십시오.");
+				return;
+			} else if(!soppData.cntrctMth){
+				alert("계약구분을 선택해주십시오.");
+				return;
+			} else if(!soppData.soppType){
+				alert("판매방식을 선택해주십시오.");
+				return;
+			}
+			
 			$.ajax({ url: "${path}/sopp/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 				data: soppData , // HTTP 요청과 함께 서버로 보낼 데이터
 				method: "POST", // HTTP 요청 메소드(GET, POST 등)
@@ -547,6 +706,101 @@
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
+		}
+
+		function fn_Contreq() {
+			var msg = "계약요청을 진행하시겠습니까?";
+			var dataLength = "${fn:length(dtodata01)}";
+			if (confirm(msg)){
+				if ($("#soppTitle").val() === "") {
+					alert("영업기회명을 입력하십시오.");
+					return;
+				} else if($("#custName").val() === ""){
+					alert("매출처를 선택해주십시오.");
+					return;
+				} else if($("#endCustName").val() === ""){
+					alert("엔드유저를 선택해주십시오.");
+					return;
+				} else if($("#cntrctMth").val() === ""){
+					alert("계약구분을 선택해주십시오.");
+					return;
+				} else if($("#soppType").val() === ""){
+					alert("판매방식을 선택해주십시오.");
+					return;
+				} else if($("#soppTargetAmt").val() == 0){
+					alert("예상매출을 입력해주십시오.");
+					return;
+				} else if(dataLength == 0){
+					alert("매입매출을 등록해주십시오.");
+					return;
+				}
+				
+				var soppData = {};
+				soppData.soppNo 		= $("#soppNo").val();
+				soppData.soppTargetAmt 	= $("#soppTargetAmt").val().replace(/[\D\s\._\-]+/g, "");
+				soppData.soppSrate 		= '100';
+				soppData.soppStatus 	= '10182';
+				$.ajax({ url: "${path}/sopp/updateSoppStatus.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+					data: soppData , // HTTP 요청과 함께 서버로 보낼 데이터
+					method: "POST", // HTTP 요청 메소드(GET, POST 등)
+					dataType: "json" // 서버에서 보내줄 데이터의 타입
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+					.done(function(data) {
+						if(data.code == 10001){
+							alert("계약요청 완료");
+							var url = '${path}/sopp/list.do';
+							location.href = url;
+						}else{
+							alert("저장 실패");
+						}
+					}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+					.fail(function(xhr, status, errorThrown) {
+						alert("통신 실패");
+					});
+				}
+		}
+
+		function fn_Contfail() {
+			var msg = "계약실패건으로 처리하시겠습니까?";
+			if (confirm(msg)){
+				if ($("#soppTitle").val() === "") {
+					alert("영업기회명을 입력하십시오.");
+					return;
+				} else if($("#custName").val() === ""){
+					alert("매출처를 선택해주십시오.");
+					return;
+				} else if($("#endCustName").val() === ""){
+					alert("엔드유저를 선택해주십시오.");
+					return;
+				} else if($("#cntrctMth").val() === ""){
+					alert("계약구분을 선택해주십시오.");
+					return;
+				} else if($("#soppType").val() === ""){
+					alert("판매방식을 선택해주십시오.");
+					return;
+				}
+				var soppData = {};
+				soppData.soppNo 		= $("#soppNo").val();
+				soppData.soppSrate 		= '0';
+				soppData.soppStatus 	= '10185';
+				$.ajax({ url: "${path}/sopp/updateSoppStatus.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+					data: soppData , // HTTP 요청과 함께 서버로 보낼 데이터
+					method: "POST", // HTTP 요청 메소드(GET, POST 등)
+					dataType: "json" // 서버에서 보내줄 데이터의 타입
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+					.done(function(data) {
+						if(data.code == 10001){
+							alert("계약실패 저장 완료");
+							var url = '${path}/sopp/list.do';
+							location.href = url;
+						}else{
+							alert("저장 실패");
+						}
+					}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+					.fail(function(xhr, status, errorThrown) {
+						alert("통신 실패");
+					});
+				}
 		}
 
 		function fn_soppDelete(){
@@ -596,10 +850,13 @@
 
 		$(document).ready(function(){
 			var $input = $("#soppTargetAmt");
+			var soppStatus = "${dto.soppStatus}";
 
+			$("#soppStatus").val(soppStatus);
+			
 			// 이벤트 시작 ==========================================================================
 			// 이벤트시 동작
-			$input.on("keyup", function (event) {
+			/* $input.on("keyup", function (event) {
 				// 긁어와서 이벤트 체크
 				var selection = window.getSelection().toString();
 				if (selection !== '') return;
@@ -616,8 +873,15 @@
 				$this.val(function () {
 					return (input === 0) ? "0" : input.toLocaleString("en-US");
 				});
-			});
+			}); */
 			$("#tab_common_bottom").hide();
+			
+			var lastTab = localStorage.getItem('lastTab');
+			
+			if (lastTab) {
+			  	$('[href="' + lastTab + '"]').tab('show');
+			  	localStorage.clear();
+			}
 		});
 	</script>
 </div>

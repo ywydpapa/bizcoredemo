@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" 	content="IE=edge" />
 <meta http-equiv="Content-Type" 	content="text/html; charset=utf-8"/>
 <meta http-equiv="Cache-Control" 	content="no-cache; no-store; no-save">
-  
+
 <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${path}/assets/css/bootstrap/css/bootstrap.min.css">  
@@ -166,7 +166,7 @@ margin-left:10px;
 	
 	}
 </script>
-<title>SDERP</title>
+<title>BizCore</title>
  
 <script type="text/javaScript" language="javascript">
 
@@ -186,7 +186,10 @@ margin-left:10px;
 			<li><a href="${path}/">home</a></li>
 			<li><a class="menuLink selected" href="${path}/sidemenu/menu1.do">업무관리</a></li>
 			<li><a class="menuLink" href="${path}/sidemenu/menu2.do">그룹웨어</a></li>
-			<li><a class="menuLink" href="${path}/sidemenu/menu3.do">회계관리</a></li>
+			<c:if test="${sessionScope.userRole eq 'ADMIN'}">
+				<li><a class="menuLink" href="${path}/sidemenu/menu3.do">회계관리</a></li>
+			</c:if>
+			<li><a class="menuLink" href="${path}/sidemenu/menu4.do">경영정보</a></li>
 		</ul>
 
 	</nav>
@@ -271,7 +274,7 @@ margin-left:10px;
                                         <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">계약관리</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                                                        <ul class="pcoded-submenu">
+                                    <ul class="pcoded-submenu">
                                         <li class="pcoded-hasmenu ">
                                             <a href="${path}/cont/list.do">
                                                 <span class="pcoded-micon"><i class="ti-direction-alt"></i></span>
@@ -377,22 +380,22 @@ margin-left:10px;
 
 });
 </script>
-                            <div class="main-body">
-                                <div class="page-wrapper full-calender">
-                                    <!-- Page-header start -->
-                                    <!-- Page-header end -->
-                                    <div class="page-body">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5>업무 달력</h5>
-                                                <div class="card-header-right">    <ul class="list-unstyled card-option">        <li><i class="icofont icofont-simple-left "></i></li>        <li><i class="icofont icofont-maximize full-card"></i></li>        <li><i class="icofont icofont-minus minimize-card"></i></li>        <li><i class="icofont icofont-refresh reload-card"></i></li>        <li><i class="icofont icofont-error close-card"></i></li>    </ul></div>
-                                                <div id='calendar'></div>
-                                            </div>
-                                           <button class = "add-button" type="button" onclick="click_add();">일정추가 </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<div class="main-body">
+    <div class="page-wrapper full-calender">
+        <!-- Page-header start -->
+        <!-- Page-header end -->
+        <div class="page-body">
+            <div class="card">
+                <div class="card-header">
+                    <h5>업무 달력</h5>
+                    <div class="card-header-right">    <ul class="list-unstyled card-option">        <li><i class="icofont icofont-simple-left "></i></li>        <li><i class="icofont icofont-maximize full-card"></i></li>        <li><i class="icofont icofont-minus minimize-card"></i></li>        <li><i class="icofont icofont-refresh reload-card"></i></li>        <li><i class="icofont icofont-error close-card"></i></li>    </ul></div>
+                    <div id='calendar'></div>
+                </div>
+               <button class = "add-button" type="button" onclick="click_add();">일정추가 </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 최초 나오는 달력 종료 -->
 	</div>
 <!-- 메인컨텐츠 종료 -->

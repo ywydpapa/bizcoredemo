@@ -26,6 +26,7 @@
 	<resources location="/WEB-INF/views/fullcalendar4/" 	mapping="/fullcalendar4/**"/>
 	<resources location="/WEB-INF/views/calendar/" 	mapping="/calendar/**"/>
 	<resources location="/WEB-INF/views/fancytree/" 	mapping="/fancytree/**"/>
+	<resources location="/WEB-INF/views/form/" 	mapping="/form/**"/>
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -42,9 +43,6 @@
 	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
 	<task:executor id="myExecutor" pool-size="5"/>
 	<task:scheduler id="myScheduler" pool-size="10"/>
-
-	
 	<beans:import resource="classpath:/config/cors-config.xml"/>
 	
 </beans:beans>
-

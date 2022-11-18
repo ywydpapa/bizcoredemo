@@ -19,6 +19,7 @@ public class OrganizDTO {
 	private String org_regdatetime;
 	private String org_moddatetime;
 	private String org_desc;
+	private String org_salesTarget;
 	private String org_rolemap;
 	private String attrib;
 	private String org_color;

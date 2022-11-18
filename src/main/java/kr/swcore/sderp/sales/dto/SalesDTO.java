@@ -40,6 +40,7 @@ public class SalesDTO extends PageDTO {
 	// 확장
 	private String regSDate;	// 등록일 시작
 	private String regEDate;	// 등록일 끝
+	private String listDateFrom;
 
 	public SalesDTO() {
 		super();

@@ -8,8 +8,8 @@
 	<table id="endCustDataTable" class="table table-striped table-bordered nowrap">
 		<thead>
 			<tr>
-				<th>거래처번호</th>
-				<th>거래처명</th>
+				<th>엔드유저번호</th>
+				<th>엔드유저명</th>
 				<th>대표자명</th>
 				<th>사업자번호</th>
 			</tr>

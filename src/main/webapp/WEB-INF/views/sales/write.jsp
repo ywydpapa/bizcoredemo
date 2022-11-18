@@ -32,41 +32,43 @@
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
-								<col width="15%" />
-								<col width="35%" />
-								<col width="15%" />
-								<col width="35%" />
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
+								<col width="5%"/>
+								<col width="15%"/>
 							</colgroup>
 							<tbody>
 								<tr>
 									<th scope="row" class="requiredTextCss">활동일</th>
 									<td colspan="3">
 										<div class="input-group input-group-sm mb-0 mr-1">
-											<input id="salesFrdatetime" class="form-control form-control-sm col-md-4 m-r-10" type="date" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)">
+											<input id="salesFrdatetime" style="width:400px" class="form-control col-xl-2" type="date" max="9999-12-30" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)">
 											<select id="startTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)"></select>
-											~
-											<input id="salesTodatetime" class="form-control form-control-sm col-md-4 m-r-10" type="date" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)">
+											<span style="line-height:30px;">&nbsp;~&nbsp;</span>
+											<input id="salesTodatetime" class="form-control col-xl-2" type="date" max="9999-12-31" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)">
 											<select id="endTime" style="width:100px" onChange="javascript:inputDate(setDateHourMinute($('#salesFrdatetime').val(), $('#startTime').val()), setDateHourMinute($('#salesTodatetime').val(), $('#endTime').val()),this)"></select>
 										</div>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">장소</th>
-									<td><input type="text" class="form-control form-control-sm"
+									<td><input type="text" class="form-control form-control-sm "
 										id="salesPlace" name="salesPlace" placeholder="장소를 입력하세요"></td>
-									<th>활동형태</th>
+									<th class="requiredTextCss">활동형태</th>
 									<td><select name="salesType" id="salesType" class="form-control form-control-sm">
 											<option value="">선택</option>
 											<c:forEach var = "salesType" items="${salesType}">
 												<option value="${salesType.codeNo}">${salesType.desc03}</option>
 											</c:forEach>
 									</select></td>
-								</tr>
-								<tr>
 									<th class="requiredTextCss">담당사원</th>
 									<td>
-										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="userName" id="userName" value="${sessionScope.userName}" />
+										<div class="input-group input-group-sm mb-0 ">
+											<input type="text" class="form-control " name="userName" id="userName" value="${sessionScope.userName}" readonly>
 											<input type="hidden" class="form-control" name="userNo" id="userNo" value="${sessionScope.userNo}" />
 											 <span class="input-group-btn">
 												<button class="btn btn-primary sch-company"
@@ -101,7 +103,7 @@
 									<th scope="row">영업기회</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="soppTitle" id="soppTitle" value="" />
+											<input type="text" class="form-control " name="soppTitle" id="soppTitle" value="" readonly>
 											<input type="hidden" class="form-control" name="soppNo" id="soppNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-opportunity2" data-remote="${path}/modal/popup.do?popId=sopp" type="button" data-toggle="modal" data-target="#soppModal">
@@ -131,11 +133,12 @@
 										</div>
 									</td>
 								</tr>
+								
 								<tr>
 									<th scope="row">매출처</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" name="custName" id="custName" value="" />
+											<input type="text" class="form-control" name="custName" id="custName" value="" readonly>
 											<input type="hidden" name="custNo" id="custNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-company" data-remote="${path}/modal/popup.do?popId=cust" type="button" data-toggle="modal" data-target="#custModal">
@@ -188,7 +191,7 @@
 									<th scope="row">엔드유저</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
-											<input type="text" class="form-control" id="endCustName" value="" />
+											<input type="text" class="form-control" id="endCustName" value="" readonly>
 											<input type="hidden" id="endCustNo" value="" />
 											<span class="input-group-btn">
 												<button class="btn btn-primary sch-partner" data-remote="${path}/modal/popup.do?popId=endCust" type="button" data-toggle="modal" data-target="#endCustModal">
@@ -199,7 +202,7 @@
 												<div class="modal-dialog modal-80size" role="document">
 													<div class="modal-content modal-80size">
 														<div class="modal-header">
-															<h4 class="modal-title"></h4>
+															<h4 class="modal-title">엔드유저검색</h4>
 															<button type="button" class="close" onclick="$('#endCustModal').modal('hide');" aria-label="Close">
 																<span aria-hidden="true">&times;</span>
 															</button>
@@ -216,14 +219,15 @@
 											</div>
 										</div>
 									</td>
-								</tr>
-								<tr>
 									<th scope="row" class="requiredTextCss">제목</th>
-									<td colspan="3"><input type="text" class="form-control form-control-sm" id="salesTitle" name="salesTitle" placeholder=""></td>
+									<td><input type="text" class="form-control form-control-sm" id="salesTitle" name="salesTitle" placeholder=""></td>
+									<th></th>
+									<td></td>
 								</tr>
+								
 								<tr>
 									<th scope="row">내용</th>
-									<td colspan="3"><textarea name="salesDesc" id="salesDesc" rows="8" class="form-control"></textarea></td>
+									<td colspan="7"><textarea name="salesDesc" id="salesDesc" rows="8" class="form-control"></textarea></td>
 								</tr>
 							</tbody>
 						</table>
@@ -245,11 +249,6 @@
 			modal.find('.modal-body').load(button.data("remote"));
 		});
 		$('#userModal').on('show.bs.modal', function(e) {
-			var button = $(e.relatedTarget);
-			var modal = $(this);
-			modal.find('.modal-body').load(button.data("remote"));
-		});
-		$('#endCustModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
@@ -385,9 +384,18 @@
 			$(".modal-backdrop").remove();
 			$("#endCustModal").modal("hide");
 		}
-		
+		//buyrNo
 		function fnSetSoppData(a, b) {
 			$("#soppNo").val(b);
+			$.ajax({
+				url: "${path}/acc/endusernamelist.do/" + b,
+				method: "post",
+				dataType: "json"
+			})
+			.done(function(result){
+				$("#endCustNo").val(result.data[0].buyrNo);
+				$("#endCustName").val(result.data[0].custName);
+			});
 			$("#soppTitle").val(a);
 			$(".modal-backdrop").remove();
 			$("#soppModal").modal("hide");
@@ -404,14 +412,23 @@
 			salesData.soppNo 		= $("#soppName").val() != "" ? Number($("#soppNo").val()) : 0;
 			salesData.ptncNo 		= $("#endCustName").val() != "" ? Number($("#endCustNo").val()) : 0;
 			salesData.salesType 		= $("#salesType").val();
-			salesData.salesDesc 		= $("#salesDesc").val();
-
+			
+			if($("textarea").attr("style") === "display: none;"){
+				salesData.salesDesc			= tinyMCE.get("salesDesc").getContent();
+			}else{
+				salesData.salesDesc 		= $("#salesDesc").val();
+			}
+			
 			if (!salesData.salesFrdatetime){
 				alert("영업활동의 시작일을 선택해 주십시오.");
 				return;
 			}
 			else if (!salesData.salesTodatetime){
 				alert("영업활동의 종료일을 선택해 주십시오.");
+				return;
+			}
+			else if (!salesData.salesType){
+				alert("활동형태를 선택해주십시오.");
 				return;
 			}
 			else if (!salesData.userNo){

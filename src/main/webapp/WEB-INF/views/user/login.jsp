@@ -8,7 +8,7 @@
 <html lang="en">
 
 <head>
-    <title>소프트코어 서비스 로그인 </title>
+    <title>BizCore </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />

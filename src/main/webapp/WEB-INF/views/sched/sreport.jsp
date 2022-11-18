@@ -2,6 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%
+	pageContext.setAttribute("replaceChar", "\n");
+%>
 <c:set var="path" value ="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -36,7 +40,8 @@
 								<tr>
 									<td><h4>개인업무 일지</h4></td>
 									<td align="right">
-									<button class="btn btn-md btn-primary" onClick="fn_Create()">업무일지 생성</button>
+									<button class="btn btn-md btn-primary" onClick="fn_Create()">업무일지 생성(금주)</button>
+									<button class="btn btn-md btn-primary" onClick="fn_Create2()">업무일지 생성(차주)</button>
 									<button class="btn btn-md btn-primary" onClick="fn_Print()">업무일지 출력</button>
 									</td>
 								</tr>
@@ -80,9 +85,9 @@
 							<c:forEach var="ritem" items="${rlist}" varStatus="stvar">
 							<c:if test="${ritem.weektype eq 'p'}">
 							<tr>
-								<td class="firstr1">${ritem.weekno}</td>
-								<td class="secondr1"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td>
+								<td class="firstr1" style="vertical-align:middle;">${ritem.weekno}</td>
+								<td class="secondr1" style="vertical-align:middle;"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
+								<td style="vertical-align:middle;">
 								<c:choose>
 								<c:when test="${ritem.stype eq 'S'}"><a href="javascript:eventclk1(${ritem.id})">${ritem.title}</a></c:when>
 								<c:when test="${ritem.stype eq 'T'}"><a href="javascript:eventclk2(${ritem.id})">${ritem.title}</a></c:when>
@@ -90,17 +95,33 @@
 								<c:otherwise>${ritem.title}</c:otherwise>
 								</c:choose>
 								</td>
-								<td style='width:300;overflow:hidden;text-overflow;ellipsis;word-break:break-word'>${ritem.schedDesc}</td>
-								<td>${ritem.start}</td>
-								<td>${ritem.end}</td>
-								<td class="chktd"><input type="checkbox" class="r1chk form-control-sm" checked></td>
+								<td style='width:300;overflow:hidden;text-overflow;ellipsis;word-break:break-word'>${fn:replace(ritem.schedDesc, replaceChar, "<br/>") }</td>
+								<td style="vertical-align:middle;">${ritem.start}</td>
+								<td style="vertical-align:middle;">${ritem.end}</td>
+								<c:choose>
+									<c:when test="${ritem.schedCheck eq '1' }">
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="1" data-name="checks" class="r1chk" checked></td>
+									</c:when>
+									<c:otherwise>
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="0" data-name="checks" class="r1chk"></td>
+									</c:otherwise>
+								</c:choose>
 							</tr>
 							</c:if>
 							</c:forEach>
 							<tr>
 							<td colspan="2" style="text-align:center;">추가기재</td>
-							<td colspan=4><textarea id="praddtext" class="form-control" cols="50" rows="5">${myadd.prComment}</textarea></td>
-							<td style="text-align:center;"><input type="checkbox" class="praddchk form-control-sm" checked></td>
+							<td colspan=4>
+								<textarea id="praddtext" class="form-control" cols="50" rows="5">${myadd2.thComment}</textarea>
+							</td>
+							<c:choose>
+								<c:when test="${myadd2.prCheck eq '1' }">
+									<td style="text-align:center;vertical-align:middle;"><input type="checkbox" data-id="${myadd2.sreportNo}" data-check="1" data-name="add" class="praddchk" checked></td>
+								</c:when>
+								<c:otherwise>
+									<td style="text-align:center;vertical-align:middle;"><input type="checkbox" data-id="${myadd2.sreportNo}" data-check="0" data-name="add" class="praddchk"></td>
+								</c:otherwise>
+							</c:choose>
 							</tr>
 							</tbody>
 						</table>
@@ -135,9 +156,9 @@
 							<c:forEach var="ritem" items="${rlist}">
 							<c:if test="${ritem.weektype eq 't'}">
 							<tr>
-								<td class="firstr2">${ritem.weekno}</td>
-								<td class="secondr2"><c:if test="${ritem.weekdays eq 1}">일</c:if><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td>
+								<td class="firstr2" style="vertical-align:middle;">${ritem.weekno}</td>
+								<td class="secondr2" style="vertical-align:middle;"><c:if test="${ritem.weekdays eq 1}">일</c:if><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
+								<td style="vertical-align:middle;">
 								<c:choose>
 								<c:when test="${ritem.stype eq 'S'}"><a href="javascript:eventclk1(${ritem.id})">${ritem.title}</a></c:when>
 								<c:when test="${ritem.stype eq 'T'}"><a href="javascript:eventclk2(${ritem.id})">${ritem.title}</a></c:when>
@@ -145,17 +166,31 @@
 								<c:otherwise>${ritem.title}</c:otherwise>
 								</c:choose>
 								</td>
-								<td style='width:300;overflow:hidden;text-overflow;ellipsis;word-break:break-word'>${ritem.schedDesc}</td>
-								<td>${ritem.start}</td>
-								<td>${ritem.end}</td>
-								<td class="chktd"><input type="checkbox" class="r2chk form-control-sm" checked></td>
+								<td style='width:300;overflow:hidden;text-overflow;ellipsis;word-break:break-word'>${fn:replace(ritem.schedDesc, replaceChar, "<br/>") }</td>
+								<td style="vertical-align:middle;">${ritem.start}</td>
+								<td style="vertical-align:middle;">${ritem.end}</td>
+								<c:choose>
+									<c:when test="${ritem.schedCheck eq '1' }">
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="1" data-name="checks" class="r2chk" checked></td>
+									</c:when>
+									<c:otherwise>
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="0" data-name="checks" class="r2chk"></td>
+									</c:otherwise>
+								</c:choose>
 							</tr>
 							</c:if>
 							</c:forEach>
 							<tr>
 							<td colspan="2" style="text-align:center;">추가기재</td>
 							<td colspan=4><textarea id="thaddtext" class="form-control" cols="50" rows="5">${myadd.thComment}</textarea></td>
-							<td style="text-align:center;"><input type="checkbox" class="thaddchk form-control-sm" checked></td>
+							<c:choose>
+								<c:when test="${myadd.thCheck eq '1' }">
+									<td style="text-align:center; vertical-align:middle;"><input type="checkbox" data-id="${myadd.sreportNo }" data-check="1" data-name="add" class="thaddchk" checked></td>
+								</c:when>
+								<c:otherwise>
+									<td style="text-align:center; vertical-align:middle;"><input type="checkbox" data-id="${myadd.sreportNo }" data-check="0" data-name="add" class="thaddchk"></td>
+								</c:otherwise>
+							</c:choose>
 							</tr>
 							</tbody>
 						</table>
@@ -190,9 +225,9 @@
 							<c:forEach var="ritem" items="${rlist}">
 							<c:if test="${ritem.weektype eq 'n'}">
 							<tr>
-								<td class="firstr3">${ritem.weekno}</td>
+								<td class="firstr3" style="vertical-align:middle;">${ritem.weekno}</td>
 								<td class="secondr3"><c:if test="${ritem.weekdays eq 1}">일</c:if><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td>
+								<td style="vertical-align:middle;">
 								<c:choose>
 								<c:when test="${ritem.stype eq 'S'}"><a href="javascript:eventclk1(${ritem.id})">${ritem.title}</a></c:when>
 								<c:when test="${ritem.stype eq 'T'}"><a href="javascript:eventclk2(${ritem.id})">${ritem.title}</a></c:when>
@@ -201,17 +236,38 @@
 								</c:choose>
 								</td>
 								<td style='width:300;overflow:hidden;text-overflow;ellipsis;word-break:break-word'>${ritem.schedDesc}</td>
-								<td>${ritem.start}</td>
-								<td>${ritem.end}</td>
-								<td class="chktd"><input type="checkbox" class="r3chk form-control-sm"></td>
+								<td style="vertical-align:middle;">${ritem.start}</td>
+								<td style="vertical-align:middle;">${ritem.end}</td>
+								<c:choose>
+									<c:when test="${ritem.schedCheck eq '1'}">
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="1" data-name="checks" class="r3chk" checked></td>
+									</c:when>
+									<c:otherwise>
+										<td class="chktd" style="vertical-align:middle;"><input type="checkbox" id="chk" data-id="${ritem.id }" data-check="0" data-name="checks" class="r3chk"></td>
+									</c:otherwise>
+								</c:choose>
 							</tr>
 							</c:if>
 							</c:forEach>
+							<tr>
+							<td colspan="2" style="text-align:center;">추가기재</td>
+							<td colspan=4>
+								<textarea id="nxaddtext" class="form-control" cols="50" rows="5"></textarea>
+							</td>
+							<c:choose>
+								<c:when test="${myadd2.thCheck eq '1' }">
+									<td style="text-align:center; vertical-align:middle;"><input type="checkbox" data-id="" data-check="1" data-name="add" class="nxaddchk" checked></td>
+								</c:when>
+								<c:otherwise>
+									<td style="text-align:center; vertical-align:middle;"><input type="checkbox" data-id="" data-check="0" data-name="add" class="nxaddchk"></td>
+								</c:otherwise>
+							</c:choose>
+							</tr>
 							</tbody>
 						</table>
 						<div class="table-responsive">
-						<div style="display:" id = "printdiv">
-						<table class="table table-bordered " style="white-space:normal;table-layout:fixed;word-break:break-word">
+						<div id = "printdiv">
+						<table class="table table-bordered printdivTable" style="white-space:normal;table-layout:fixed;word-break:break-word;width:99.8% !important; font-size:0.5em !important;">
 						<colgroup>
 								<col width="25%">
 								<col width="25%">
@@ -219,43 +275,19 @@
 								<col width="25%">
 							</colgroup>
 						<tr>
-						<th colspan="4" style="text-align:center;"><h3>주간 업무 보고</h3></th>
+							<h3 style="text-align:center; font-size:16px;">주간 업무 보고</h3>
 						</tr>
 						<tr>
-						<th colspan="3"  style="text-align:center;"><div id="thisWeek"></div></th>
-						<th  style="text-align:center;"><div id="uName"></div></th>
+						<th class="thWeek" colspan="3"  style="text-align:center;"></th>
+						<th class="thUname" style="text-align:center;"></th>
 						</tr>
 						<tr>
-						<td colspan="2" style="text-align:center;background-color:yellow;width:50%">지난주 진행사항</td>
-						<td colspan="2" style="text-align:center;background-color:yellow;width:50%">이번주 예정사항</td>
+						<td class="colorTd" colspan="2" style="text-align:center;background-color:yellow;width:50%">지난주 진행사항</td>
+						<td class="colorTd" colspan="2" style="text-align:center;background-color:yellow;width:50%">이번주 예정사항</td>
 						</tr>
 						<tr>
 						<td colspan="2">
-							<table class="table table-bordered " style="white-space:normal;table-layout:fixed;word-break:break-all">
-							<colgroup>
-								<col width="20%">
-								<col width="80%">
-							</colgroup>
-							<c:forEach var="ritem" items="${rlist}" varStatus="stvar">
-							<c:if test="${ritem.weektype eq 'p'}">
-							<tr>
-								<td class="secondsr1 text-center"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td class="chktd text-left" style="word-break:break-all"><b>${ritem.title}</b><br/>
-								${ritem.schedDesc}<br/>
-								<input type="checkbox" style="display:none" class="sr1chk form-control-sm" checked></td>
-							</tr>
-							</c:if>
-							</c:forEach>
-							</table>
-							<div class="praddtxt1">
-							<hr>
-							<h6>추가 기재 사항</h6>
-							<hr>
-							<textarea style="border: 0" id="prprntext" class="form-control" cols="50" rows="5"></textarea>
-							</div>
-						</td>
-						<td colspan="2">
-							<table class="table table-bordered " style="table-layout:fixed;word-break:break-word">
+							<table class="table table-bordered " style="table-layout:fixed;word-break:break-word;margin:auto;">
 							<colgroup>
 								<col width="20%">
 								<col width="80%">
@@ -263,22 +295,24 @@
 							<c:forEach var="ritem" items="${rlist}" varStatus="stvar">
 							<c:if test="${ritem.weektype eq 't'}">
 							<tr>
-								<td class="secondsr2 text-center"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td class="chktd text-left" style="white-space:normal;word-break:break-all"><b>${ritem.title}</b><br/>
-								${ritem.schedDesc}<br/>
-								<input type="checkbox" style="display:none" class="sr2chk form-control-sm" checked></td>
+								<td class="secondsr1 text-center" style="vertical-align:middle;"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
+								<td class="chktd text-left" style="word-break:break-all;border:0;white-space:normal;"><b>${ritem.title}</b><br/>
+								${fn:replace(ritem.schedDesc, replaceChar, "<br/>") }<br/>
+								<input type="checkbox" style="display:none" class="sr1chk form-control-sm" checked></td>
 							</tr>
 							</c:if>
 							</c:forEach>
 							</table>
-							<div class="thaddtxt1">
+							<div class="praddtxt1">
 							<hr>
-							<h6>추가 기재 사항</h6>
+							<h4>추가 기재 사항</h4>
 							<hr>
-							<textarea style="border: 0" id="thprntext" class="form-control" cols="50" rows="5"></textarea>
-							<hr>
+							<%-- <textarea style="border: 0;" id="prprntext" class="form-control txt" cols="50" rows="5">${myadd.prComment}</textarea> --%>
+							<div>${fn:replace(myadd.prComment, replaceChar, "<br/>") }</div>
 							</div>
-							<table class="table table-bordered " style="table-layout:fixed;word-break:break-word">
+						</td>
+						<td colspan="2">
+							<table class="table table-bordered " style="table-layout:fixed;word-break:break-word;">
 							<colgroup>
 								<col width="20%">
 								<col width="80%">
@@ -286,14 +320,21 @@
 							<c:forEach var="ritem" items="${rlist}" varStatus="stvar">
 							<c:if test="${ritem.weektype eq 'n'}">
 							<tr>
-								<td class="secondsr2 text-center"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
-								<td class="chktd text-left" style="white-space:normal;word-break:break-all"><b>${ritem.title}</b><br/>
-								${ritem.schedType}<br/>
-								<input type="checkbox" style="display:none" class="sr3chk form-control-sm" checked></td>
+								<td class="secondsr2 text-center" style="vertical-align:middle;"><c:if test="${ritem.weekdays eq 2}">월</c:if><c:if test="${ritem.weekdays eq 3}">화</c:if><c:if test="${ritem.weekdays eq 4}">수</c:if><c:if test="${ritem.weekdays eq 5}">목</c:if><c:if test="${ritem.weekdays eq 6}">금</c:if><c:if test="${ritem.weekdays eq 7}">토</c:if></td>
+								<td class="chktd text-left" style="white-space:normal;border:0;word-break:break-all"><b>${ritem.title}</b><br/>
+								${fn:replace(ritem.schedDesc, replaceChar, "<br/>") }<br/>
+								<input type="checkbox" style="display:none" class="sr2chk form-control-sm" checked></td>
 							</tr>
 							</c:if>
 							</c:forEach>
 							</table>
+							<div class="thaddtxt1">
+							<hr>
+							<h4>추가 기재 사항</h4>
+							<hr>
+							<%-- <textarea style="border: 0" id="thprntext" class="form-control txt" cols="50" rows="5">${myadd.thComment}</textarea> --%>
+							<div>${fn:replace(myadd.thComment, replaceChar, "<br/>") }</div>
+							</div>
 						</td>
 						</tr>
 						</table>
@@ -308,6 +349,17 @@
 </div>
 <jsp:include page="../body-bottom.jsp"/>
 <script>
+/* function fn_Print() {
+	$("#printdiv").attr("style", "display:block");
+	printJS({
+	    printable: 'printdiv',
+	    type: 'html',
+	    css: ['${path}/css/print.media.css'],
+	    scanStyles: false,
+	});
+	$("#printdiv").attr("style", "display:none");
+}
+ */
 function setFirstr1(){
 	var i = 1;
 	var str = undefined;
@@ -581,23 +633,67 @@ function printWeek() {
     var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1);
     var weekEndDate = new Date(nowYear, nowMonth, nowDay + (6 - nowDayOfWeek - 1));
     var thisweek = formatDate(weekStartDate) + " ~ " + formatDate(weekEndDate);
-    console.log(thisweek);
-    $("#thisWeek").html("<h6> 일자 :" + thisweek + "</h6>");
+    $(".thWeek").html("일자 :" + thisweek);
     var unam = "${userName}";
     console.log(unam);
-    $("#uName").html("<h6>담당:" + unam + "</h6>");
+    $(".thUname").html("담당:" + unam);
+    $("#printdiv").attr("style", "display:none");
+    $("#praddtext").val().replace("\t", "");
+    
+    if($(".praddchk").attr("data-check") == 1){
+		$(".praddtxt1").show();
+	} else{
+		$(".praddtxt1").hide();
+	}
+    
+    if($(".thaddchk").attr("data-check") == 1){
+		$(".thaddtxt1").show();
+	} else{
+		$(".thaddtxt1").hide();
+	}
 }
+
+$(document).on("click", "[type='checkbox']", function(){
+	if($(this).is(":checked") == true){
+		$(this).attr("data-check", 1);
+	}else{
+		$(this).attr("data-check", 0);
+	}
+});
 
 function fn_Create(){
 	var sreportData = {};
+	var checkData = [];
 	sreportData.userNo 		= Number("${userNo}");
 	sreportData.compNo 		= Number("${compNo}");
-	sreportData.prComment	= $("#praddtext").val();
-	sreportData.thComment	= $("#thaddtext").val();
+	sreportData.prComment	= tinyMCE.get("praddtext").getContent();
+	sreportData.prCheck 	= $(".praddchk").attr("data-check");
+	sreportData.thComment	= tinyMCE.get("thaddtext").getContent();
+	sreportData.thCheck 	= $(".thaddchk").attr("data-check");
+	
+	
+	$("input[type='checkbox']").each(function(){
+		if(typeof $(this).attr("data-id") != "undefined" && typeof $(this).attr("data-check") != "undefined" && $(this).attr("data-name") == "checks"){
+			var tempArray = [];
+			tempArray = {
+				schedNo: $(this).attr("data-id"),
+				schedCheck: $(this).attr("data-check")
+			}
+			checkData.push(tempArray);
+		}
+	});
+	
+	sreportData.checks = checkData;
+	
 	console.log(sreportData);
+	
 	$.ajax({
 		url: "${path}/sched/insSreport.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
-		data: sreportData , // HTTP 요청과 함께 서버로 보낼 데이터
+		data: JSON.stringify({
+			sreportData: sreportData, // HTTP 요청과 함께 서버로 보낼 데이터
+			checkData: checkData
+		}),
+		contentType: 'application/json',
 		method: "POST", // HTTP 요청 메소드(GET, POST 등)
 		dataType: "json" // 서버에서 보내줄 데이터의 타입
 	}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨..
@@ -613,7 +709,48 @@ function fn_Create(){
 	});
 }
 
-
+function fn_Create2(){
+	var sreportData = {};
+	var checkData = [];
+	sreportData.userNo 		= Number("${userNo}");
+	sreportData.compNo 		= Number("${compNo}");
+	sreportData.prComment	= tinyMCE.get("thaddtext").getContent();
+	sreportData.prCheck 	= $(".thaddchk").attr("data-check");
+	sreportData.thComment	= tinyMCE.get("nxaddtext").getContent();
+	sreportData.thCheck 	= $(".nxaddchk").attr("data-check");
+	$("input[type='checkbox']").each(function(){
+		if(typeof $(this).attr("data-id") != "undefined" && typeof $(this).attr("data-check") != "undefined" && $(this).attr("data-name") == "checks"){
+			var tempArray = [];
+			tempArray = {
+				schedNo: $(this).attr("data-id"),
+				schedCheck: $(this).attr("data-check")
+			}
+			checkData.push(tempArray);
+		}
+	});
+	sreportData.checks = checkData;
+	console.log(sreportData);
+	$.ajax({
+		url: "${path}/sched/insSreport2.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+		data: JSON.stringify({
+			sreportData: sreportData, // HTTP 요청과 함께 서버로 보낼 데이터
+			checkData: checkData
+		}),
+		contentType: 'application/json',
+		method: "POST", // HTTP 요청 메소드(GET, POST 등)
+		dataType: "json" // 서버에서 보내줄 데이터의 타입
+	}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨..
+	.done(function(data) {
+		if(data.code == 10001){
+			alert("저장 성공");
+		}else{
+			alert("저장 실패");
+		}
+	}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+	.fail(function(xhr, status, errorThrown) {
+		alert("통신 실패");
+	});
+}
 
 function fn_Print() {
 	PrSet();
@@ -641,6 +778,7 @@ $(".r1chk,.r2chk,.r3chk").change(function(){
 
 $(".praddchk").change(function(){
 	if($(".praddchk").is(":checked")==true){
+		console.log("실행");
 		$(".praddtxt1").show();
 	} else{
 		$(".praddtxt1").hide();
@@ -750,14 +888,14 @@ function tblTest(){
 }
 
 function linecopy(){
-	var aa = $("#praddtext").val(); 
+	var aa = tinyMCE.get("praddtext").getContent();
 	$("#prprntext").html(aa);
-	var bb = $("#thaddtext").val();
+	var bb = tinyMCE.get("thaddtext").getContent();
 	$("#thprntext").html(bb);
 }
 
 $("#praddtext,#thaddtext").change(function(){
-linecopy();
+	linecopy();
 });
 
 $(document).ready(function() {
