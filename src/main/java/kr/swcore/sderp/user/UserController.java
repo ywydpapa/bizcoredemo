@@ -75,6 +75,8 @@ public class UserController {
 	@RequestMapping("view.do")
 	public ModelAndView userView(@ModelAttribute UserDTO dto, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
+		String compNo = (String) session.getAttribute("compNo");
+		dto.setCompNo(compNo);
 		UserDTO userInfo = userService.viewUser(dto);
 		List<OrganizDTO> listdept = organizService.listDept(session);
 		mav.addObject("listDept",listdept);

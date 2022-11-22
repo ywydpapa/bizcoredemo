@@ -33,138 +33,144 @@
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
-		<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/calendar/calmain.do' || path2 eq '/sched/list.do' || path2 eq '/sched/write.do' || fn:startsWith(path2, '/sched')}">pcoded-trigger</c:if>">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon">
-					<i class="ti-calendar"></i>
-				</span>
-				<span class="pcoded-mtext" data-i18n="nav.basic-components.main">일정관리</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-			<ul class="pcoded-submenu">
-				<li class="pcoded-hasmenu">
-					<a href="${path}/calendar/calmain.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">캘린더</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sched/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">일정조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sched/write.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">일정등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sched/schedreport.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">개인 업무일지 작성</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sched/listMreport.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">업무일지 검토</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
-		<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/sales/list.do' || path2 eq '/sales/list.do' || path2 eq '/sales/write.do' || fn:startsWith(path2, '/sales/detail')}">pcoded-trigger</c:if>">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon">
-					<i class="ti-briefcase"></i>
-				</span>
-				<span class="pcoded-mtext" data-i18n="nav.form-select.main">영업활동관리</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-			<ul class="pcoded-submenu">
-				<li class="pcoded-hasmenu ">
-					<a href="${path}/sales/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">영업활동조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sales/write.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">영업활동등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
-		<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/sopp/list.do' ||  path2 eq '/sopp/list.do' || path2 eq '/sopp/write.do' || path2 eq '/gw/estlist.do' || path2 eq '/gw/estwrite.do' || fn:startsWith(path2, '/gw/estdetail') || fn:startsWith(path2, '/sopp/detail')}">pcoded-trigger</c:if>">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon">
-					<i class="ti-agenda"></i>
-				</span>
-				<span class="pcoded-mtext" data-i18n="nav.basic-components.main">영업기회</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-			<ul class="pcoded-submenu">
-				<li class="pcoded-hasmenu ">
-					<a href="${path}/sopp/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">영업기회조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/sopp/write.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">영업기회등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/gw/estlist.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">견적관리</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/gw/estwrite.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">견적작성</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'AA0') == -1}">
+			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/calendar/calmain.do' || path2 eq '/sched/list.do' || path2 eq '/sched/write.do' || fn:startsWith(path2, '/sched')}">pcoded-trigger</c:if>">
+				<a href="javascript:void(0)">
+					<span class="pcoded-micon">
+						<i class="ti-calendar"></i>
+					</span>
+					<span class="pcoded-mtext" data-i18n="nav.basic-components.main">일정관리</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+				<ul class="pcoded-submenu">
+					<li class="pcoded-hasmenu">
+						<a href="${path}/calendar/calmain.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">캘린더</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sched/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">일정조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sched/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">일정등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sched/schedreport.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">개인 업무일지 작성</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sched/listMreport.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">업무일지 검토</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</c:if>
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'CC0') == -1}">
+			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/sales/list.do' || path2 eq '/sales/list.do' || path2 eq '/sales/write.do' || fn:startsWith(path2, '/sales/detail')}">pcoded-trigger</c:if>">
+				<a href="javascript:void(0)">
+					<span class="pcoded-micon">
+						<i class="ti-briefcase"></i>
+					</span>
+					<span class="pcoded-mtext" data-i18n="nav.form-select.main">영업활동관리</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+				<ul class="pcoded-submenu">
+					<li class="pcoded-hasmenu ">
+						<a href="${path}/sales/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">영업활동조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sales/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">영업활동등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</c:if>
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'EE0') == -1}">
+			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/sopp/list.do' ||  path2 eq '/sopp/list.do' || path2 eq '/sopp/write.do' || path2 eq '/gw/estlist.do' || path2 eq '/gw/estwrite.do' || fn:startsWith(path2, '/gw/estdetail') || fn:startsWith(path2, '/sopp/detail')}">pcoded-trigger</c:if>">
+				<a href="javascript:void(0)">
+					<span class="pcoded-micon">
+						<i class="ti-agenda"></i>
+					</span>
+					<span class="pcoded-mtext" data-i18n="nav.basic-components.main">영업기회</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+				<ul class="pcoded-submenu">
+					<li class="pcoded-hasmenu ">
+						<a href="${path}/sopp/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">영업기회조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/sopp/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">영업기회등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/gw/estlist.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">견적관리</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/gw/estwrite.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">견적작성</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</c:if>
 		<%-- <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/pps/ppslist.do' || path2 eq '/pps/ppsStatusList.do'|| path2 eq '/pps/mppsStatusList.do' || fn:startsWith(path2, '/pps/ppsdetail') || fn:startsWith(path2, '/pps/statusdetail')}">pcoded-trigger</c:if>">
 			<a href="javascript:void(0)">
 					<span class="pcoded-micon">
@@ -203,7 +209,7 @@
 				</li>
 			</ul>
 		</li> --%>
-		<c:if test="${sessionScope.userRole eq 'ADMIN'}">
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'GG0') == -1}">
 			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/sopp/list2.do' || path2 eq '/sopp/list2.do' || fn:startsWith(path2, '/sopp/detail2')}">pcoded-trigger</c:if>">
 				<a href="javascript:void(0)">
 					<span class="pcoded-micon">
@@ -225,97 +231,100 @@
 				</ul>
 			</li>
 		</c:if>
-		<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/cont/list.do' || path2 eq '/cont/list.do' || path2 eq '/cont/write.do' || fn:startsWith(path2, '/cont/detail')}">pcoded-trigger</c:if>">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon">
-					<i class="ti-pencil-alt"></i>
-				</span>
-				<span class="pcoded-mtext" data-i18n="nav.basic-components.main">계약관리</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-			<ul class="pcoded-submenu">
-				<li class="pcoded-hasmenu ">
-					<a href="${path}/cont/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">계약조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/cont/write.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">계약등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/cust/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">업체정보 조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/cont/iowrite.do/0">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i></span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">매입/매출 자료등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
-		<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/techd/list.do' || path2 eq '/techd/list.do' || path2 eq '/techd/write.do' || path2 eq '/techd/contlist.do' || path2 eq '/techd/bbuycontlist.do' || fn:startsWith(path2, '/techd/detail') || fn:startsWith(path2, '/techd/contextdetail')}">pcoded-trigger</c:if>">
-			<a href="javascript:void(0)">
-				<span class="pcoded-micon">
-					<i class="ti-agenda"></i></span>
-				<span class="pcoded-mtext" data-i18n="nav.basic-components.main">기술지원업무</span>
-				<span class="pcoded-mcaret"></span>
-			</a>
-			<ul class="pcoded-submenu">
-				<li class="pcoded-hasmenu ">
-					<a href="${path}/techd/list.do">
-						<span class="pcoded-micon">
-							<i class="ti-direction-alt"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">기술지원 조회</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/techd/write.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">기술지원 등록</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/techd/contlist.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">유지보수 계약 관리</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-				<li class="pcoded-hasmenu">
-					<a href="${path}/techd/bbuycontlist.do">
-						<span class="pcoded-micon">
-							<i class="ti-angle-right"></i>
-						</span>
-						<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">유지보수 매입 관리</span>
-						<span class="pcoded-mcaret"></span>
-					</a>
-				</li>
-			</ul>
-		</li>
-		
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'II0') == -1}">
+			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/cont/list.do' || path2 eq '/cont/list.do' || path2 eq '/cont/write.do' || fn:startsWith(path2, '/cont/detail')}">pcoded-trigger</c:if>">
+				<a href="javascript:void(0)">
+					<span class="pcoded-micon">
+						<i class="ti-pencil-alt"></i>
+					</span>
+					<span class="pcoded-mtext" data-i18n="nav.basic-components.main">계약관리</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+				<ul class="pcoded-submenu">
+					<li class="pcoded-hasmenu ">
+						<a href="${path}/cont/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">계약조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/cont/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i></span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">계약등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/cust/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i></span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">업체정보 조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/cont/iowrite.do/0">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i></span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">매입/매출 자료등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</c:if>
+		<c:if test="${fn:indexOf(sessionScope.userKey, 'KK0') == -1}">
+			<li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/techd/list.do' || path2 eq '/techd/list.do' || path2 eq '/techd/write.do' || path2 eq '/techd/contlist.do' || path2 eq '/techd/bbuycontlist.do' || fn:startsWith(path2, '/techd/detail') || fn:startsWith(path2, '/techd/contextdetail')}">pcoded-trigger</c:if>">
+				<a href="javascript:void(0)">
+					<span class="pcoded-micon">
+						<i class="ti-agenda"></i></span>
+					<span class="pcoded-mtext" data-i18n="nav.basic-components.main">기술지원업무</span>
+					<span class="pcoded-mcaret"></span>
+				</a>
+				<ul class="pcoded-submenu">
+					<li class="pcoded-hasmenu ">
+						<a href="${path}/techd/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">기술지원 조회</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/techd/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">기술지원 등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/techd/contlist.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">유지보수 계약 관리</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/techd/bbuycontlist.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">유지보수 매입 관리</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		</c:if>
 		
 		<!-- 게시판 관련  -->
 		<li class="">
@@ -339,7 +348,7 @@
 		</c:if>
 	</ul>
 	
-	<c:if test="${fn:contains(userKey, '5') || fn:contains(userKey, '7') }">
+	<c:if test="${fn:indexOf(sessionScope.userKey, 'MM0') == -1 && sessionScope.userRole eq 'ADMIN'}">
 		<div class="pcoded-navigatio-lavel" data-i18n="nav.category.other">설정</div>
 		<ul class="pcoded-item pcoded-left-item">
 			<li class="pcoded-hasmenu <c:if test="${path2 eq '/cust/list.do' || path2 eq '/product/list.do' || path2 eq '/sales/setTarget.do' || path2 eq '/user/list.do'}">pcoded-trigger</c:if>">

@@ -59,7 +59,9 @@
 							<div id="topMenu" class="nav_menu">
 								<ul>
 									<li><a class="menuLink" href="${path}/sidemenu/menu1.do">업무관리</a></li>
-									<li><a class="menuLink" href="${path}/sidemenu/menu2.do">그룹웨어</a></li>
+									<c:if test="${sessionScope.userRole ne 'DUSER'}">
+										<li><a class="menuLink" href="${path}/sidemenu/menu2.do">그룹웨어</a></li>
+									</c:if>
 									<c:if test="${sessionScope.userRole eq 'ADMIN'}">
 										<li><a class="menuLink" href="${path}/sidemenu/menu3.do">회계관리</a></li>
 									</c:if>

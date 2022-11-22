@@ -49,7 +49,7 @@
 									<tr align="center">
 										<td>${row.userId}</td>
 										<td>${row.userName}</td>
-										<td><c:if test="${row.userRole eq 'CUSER'}">일반사용자</c:if><c:if test="${row.userRole eq 'ADMIN'}">시스템관리자</c:if><c:if test="${row.userRole eq 'PUSER'}">업무관리자</c:if></td>
+										<td><c:if test="${row.userRole eq 'CUSER'}">일반사용자</c:if><c:if test="${row.userRole eq 'ADMIN'}">시스템관리자</c:if><c:if test="${row.userRole eq 'PUSER'}">업무관리자</c:if><c:if test="${row.userRole eq 'DUSER'}">데모사용자</c:if></td>
 										<td><a href="javascript:location='${path}/user/view.do?userNo=${row.userNo}'">상세보기</a></td>
 									</tr>
 								</c:forEach>

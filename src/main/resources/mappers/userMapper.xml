@@ -22,11 +22,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		left join swc_userData b on a.userNo=b.userNo and b.catNo='100003' and b.attrib not like 'XXX%'
  		left join swc_userData c on a.userNo=c.userNo and c.catNo='100002' and c.attrib not like 'XXX%'
 		left join swc_company d on a.compNo = d.compNo
- 		where d.compId = (select compId from swc_company where compId = #{compId})
-			<choose>
-				<when test="userId != null and userId != ''"> and a.userId = #{userId}</when>
-				<when test="userNo > 0"> and a.userNo = #{userNo}</when>
-			</choose>
+		<choose>
+			<when test="compId != null and compId != ''">
+				where d.compId = (select compId from swc_company where compId = #{compId})
+			</when>
+			<otherwise>
+		 		where d.compNo = (select compNo from swc_company where compNo = #{compNo})
+			</otherwise>
+		</choose>
+		
+		<choose>
+			<when test="userId != null and userId != ''"> and a.userId = #{userId}</when>
+			<when test="userNo > 0"> and a.userNo = #{userNo}</when>
+		</choose>
  </select>
  
  <select id="userList"

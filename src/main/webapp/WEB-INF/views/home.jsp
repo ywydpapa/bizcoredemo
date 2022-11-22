@@ -206,6 +206,7 @@ margin-left:10px;
                                     </a>
                                 </li>
                                 <li class="pcoded-hasmenu active pcoded-trigger">
+                                	<c:if test="${sessionScope.userKey}"></c:if>
                                     <a href="#">
                                         <span class="pcoded-micon"><i class="ti-layout"></i></span>
                                         <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">일정관리</span>

@@ -112,9 +112,10 @@
 									<th scope="row">사용자 권한</th>
 									<td>
 										<select name="userRole" id="userRole"  class="form-control form-control-sm">
-										<option value="CUSER"<c:if test="${userInfo.userRole eq 'CUSER'}">selected</c:if> >일반사용자</option>
-										<option value="PUSER"<c:if test="${userInfo.userRole eq 'PUSER'}">selected</c:if>>조직관리자</option>
-										<option value="ADMIN"<c:if test="${userInfo.userRole eq 'ADMIN'}">selected</c:if>>시스템관리자</option>
+										<option value="CUSER" <c:if test="${userInfo.userRole eq 'CUSER'}">selected</c:if>>일반사용자</option>
+										<option value="PUSER" <c:if test="${userInfo.userRole eq 'PUSER'}">selected</c:if>>조직관리자</option>
+										<option value="ADMIN" <c:if test="${userInfo.userRole eq 'ADMIN'}">selected</c:if>>시스템관리자</option>
+										<option value="DUSER" <c:if test="${userInfo.userRole eq 'DUSER'}">selected</c:if>>데모사용자</option>
 										</select>
 									</td>
 								</tr>
