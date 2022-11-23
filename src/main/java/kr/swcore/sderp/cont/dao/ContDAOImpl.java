@@ -24,8 +24,8 @@ public class ContDAOImpl implements ContDAO {
 	}
 
 	@Override
-	public List<ContDTO> listCont3m() {
-		return sqlSession.selectList("cont.listcont3m");
+	public List<ContDTO> listCont3m(ContDTO contDto) {
+		return sqlSession.selectList("cont.listcont3m", contDto);
 	}
 
 	@Override

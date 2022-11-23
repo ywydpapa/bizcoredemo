@@ -74,7 +74,8 @@ public class TechdController {
 	@RequestMapping("contlist.do")
 	public ModelAndView listcont3m(HttpSession session, ModelAndView mav) {
 		mav.setViewName("techd/listcont");
-		mav.addObject("list", contService.listCont3m());
+		ContDTO contDto = new ContDTO();
+		mav.addObject("list", contService.listCont3m(session, contDto));
 		mav.addObject("first","Y");
 		return mav;
 	}
@@ -107,7 +108,8 @@ public class TechdController {
 	@RequestMapping("bbuycontlist.do")
 	public ModelAndView bbuycont(HttpSession session, ModelAndView mav) {
 		mav.setViewName("techd/listbbuycont");
-		mav.addObject("list", contService.listCont3m());
+		ContDTO contDto = new ContDTO();
+		mav.addObject("list", contService.listCont3m(session, contDto));
 		mav.addObject("first","Y");
 		return mav;
 	}

@@ -10,7 +10,7 @@ import kr.swcore.sderp.sopp.dto.SoppDTO;
 public interface ContDAO {
 
 	List<ContDTO> listCont();
-	List<ContDTO> listCont3m();
+	List<ContDTO> listCont3m(ContDTO contDto);
 	List<ContDTO> listContbycust(int custNo);
 	List<ContDTO> listCont(SoppDTO soppDto);
 	List<ContDTO> listconCont(ContDTO contDto);
