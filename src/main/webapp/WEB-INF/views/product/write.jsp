@@ -36,7 +36,7 @@
 							</colgroup>
 							<tbody>
 								<tr>
-									<th scope="row" class="requiredTextCss">공급사</th>
+									<th scope="row" class="requiredTextCss">고객사</th>
 									<td>
 										<div class="input-group input-group-sm mb-0">
 											<input type="text" class="form-control" name="product" id="custName" value="" readonly/>
@@ -228,7 +228,7 @@
 			}
 			productData.productDefaultPrice = Number(productDefaultPrice);		// 상품 기본 가격
 			productData.productDesc	 		= $("#productDesc").val();				// 상품 설명
-			productData.custNo				= $("#custNo").val();					// 공급사(외래키)
+			productData.custNo				= $("#custNo").val();					// 고객사(외래키)
 
 			if(!productData.custNo){
 				var b = confirm("미등록된 거래처 또는 거래처가 입력되지 않았습니다. \n 간편등록을 진행하시겠습니까?");
