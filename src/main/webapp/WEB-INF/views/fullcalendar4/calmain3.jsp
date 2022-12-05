@@ -16,13 +16,14 @@
 <%--	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet"> <!--CDN 링크 -->--%>
 	<link href="${path}/fancytree/skin-win8/ui.fancytree.css" rel="stylesheet">
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src='${path}/fullcalendar4/core/main.js'></script>
     <script src='${path}/fullcalendar4/daygrid/main.js'></script>
     <script src='${path}/fullcalendar4/interaction/main.js'></script>
     <script src='${path}/fullcalendar4/list/main.js'></script>
     <script src='${path}/fullcalendar4/timegrid/main.js'></script>
+    <script src='${path}/fullcalendar4/google-calendar/main.js'></script>
 <%--    <script src='${path}/fullcalendar4/moment/main.js'></script>--%>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src='${path}/fancytree/jquery.fancytree-all-deps.js'></script>
 	<script src='${path}/fancytree/jquery.fancytree-all.js'></script>
 
@@ -214,6 +215,7 @@
 		var calendar;
 		function setCalendar(event, userNoList) {
 			var userNoList = userNoList;
+			var googleCalendarId = "${sessionScope.googleCalendarId}";
 			if(event != 'search') {
 				userNoList = ["${sessionScope.userNo}"];
 			}
@@ -225,7 +227,7 @@
 					center: 'title',
 					right:  'prevYear prev today next nextYear'
 				},
-				plugins: [ 'dayGrid','interaction','timeGrid','list' ],
+				plugins: [ 'dayGrid','interaction','timeGrid','list','googleCalendar' ],
 				locale                    : 'ko',
 				timezone                  : "local",
 				firstDay                  : 0,
@@ -247,23 +249,39 @@
 					$('.eventModalRadioGroup').show();
 					$('#eventModal').modal('show');
 				},
-
-				eventSources: [{
-					url: '${path}/calendar/listEvent.do',
-					method: 'POST',
-					extraParams: {
-						userNoList : userNoList
-					},
-					success : function(rawData, response) {
-						return rawData;
-					},
-					failure: function(error) {
-						// console.dir(error);
-						alert('캘린더 데이터 요청 실패');
-					},
-					color: 'yellow',    // an option!
-					textColor: 'black',  // an option!
-				}],
+				
+				googleCalendarApiKey : "AIzaSyCT99xh7Q94gDNmRYh64g0J3-dGYCkisNo",
+				eventSources: [
+					{
+			           	googleCalendarId: googleCalendarId,
+			        },
+			        {
+			        	googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com', 
+	            		color: 'red', 
+	            		textColor: 'white',
+			        },
+			        {
+			        	googleCalendarId : 'addressbook#contacts@group.v.calendar.google.com', 
+	            		color: 'blue', 
+	            		textColor: 'white',
+			        },
+					{
+						url: '${path}/calendar/listEvent.do',
+						method: 'POST',
+						extraParams: {
+							userNoList : userNoList
+						},
+						success : function(rawData, response) {
+							return rawData;
+						},
+						failure: function(error) {
+							// console.dir(error);
+							alert('캘린더 데이터 요청 실패');
+						},
+						color: 'yellow',    // an option!
+						textColor: 'black',  // an option!
+					}
+				],
 
 				eventClick: function(info) {
 					$('#detail-content').empty();

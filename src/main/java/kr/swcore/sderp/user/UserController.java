@@ -151,6 +151,7 @@ public class UserController {
 			session.setAttribute("compNo", userInfo.getCompNo()); // ȸ���ڵ�
 			session.setAttribute("userNo", Integer.toString(userInfo.getUserNo())); // ���� �Ϸù�ȣ
 			session.setAttribute("orgId", userInfo.getOrg_id()); // �μ� ��ȣ
+			session.setAttribute("googleCalendarId", userInfo.getGoogleCalendarId()); // �μ� ��ȣ
 			session.setAttribute("listUser", userService.userList(session));
 			session.setAttribute("listCust", custService.listCust(session));
 			session.setAttribute("listSopp", soppService.listSopp(session, null));

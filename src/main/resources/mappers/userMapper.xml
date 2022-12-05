@@ -60,6 +60,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		<if test="listDateFrom != '' and listDateFrom != null">
  			, listDateFrom = #{listDateFrom}
  		</if>
+ 		<if test="googleCalendarId != '' and googleCalendarId != null">
+ 			, googleCalendarId = #{googleCalendarId}
+ 		</if>
  		<!-- userRole=#{userRole} -->
  		where userId=#{userId}
  		and userPasswd=PASSWORD(#{userPasswd})

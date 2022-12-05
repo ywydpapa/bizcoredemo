@@ -31,6 +31,10 @@
                         <input type="password" class="form-control" id="checkedUserChangePasswd">
                     </div>
                     <div class="form-group">
+                        <label for="googleCalendarId">구글캘린더 통합Id</label>
+                        <input type="text" class="form-control" id="googleCalendarId" value="${sessionScope.googleCalendarId}">
+                    </div>
+                    <div class="form-group">
 				    	<label class="col-form-label">리스트 default 기간 설정</label>
                         <p class="input_inline">
                         	<input class="form-control" type="date" max="9999-12-30" id="listDateFrom" value="${sessionScope.listDateFrom}"/>

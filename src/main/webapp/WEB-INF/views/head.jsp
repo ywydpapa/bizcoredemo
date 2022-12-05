@@ -218,6 +218,7 @@
 		var changePassword = $("#userChangePasswd").val();
 		var checkedChangePassword = $("#checkedUserChangePasswd").val();
 		var listDateFrom = $("#listDateFrom").val();
+		var googleCalendarId = $("#googleCalendarId").val();
 		
 		if(fnIsNullOrEmpty(currentPassword)) {
 			alert("현재 비밀번호는 필수입니다.");
@@ -233,6 +234,7 @@
 		userData.userPasswd = currentPassword;
 		userData.userChangePasswd = changePassword;
 		userData.listDateFrom = listDateFrom;
+		userData.googleCalendarId = googleCalendarId;
 		
 		$.ajax({
 			url : "${path}/user/updatePass.do",

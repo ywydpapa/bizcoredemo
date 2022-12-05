@@ -32,4 +32,5 @@ public class UserDTO {
 	private String attEnd;
 	private String attDesc;
 	private int attType;
+	private String googleCalendarId;
 }
