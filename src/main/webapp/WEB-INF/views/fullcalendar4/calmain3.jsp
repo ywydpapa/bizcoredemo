@@ -250,7 +250,7 @@
 					$('#eventModal').modal('show');
 				},
 				
-				googleCalendarApiKey : "AIzaSyCT99xh7Q94gDNmRYh64g0J3-dGYCkisNo",
+				googleCalendarApiKey : "AIzaSyCyrxqFXMg_bUVYktFstKghb_TC0N3LgUo",
 				eventSources: [
 					{
 			           	googleCalendarId: googleCalendarId,
@@ -258,11 +258,6 @@
 			        {
 			        	googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com', 
 	            		color: 'red', 
-	            		textColor: 'white',
-			        },
-			        {
-			        	googleCalendarId : 'addressbook#contacts@group.v.calendar.google.com', 
-	            		color: 'blue', 
 	            		textColor: 'white',
 			        },
 					{
