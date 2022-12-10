@@ -167,7 +167,12 @@ public class HomeController {
 	public String menu4() {
 		return "sidemenu/menu4";
 	}
-	
+
+	@RequestMapping("/sidemenu/menu5.do")
+	public String menu5() {
+		return "sidemenu/menu5";
+	}
+
 	@RequestMapping("/manual_detail/introduction.do")
 	public String introduction() {
 		return "manual_detail/introduction";

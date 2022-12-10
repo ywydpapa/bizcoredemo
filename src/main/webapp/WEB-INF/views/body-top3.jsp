@@ -68,6 +68,9 @@
 									<c:if test="${sessionScope.userRole eq 'ADMIN'}">
 										<li><a class="menuLink" href="${path}/sidemenu/menu4.do">경영정보</a></li>
 									</c:if>
+									<c:if test="${sessionScope.userRole eq 'ADMIN'}">
+										<li><a class="menuLink on" href="${path}/sidemenu/menu5.do">재고관리</a></li>
+									</c:if>
 								</ul>
 							</div>
 						</li>
