@@ -5,10 +5,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="store">
 
 <select id="listStore" resultType="storeDto">
- 	select sp.*, sc.custName
- 	from swc_product sp
- 	left join swc_cust sc on sp.custNo = sc.custNo
- 	where sp.compNo = #{compNo} and sp.attrib not like 'XXX%' order by sp.productNo
+ 	select *
+ 	from swc_store
+ 	where compNo = #{compNo} and sp.attrib not like 'XXX%'
 </select>
 
 <select id="detailStore" resultType="storeDto">
@@ -69,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </update>
  
 <delete id="deleteStore">
-	update swc_product set attrib = 'XXXXX' where compNo=#{compNo} and productNo=#{productNo}
+	update swc_store set attrib = 'XXXXX' where compNo=#{compNo} and storeNo=#{storeNo}
 </delete>
  		
 </mapper>

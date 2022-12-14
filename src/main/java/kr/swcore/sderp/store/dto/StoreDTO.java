@@ -12,17 +12,16 @@ import java.math.BigDecimal;
 public class StoreDTO {
     private int storeNo;
     private int compNo;
-    private String inoutType;
+    private String storeType;
     private int productNo;
-    private int suppNo;
     private String storeUnit;
     private int storeQty;
-    private String locateCode;
+    private String locationNo;
     private String regDate;
     private String modDate;
     private String attrib;
     private String comment;
-    private BigDecimal storeNetprice;
+    private BigDecimal storeAmount;
     private String serialNo;
 
     public StoreDTO(){
