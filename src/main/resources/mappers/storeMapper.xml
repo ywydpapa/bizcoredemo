@@ -34,8 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						and productCategoryName = #{productCategoryName}
 					 )
 				end
-				as productNo
-			from swc_product sp1 where compNo = #{compNo}
+				as storeNo
+			from swc_store sp1 where compNo = #{compNo}
 			<!--
 			- 데이터 0개 -> 1로 세팅
 			- 데이터 일치 -> 일치된 productCategoryNo
@@ -46,12 +46,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			select #{productCategoryNo} as productCategoryNo
 		</if>
  	</selectKey>
- 	insert into swc_product (productCategoryNo, productCategoryName, compNo, custNo, userNo, productName, productDesc, productDefaultPrice, productImageNo, attrib)
+ 	insert into swc_store (productCategoryNo, productCategoryName, compNo, custNo, userNo, productName, productDesc, productDefaultPrice, productImageNo, attrib)
  	values (#{productCategoryNo}, #{productCategoryName}, #{compNo}, #{custNo}, #{userNo}, #{productName}, #{productDesc}, #{productDefaultPrice}, #{productImageNo}, '10000')
  </insert>
 
 <update id="updateStore">
- 	update swc_product
+ 	update swc_store
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="productCategoryNo != 0">productName=#{productName},</if>
 			<if test="productCategoryName != null">productCategoryName=#{productCategoryName},</if>
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="productImageNo != 0">productImageNo=#{productImageNo},</if>
 			<if test="attrib != null">attrib=#{attrib},</if>
 		</trim>
- 	where productNo=#{productNo}
+ 	where storeNo=#{storeNo}
  	and compNo = #{compNo}
 </update>
  
