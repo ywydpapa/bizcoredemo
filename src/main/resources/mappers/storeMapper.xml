@@ -4,44 +4,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="store">
 
-<select id="searchingWithMaxProductCategoryNo" resultType="productDto">
-	select IF(
-		count(*)>0,
-		productCategoryNo,
-		(select max(sp2.productCategoryNo) from swc_product sp2 where sp2.compNo = #{compNo})
-	) productCategoryNo, productCategoryName
-	from swc_product
-	where productCategoryName = #{productCategoryName}
-	  and compNo = #{compNo}
-</select>
-
-<select id="oneProduct" resultType="productDto">
-	select * from swc_product where productNo = #{productNo} and compNo = #{compNo}
-</select>
-
-<select id="checkDetailProudct" resultType="productDto">
-	select * from swc_product where compNo = #{compNo} and productCategoryName = #{productCategoryName} and custNo = #{custNo} and productName = #{productName}
-</select>
-
-<select id="oneDetailProudct" resultType="productDto">
-	select * from swc_product where compNo = #{compNo} and productCategoryNo = #{productCategoryNo} and custNo = #{custNo} and productName = #{productName}
-</select>
-
-<select id="listProduct" resultType="productDto">
+<select id="listStore" resultType="storeDto">
  	select sp.*, sc.custName
  	from swc_product sp
  	left join swc_cust sc on sp.custNo = sc.custNo
  	where sp.compNo = #{compNo} and sp.attrib not like 'XXX%' order by sp.productNo
 </select>
 
-<select id="listProductGoodsCategory" resultType="productDto">
- 	select productCategoryNo, productCategoryName 
-	from swc_product where compNo = #{compNo} and attrib not like 'XXX%' 
-	group by productCategoryNo 
-	order by productNo
-</select>
-
-<select id="detailProduct" resultType="productDto">
+<select id="detailStore" resultType="storeDto">
  	select sp.*, sc.custName, IFNULL(MAX(spD.productDataNo), 0) productDataLastNo
 	from swc_product sp
 	left join swc_cust sc on sp.custNo = sc.custNo
@@ -50,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	and sp.compNo = #{compNo}
 </select>
  
-<insert id="insertProduct">
+<insert id="insertStore">
  	<!-- INSERT 직전 새 상품인경우 productCategoryNo 마지막번호 + 1 -->
 	<selectKey resultType="int" keyProperty="productCategoryNo" order="BEFORE">
 		<if test="productCategoryNo == 0">
@@ -81,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	values (#{productCategoryNo}, #{productCategoryName}, #{compNo}, #{custNo}, #{userNo}, #{productName}, #{productDesc}, #{productDefaultPrice}, #{productImageNo}, '10000')
  </insert>
 
-<update id="updateProduct">
+<update id="updateStore">
  	update swc_product
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="productCategoryNo != 0">productName=#{productName},</if>
@@ -98,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	and compNo = #{compNo}
 </update>
  
-<delete id="deleteProduct">
+<delete id="deleteStore">
 	update swc_product set attrib = 'XXXXX' where compNo=#{compNo} and productNo=#{productNo}
 </delete>
  		
