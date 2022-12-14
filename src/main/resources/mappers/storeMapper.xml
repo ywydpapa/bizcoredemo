@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="store">
+
+<select id="searchingWithMaxProductCategoryNo" resultType="productDto">
+	select IF(
+		count(*)>0,
+		productCategoryNo,
+		(select max(sp2.productCategoryNo) from swc_product sp2 where sp2.compNo = #{compNo})
+	) productCategoryNo, productCategoryName
+	from swc_product
+	where productCategoryName = #{productCategoryName}
+	  and compNo = #{compNo}
+</select>
+
+<select id="oneProduct" resultType="productDto">
+	select * from swc_product where productNo = #{productNo} and compNo = #{compNo}
+</select>
+
+<select id="checkDetailProudct" resultType="productDto">
+	select * from swc_product where compNo = #{compNo} and productCategoryName = #{productCategoryName} and custNo = #{custNo} and productName = #{productName}
+</select>
+
+<select id="oneDetailProudct" resultType="productDto">
+	select * from swc_product where compNo = #{compNo} and productCategoryNo = #{productCategoryNo} and custNo = #{custNo} and productName = #{productName}
+</select>
+
+<select id="listProduct" resultType="productDto">
+ 	select sp.*, sc.custName
+ 	from swc_product sp
+ 	left join swc_cust sc on sp.custNo = sc.custNo
+ 	where sp.compNo = #{compNo} and sp.attrib not like 'XXX%' order by sp.productNo
+</select>
+
+<select id="listProductGoodsCategory" resultType="productDto">
+ 	select productCategoryNo, productCategoryName 
+	from swc_product where compNo = #{compNo} and attrib not like 'XXX%' 
+	group by productCategoryNo 
+	order by productNo
+</select>
+
+<select id="detailProduct" resultType="productDto">
+ 	select sp.*, sc.custName, IFNULL(MAX(spD.productDataNo), 0) productDataLastNo
+	from swc_product sp
+	left join swc_cust sc on sp.custNo = sc.custNo
+	left join swc_productData spD on sp.productNo = spD.productNo
+	where sp.productNo=#{productNo} 
+	and sp.compNo = #{compNo}
+</select>
+ 
+<insert id="insertProduct">
+ 	<!-- INSERT 직전 새 상품인경우 productCategoryNo 마지막번호 + 1 -->
+	<selectKey resultType="int" keyProperty="productCategoryNo" order="BEFORE">
+		<if test="productCategoryNo == 0">
+			select 
+				case count(sp1.productNo)
+				when 0 then 1
+				else (
+						select
+						if(count(sp2.productNo) = 0, (select max(sp3.productCategoryNo)+1 as A from swc_product sp3 where sp3.compNo = 100002 ), sp2.productCategoryNo) productNo
+						from swc_product sp2
+						where compNo = #{compNo}
+						and productCategoryName = #{productCategoryName}
+					 )
+				end
+				as productNo
+			from swc_product sp1 where compNo = #{compNo}
+			<!--
+			- 데이터 0개 -> 1로 세팅
+			- 데이터 일치 -> 일치된 productCategoryNo
+			- 데이터 불일치 -> 하지만 다른데이터있는경우 last(productCategoryNo) + 1
+			-->
+		</if>
+ 		<if test="productCategoryNo != 0">
+			select #{productCategoryNo} as productCategoryNo
+		</if>
+ 	</selectKey>
+ 	insert into swc_product (productCategoryNo, productCategoryName, compNo, custNo, userNo, productName, productDesc, productDefaultPrice, productImageNo, attrib)
+ 	values (#{productCategoryNo}, #{productCategoryName}, #{compNo}, #{custNo}, #{userNo}, #{productName}, #{productDesc}, #{productDefaultPrice}, #{productImageNo}, '10000')
+ </insert>
+
+<update id="updateProduct">
+ 	update swc_product
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="productCategoryNo != 0">productName=#{productName},</if>
+			<if test="productCategoryName != null">productCategoryName=#{productCategoryName},</if>
+			<if test="custNo != 0">custNo=#{custNo},</if>
+			<if test="userNo != 0">userNo=#{userNo},</if>
+			<if test="productName != null">productName=#{productName},</if>
+			<if test="productDesc != null">productDesc=#{productDesc},</if>
+			<if test="productDefaultPrice != 0">productDefaultPrice=#{productDefaultPrice},</if>
+			<if test="productImageNo != 0">productImageNo=#{productImageNo},</if>
+			<if test="attrib != null">attrib=#{attrib},</if>
+		</trim>
+ 	where productNo=#{productNo}
+ 	and compNo = #{compNo}
+</update>
+ 
+<delete id="deleteProduct">
+	update swc_product set attrib = 'XXXXX' where compNo=#{compNo} and productNo=#{productNo}
+</delete>
+ 		
+</mapper>

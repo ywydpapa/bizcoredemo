@@ -26,9 +26,9 @@
 <script src='${path}/assets/jstree/js/jstree.js'></script>
 <script type="text/javascript" src="${path}/assets/pages/treeview/jquery.tree.js"></script>
 <script src="${path}/assets/pages/data-table/js/data-table-custom.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
 <script src="${path}/assets/js/pcoded.min.js"></script>
 <script src="${path}/assets/js/demo-12.js"></script>
-
 <script src="${path}/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="${path}/assets/js/script.js"></script>
 </body>

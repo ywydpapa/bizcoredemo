@@ -18,6 +18,10 @@
 			info:false,
 			searching: true,
 			order: [[ 0, "desc" ]],
+			dom: 'Bfrtip',
+	        buttons: [
+	            'csv', 'excel'
+	        ]
 		});
 	});
 	</script>
