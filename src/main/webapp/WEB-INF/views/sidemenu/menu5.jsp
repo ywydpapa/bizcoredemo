@@ -29,14 +29,14 @@
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class="pcoded-hasmenu ">
-                                            <a href="${path}/store/list.do">
+                                            <a href="${path}/store/listStore.do">
                                                 <span class="pcoded-micon"><i class="ti-direction-alt"></i></span>
                                                 <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">재고 현황</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class="pcoded-hasmenu">
-                                            <a href="${path}/store/write.do">
+                                            <a href="${path}/store/writeStore.do">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">재고 등록</span>
                                                 <span class="pcoded-mcaret"></span>

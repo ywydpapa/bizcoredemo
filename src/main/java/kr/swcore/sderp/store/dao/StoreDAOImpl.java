@@ -14,8 +14,8 @@ public class StoreDAOImpl implements StoreDAO{
     SqlSession sqlSession;
 
     @Override
-    public List<StoreDTO> listStore() {
-        return sqlSession.selectList("store.listStore");
+    public List<StoreDTO> listStore(StoreDTO dto) {
+        return sqlSession.selectList("store.listStore", dto);
     }
 
     @Override

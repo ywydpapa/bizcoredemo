@@ -4,7 +4,7 @@ import kr.swcore.sderp.store.dto.StoreDTO;
 
 import java.util.List;
 public interface StoreDAO {
-    List<StoreDTO> listStore();
+    List<StoreDTO> listStore(StoreDTO dto);
 
     int insertStore(StoreDTO dto);
 

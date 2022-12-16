@@ -1,12 +1,14 @@
 package kr.swcore.sderp.store.service;
 
 import kr.swcore.sderp.store.dto.StoreDTO;
+
+import javax.servlet.http.HttpSession;
 import java.util.List;
 public interface StoreService {
 
-    List<StoreDTO> listStore();
+    List<StoreDTO> listStore(HttpSession session,StoreDTO dto);
 
-    int insertStgore(StoreDTO dto);
+    int insertStore(HttpSession session, StoreDTO dto);
 
     int updateStgore(StoreDTO dto);
 

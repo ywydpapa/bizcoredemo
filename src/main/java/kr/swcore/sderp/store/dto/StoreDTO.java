@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class StoreDTO {
     private int storeNo;
     private int compNo;
+    private int userNo;
     private String storeType;
     private int productNo;
     private String storeUnit;
