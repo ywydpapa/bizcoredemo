@@ -351,7 +351,7 @@
 	<c:if test="${fn:indexOf(sessionScope.userKey, 'MM0') == -1 && sessionScope.userRole eq 'ADMIN'}">
 		<div class="pcoded-navigatio-lavel" data-i18n="nav.category.other">설정</div>
 		<ul class="pcoded-item pcoded-left-item">
-			<li class="pcoded-hasmenu <c:if test="${path2 eq '/cust/list.do' || path2 eq '/product/list.do' || path2 eq '/sales/setTarget.do' || path2 eq '/user/list.do'}">pcoded-trigger</c:if>">
+			<li class="pcoded-hasmenu <c:if test="${path2 eq '/cust/list.do' || path2 eq '/product/list.do' || path2 eq '/sales/setTarget.do' || path2 eq '/user/list.do' || path2 eq '/organiz/list.do'}">pcoded-trigger</c:if>">
 				<a href="javascript:void(0)">
 					<span class="pcoded-micon">
 						<i class="ti-settings"></i>
@@ -374,6 +374,15 @@
 								<i class="ti-direction-alt"></i>
 							</span>
 							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">상품설정</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					<li class="pcoded-hasmenu">
+						<a href="${path}/organiz/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">조직도설정</span>
 							<span class="pcoded-mcaret"></span>
 						</a>
 					</li>
