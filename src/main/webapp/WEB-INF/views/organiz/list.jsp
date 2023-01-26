@@ -22,9 +22,9 @@
 <div id="main_content">
 	<style>
 		#organizationChartView {
+			display: block;
 			min-width: 200px;
 			background-color: #fff;
-			display: none;
 			position: absolute;
 			z-index: 9999;
 			padding: 5px 5px 10px 5px;
@@ -290,6 +290,9 @@
 				calYear = "";
 				calDate = "";
 			});
+			
+			$(".fancytree-expander")[0].click();
+			
 		});
 	</script>
 </div>
