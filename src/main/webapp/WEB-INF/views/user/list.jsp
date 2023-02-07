@@ -439,13 +439,19 @@
 	
 
 	$('.fancytree-title').click(function(){
+		let url; 
 		let userNo = $(this).html();
 		userNo = userNo.split("("); 
 		if(userNo.length > 1) {
 			userNo = userNo[1]; 
 			userNo = userNo.split(")")[0]; 
+			if (location.href.includes("local")) {
+				url = "/sderp/api/user/"+userNo;
+			} else {
+				url = "/api/user/"+userNo;
+			}
 		$.ajax({
-			url : "http://localhost:8080/sderp/api/user/"+userNo,
+			url : url,
 			method : "get",
 			dataType: "json",
 			success: (result) => {
