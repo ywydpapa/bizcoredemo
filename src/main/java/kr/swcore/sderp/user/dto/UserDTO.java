@@ -1,5 +1,7 @@
 package kr.swcore.sderp.user.dto;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,6 +29,10 @@ public class UserDTO {
 	private String userEmail;
 	
 	private String listDateFrom;
+	
+	// 23-02-07 등록일 수정일 추가
+	private String regDateTime;
+	private String modDateTime;
 	
 	private String attStart;
 	private String attEnd;

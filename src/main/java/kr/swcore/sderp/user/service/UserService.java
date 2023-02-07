@@ -37,5 +37,7 @@ public interface UserService {
 
 		public List<UserDTO> allList();
 
-		public List<UserDTO> listuser_data(String userName);
+		public List<UserDTO> listuser_data(String userName); 
+		
+		public UserDTO getUserDataByNo(String userNo);
 }

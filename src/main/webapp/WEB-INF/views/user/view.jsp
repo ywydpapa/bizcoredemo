@@ -11,7 +11,8 @@
 <div id="main_content">
 	<script type="text/javascript">
 	<c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
-		function fn_userUpdate() {
+		function fn_userUpdate(obj) {
+			
 			var userData = {};
 			//전화번도 유효성 검사
 			var regExp = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
@@ -29,18 +30,22 @@
 			userData.userTel		= $("#userTel").val();
 			
 			if($("[name='userPasswd']").attr("data-number") == 1){
-				userData.userPasswd 	= 1;
+				userData.userPasswd 	= 1;s
 			}else{
 				userData.userPasswd		= 0;
 			}
-			
 			userData.userName 		= $("#userName").val();
 			userData.userRole 		= $("#userRole").val();
 			userData.org_id 		= $("#userDept").val();
-			userData.attrib			= $("#userAttrib").val();
+			userData.attrib 		= obj.className == "btn btn-md btn-danger" ? "XXXXX" : $("#userAttrib").val();
 			userData.userOtp		= $("#userOtp").val();
 			userData.userKey 		= $("#userRoleAA").val()+$("#userRoleBB").val()+$("#userRoleCC").val()+$("#userRoleDD").val()+$("#userRoleEE").val()+$("#userRoleFF").val()+$("#userRoleGG").val()+$("#userRoleHH").val()+$("#userRoleII").val()+$("#userRoleJJ").val()+$("#userRoleKK").val()+$("#userRoleLL").val()+$("#userRoleMM").val()+$("#userRoleNN").val();
-			$.ajax({ url: "${path}/user/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+			
+			
+			if (obj.className == "btn btn-md btn-danger"){
+				let answer = confirm( $("#userName").val() +"을(를) 퇴사 처리 하시겠습니까?"); 
+				if(answer == true) {
+					$.ajax({ url: "${path}/user/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 						data: userData , // HTTP 요청과 함께 서버로 보낼 데이터
 						method: "POST", // HTTP 요청 메소드(GET, POST 등)
 						dataType: "json" // 서버에서 보내줄 데이터의 타입
@@ -57,6 +62,27 @@
 					.fail(function(xhr, status, errorThrown) {
 						alert("통신 실패");
 					});
+				}
+			} else {
+				$.ajax({ url: "${path}/user/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+					data: userData , // HTTP 요청과 함께 서버로 보낼 데이터
+					method: "POST", // HTTP 요청 메소드(GET, POST 등)
+					dataType: "json" // 서버에서 보내줄 데이터의 타입
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+				.done(function(data) {
+					if(data.code == 10001){
+						alert("저장 성공");
+						var url = '${path}/user/list.do';
+						location.href = url;
+					}else{
+						alert("저장 실패");
+					}
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+			}
+			
 			}
 	</c:if>
 	</script>
@@ -123,17 +149,11 @@
 									<td>부서</td>
 									<td><select class="form-control" name="userDept" id="userDept">
 										<c:forEach var="listDept" items="${listDept}">
-										<option value="${listDept.org_id}">${listDept.org_title}</option>
+										<option value="${listDept.org_id}" <c:if test="${listDept.org_id eq userInfo.org_id}">selected</c:if>>${listDept.org_title}</option>
 										</c:forEach>
 										</select></td>
 								</tr>
-								<tr>
-									<td>로그인 설정</td>
-									<td><select class="form-control" id="userAttrib">
-										<option value="10000">로그인 가능</option>
-										<option value="XXXXX">로그인 금지</option>
-										</select></td>
-								</tr>
+						 
 								<!-- tel -->
 								<tr>
 									<td>전화번호</td>
@@ -147,11 +167,30 @@
 									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
 									</td>
 								</tr>
+								<tr>
+									<td>등록 일자</td>
+									<td>
+										<input type="text" name="userAttStart" id="userAttStart" value="${userInfo.regDateTime}" disabled>  
+									</td>
+								</tr>
+						<!--  	<tr>
+									<td>퇴사일자</td>
+									<td>
+										<input type="text" name="userAttEnd" id="userAttEnd" <c:if test="${userInfo.attrib eq 'XXXXX'}" >value="${userInfo.modDateTime}"</c:if> disabled>  
+									</td>
+								</tr>-->	
+								<tr>
+									<td>로그인 설정</td>
+									<td><select class="form-control" id="userAttrib">
+										<option value="10000">로그인 가능</option>
+										<option value="XXXXX">로그인 금지</option>
+										</select></td>
+								</tr>
 								<!-- e-mail value="${userInfo.userEmail}"-->
 								<tr>
 									<td>표시 순서</td>
 									<td>
-										<input type="text" name="userOtp" id="userOtp" value="${userInfo.userOtp}">  
+										<input type="text" name="userOtp" id="userOtp" value="${userInfo.userOtp}"></input>
 									</td>
 								</tr>
 								<tr align="center">
@@ -287,7 +326,8 @@
 					<div class="btn_wr text-right mt-3">
 						<button class="btn btn-md btn-success f-left" onClick="javascript:location='${path}/user/list.do'">목록</button>
 						<c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
-								<button class="btn btn-md btn-primary" onClick= "fn_userUpdate()">수정</button>
+								<button class="btn btn-md btn-primary" onClick= "fn_userUpdate(this)">수정</button>
+								<button class="btn btn-md btn-danger" onClick= "fn_userUpdate(this)">퇴사처리</button>
 						</c:if>
 					</div>
 				</div>
@@ -312,4 +352,52 @@
 			$(this).attr("selected", true);
 		}
 	})
+	
+	
+	function now() {
+    let d = new Date();
+    return (
+        (d.getFullYear() % 100) +
+        "-" +
+        (d.getMonth() + 1 > 9
+            ? (d.getMonth() + 1).toString()
+            : "0" + (d.getMonth() + 1)) +
+        "-" +
+        (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString()) +
+        " " +
+        (d.getHours() > 9
+            ? d.getHours().toString()
+            : "0" + d.getHours().toString()) +
+        ":" +
+        (d.getMinutes() > 9
+            ? d.getMinutes().toString()
+            : "0" + d.getMinutes().toString()) +
+        ":" +
+        (d.getSeconds() > 9
+            ? d.getSeconds().toString()
+            : "0" + d.getSeconds().toString())
+    );
+}
+	
+	function getYmd(date) {
+	    let d = new Date(date);
+	    return (
+	        d.getFullYear() +
+	        "-" +
+	        (d.getMonth() + 1 > 9
+	            ? (d.getMonth() + 1).toString()
+	            : "0" + (d.getMonth() + 1)) +
+	        "-" +
+	        (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString())
+	    );
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </script>

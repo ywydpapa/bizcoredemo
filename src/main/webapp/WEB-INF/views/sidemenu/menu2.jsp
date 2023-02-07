@@ -156,7 +156,7 @@
 	               </ul>
 	           </li>
 	           <li class="pcoded-hasmenu">
-	               <a href="javascript:void(0)">
+	               <a href="${path}/user/list.do">
 	                   <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 	                   <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">사용자 설정</span>
 	                   <span class="pcoded-mcaret"></span>

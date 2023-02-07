@@ -119,4 +119,10 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userDao.listuser_data(userName);
 	}
+
+	@Override
+	public UserDTO getUserDataByNo(String userNo) {
+
+		return userDao.getUserDataByNo(userNo);
+	}
 }

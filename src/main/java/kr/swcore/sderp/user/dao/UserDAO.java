@@ -23,4 +23,5 @@ public interface UserDAO {
 	public int updateUserPass(UserDTO dto);
 	List<UserDTO> allList();
 	List<UserDTO> listuser_data(String userName);
+	UserDTO getUserDataByNo(String userNo);
 }
