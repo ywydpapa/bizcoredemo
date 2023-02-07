@@ -271,7 +271,7 @@
 					</div>
 					<div class="btn_wr text-right mt-3">
 						<c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
-								<button class="btn btn-md btn-primary" onClick="javascript:location='${path}/user/view.do'">수정</button>
+								<button class="btn btn-md btn-primary doremote" >수정</button>
 						</c:if>
 					</div>
 				</div>
@@ -486,8 +486,13 @@
 		for(let i = 0 ; i < rights.length; i ++) {
 			rights[i].value = userKey.substring(i*3, (i*3)+3); 
 		}
+		$(".doremote").click(function(userId) {
+			location.href = "${path}/user/view.do?userNo="+user.userNo;
+		})
 	}
 
+	
+	
 
 	</script>
 </div>
