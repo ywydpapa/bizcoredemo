@@ -29,11 +29,10 @@
 				</div>
 				<c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
 				<div class="btn_wr" style="float:right;">
-						<button class="btn btn-sm btn-outline" onclick="location.href='/sderp/user/write.do'"><i class="icofont icofont-pencil-alt-2"></i>사용자 추가</button>
+						<button class="btn btn-sm btn-outline insertMemBtn"><i class="icofont icofont-pencil-alt-2"></i>사용자 추가</button>
 					</div> 
 				</c:if>
 			</div>
-			
 		</div>
 	</div>
 
@@ -458,9 +457,6 @@
 				setEachData(result);
 			    }
 		}); 
-
-            
-	
 	}})
 	
 	
@@ -492,8 +488,21 @@
 		for(let i = 0 ; i < rights.length; i ++) {
 			rights[i].value = userKey.substring(i*3, (i*3)+3); 
 		}
-		$(".doremote").click(function(userId) {
+		
+		// 수정하기 버튼 클릭 이벤트 
+		$(".doremote").click(function() {
 			location.href = "${path}/user/view.do?userNo="+user.userNo;
+		})
+		
+		// 사용자 추가 하기 버튼 클릭 이벤트 
+		$(".insertMemBtn").click(function(){
+			let url; 
+			if (location.href.includes("local")) {
+				url = "/sderp/user/write.do";
+			} else {
+				url = "/user/write.do"; 
+			} 
+			 location.href = url;
 		})
 	}
 

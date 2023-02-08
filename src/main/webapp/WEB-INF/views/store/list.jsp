@@ -43,7 +43,7 @@
     </div>
     <!--Page-header end 페이지 타이틀 -->
 
-    <!--회원리스트 table-->
+    <!--재고 리스트  table-->
     <div class="cnt_wr">
         <div class="row">
             <div class="col-sm-12">

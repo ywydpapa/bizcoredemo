@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +20,8 @@ public class ApiUserController {
 	
 	@Autowired
 	UserService service;
-	@GetMapping("/api/user/{userNo}") 
+	
+	@RequestMapping(value = "/api/user/{userNo}", method = RequestMethod.GET, produces = "application/text; charset=UTF-8" )
 	public String getEachUserData(HttpServletRequest request, @PathVariable("userNo") String userNo) throws JsonProcessingException{
 		String result = null, data = null;
 		UserDTO user = null; 
@@ -30,6 +33,6 @@ public class ApiUserController {
 		
 		return result; 
 	}
-	
+	//	@GetMapping("/api/user/{userNo}",produces = "application/text; charset=UTF-8") 
 	
 }
