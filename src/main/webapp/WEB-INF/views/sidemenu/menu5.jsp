@@ -77,6 +77,16 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                    </ul>
+                                        <li class="pcoded-hasmenu">
+                                         <a href="javascript:fnSetPage('${path}/code/list.do')">
+	              						<span class="pcoded-micon">
+         								<i class="ti-angle-right"></i>
+            							</span>
+                                        <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">기초코드 설정</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+
+                            </ul>
                                     
 </nav>                                                        
