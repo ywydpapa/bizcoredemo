@@ -54,16 +54,28 @@
 		}
 		
 	</style>
- <div style="float:left; margin:0px 5px">
-	<input type="text" id="organizationChartOpen" class="form-control" value="조직도" style="width:200px; cursor:pointer" readonly/>
-	<div id="organizationChartView">
+ <div>
+ <div class="page-header2">
+		<div class="row align-items-end">
+			<div class="col-lg-12">
+				<div class="page-header-title">
+					<div class="d-inline">
+						조직관리
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ 	<div style="text-align:right; margin:5px;"><button class="btn btn-sm btn-inverse">선택 부서 편집</button>
+ 	<button class="btn btn-sm btn-inverse" onclick="javascript:location='${path}/organiz/write.do'">부서 생성</button></div>
+	<div style="display:grid;grid-template-columns:20% 80%;column-gap: 10px;">
 		<div id="tree" style="display: inline-block;">
 			<ul>
 				<li class="folder expanded topElement" data-json='{"icon": "${path}/images/tree-icon1.png"}'>${organizationArrList[0].title}
 					<ul>
 						<c:forEach var="i" begin="0" end="${fn:length(organizationArrList[0].children)-1}" varStatus="status" step="1">
 							<c:set var="item" value="${organizationArrList[0].children[i]}"/>
-							<li class="folder">${status.current}.${item.title}
+							<li class="folder">${status.current}.${item.title}(${item.code})
 								<ul>
 									<c:forEach var="user" items="${item.children}">
 										<li data-json='{"icon": "${path}/images/personIcon1.png"}' id="li_${user.userNo}">${user.title}</li>
@@ -75,7 +87,70 @@
 				</li>
 			</ul>
 		</div>
-		<div style="text-align:center; margin-top:5px;"><button class="btn btn-sm btn-inverse" onClick="javascript:$('#organizationChartView').hide();">닫기</button></div>
+		<div class="cnt_wr">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="card-block table-border-style">
+					<div class="table-responsive">
+						<table class="table table-sm bst02">
+							<colgroup>
+								<col width="20%"/>
+								<col width="80%"/>
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">부서명</th>
+									<td>
+										<input name="orgName" id=""orgName"" value="${userInfo.userId}" class="form-control form-control-sm" readonly ><input type="hidden" id="userNo" value="${userInfo.userNo}" readonly >
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">부서 코드</th>
+									<td>
+										<input name="userName" id="userName"  value="${userInfo.userName}" class="form-control form-control-sm">
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">부서 레벨</th>
+									<td>
+										<select name="userRole" id="userRole"  class="form-control form-control-sm">
+										<option value="CUSER">일반사용자</option>
+										<option value="PUSER">조직관리자</option>
+										<option value="ADMIN">시스템관리자</option>
+										<option value="DUSER">데모사용자</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>영업목표 설정 여부</td>
+									<td><select class="form-control" id="userAttrib">
+										<option value="0">Y</option>
+										<option value="1">N</option>
+										</select></td>
+								</tr>
+								<tr>
+									<td>생성일</td>
+									<td><input type="text" class="form-control form-control-sm" id="userTel" name="userTel" value="${userInfo.userTel}" placeholder="000-0000-0000">
+									</td>
+								</tr>
+								<tr>
+									<td>부서색상</td>
+									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
+									</td>
+								</tr>
+								<tr>
+									<td>비고</td>
+									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
 	</div>
 </div>
 <jsp:include page="../body-bottom.jsp"/>
@@ -108,91 +183,12 @@
 			modal.find('.modal-body').load(button.data("remote"));
 		});
 		
-		//계약 table의 soppNo 값이 0일 경우 
-		function fnSetContData1(a,b,c,d,e){
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			alert("영업기회에 연결되어있지 않은 계약압니다.");
-			return false;
-			//영업기회와 sopno이 연결되어있지 않은 경우 경고창
-			/* $("#soppNo").val(e);
-			location.href = "${path}/cont/iowrite.do/" + e; */
-		}
 		
-		function fnSetSoppData(a, b, c, d) {
-			$("#soppNo").val(b);
-			$("#soppTitle").val(a);
-			$("#userNo").val(c);
-			$("#custNo").val(d);
-			$("#soppModal").modal("hide");
-		}
-		function fnSetContData(a, b) {
-			$("#contNo").val(b);
-			$("#contTitle").val(a);
-			$("#contModal").modal("hide");
-		}
-
-		function fnSetDetail(value, info) {
-			var path;
-
-			if(value == '770010') {
-				path = '${path}/sales/write.do?simple=Y';
-			}else if(value == '770100'){
-				path = '${path}/techd/write.do?simple=Y';
-			}else if(value == '770800'){
-				path = '${path}/sched/write.do?simple=Y';
-			}else if(value == 'modify'){
-				var schedType = info.event.extendedProps.schedType;
-				if(schedType == '영업일정') {
-					path = '${path}/sales/detail/'+info.event.id+'?simple=Y';
-				}else if(schedType == '기술지원'){
-					path = '${path}/techd/detail/'+info.event.id+'?simple=Y';
-				}else if(schedType == '기타일정'){
-					path = '${path}/sched/detail/'+info.event.id+'?simple=Y';
-				}
-			}
-
-			if(path) {
-				$('#detail-content').load(path, function() {
-					$('.modal-list-btn').hide();
-					$('.modal-cancel-btn').hide();
-					$('#detail-content').find('.modal-dialog').draggable({
-						handle: ".modal-header"
-					});
-
-					fnSetCurrentDate();
-					
-					setTimeout(() => {
-						autoCompleteSet();
-					}, 300);
-				});
-			}
-		}
-
 		function fnOrganizationCheck(companyCheckbox) {
 			var organizations = $('.organization-checkbox');
 			$('.organization-checkbox').each(function(index, item){
 				item.checked = companyCheckbox.checked;
 			});
-		}
-
-		function fnSetCurrentDate() {
-			var startDate = $('#detail-content').find('input[type=date]')[0];
-			var startTime = $('#startTime');
-			var endDate = $('#detail-content').find('input[type=date]')[1];
-			var endTime = $('#endTime');
-
-			startDate.value = $('#detail-content')[0].selectedDate;
-			startTime.val("09:00");
-			endDate.value = $('#detail-content')[0].selectedDate;
-			endTime.val("23:30");
-		}
-
-		function fnInitializeRadio() {
-			var radioButtons = $('.eventModalRadioGroup').find('input[type=radio]');
-
-			for(var i = 0; i < radioButtons.length; i++) {
-				radioButtons[i].checked = false;
-			}
 		}
 
 		function userNoSelected_Delete(userNo){
@@ -233,29 +229,29 @@
 					$('#organizationChartView').show();
 				}
 			});
+			
+			
 			$("#tree").fancytree({
-				checkbox: true,
+				//checkbox: true,
+				quicksearch: true,
 				selectMode: 3,
 				select: function(event, data) {
 					// console.dir(data.node);
-					
 					var html = "";
-					if(data.node.children === null) {
+					if(data.node.children == null) {
 						var userNo = data.node.key.split("_")[1];
 						if(data.node.isSelected()) userNoSelected[userNo] = true;
 						else userNoSelected[userNo] = false;
 					} else {
-						if(data.node.extraClasses === "topElement"){
+						if(data.node.extraClasses == "topElement"){
 							data = data.node.children;
-							for(var i=0; i < data.length; i++){
+							for(var i=0; i<data.length; i++){
 								var data2 = data[i];
-								if(data2.children !== null){
-									for(var j=0; j < data2.children.length; j++) {
-										var t = data2.children[j];
-										var userNo = t.key.split("_")[1];
-										if (t.isSelected()) userNoSelected[userNo] = true;
-										else userNoSelected[userNo] = false;
-									}
+								for(var j=0; j<data2.children.length; j++) {
+									var t = data2.children[j];
+									var userNo = t.key.split("_")[1];
+									if (t.isSelected()) userNoSelected[userNo] = true;
+									else userNoSelected[userNo] = false;
 								}
 							}
 						} else {
@@ -267,31 +263,43 @@
 							}
 						}
 					}
-					// console.dir(userNoSelected);
 					userNoSelected_ElementCreate();
-				}
-			});
+				},
+				
+				click : function(event, data) {
+					//부서가 클릭된 경우의 이벤트 처리 
+					if(data.node.isFolder()) {
+						console.log(data.node.title)
+					}
+				},
+				 extensions: ["dnd"], // 필요한 확장 요소들
 
-			$("#tree").fancytree("getTree").visit(function(node) {
-				// node.setExpanded(true);
-				node.setSelected(true);
-				if(node.key == ("li_"+${sessionScope.userNo})){
-					node.setSelected(true);
-				}
-			});
-
-			$(document).on("click",'.fc-prevYear-button, .fc-icon-chevron-left, .fc-next-button, .fc-nextYear-button',function () {
-				var moment = ($('#calendar')[0].firstChild.outerText.split('\n')[0]).replaceAll('년','').replaceAll('월','').split(' ');
-				calYear = moment[0];
-				calDate = moment[1];
-			});
-			$(document).on("click",'fc-today-button',function () {
-				var moment = ($('#calendar')[0].firstChild.outerText.split('\n')[0]).replaceAll('년','').replaceAll('월','').split(' ');
-				calYear = "";
-				calDate = "";
+				dnd: {  //드래그앤드롭
+				     preventVoidMoves: true,
+				      preventRecursiveMoves: true,
+				      autoExpandMS: 400,
+				      dragStart: function(node, data) {
+				    	  // 폴더는 이동 안 되게 
+				    	  if(node.isFolder()) {
+				    		  return false;
+				    	  }
+				      return true; // 자식 노드는 드래그 가능
+				     },
+				     dragEnter: function(node, data) {
+				        //return ["before", "after"]; // 다른 노드의 앞,뒤에만 가능
+				       return true; // 자식노드로도 옮겨 넣을 수 있다.
+				      },
+				     dragDrop: function(node, data) {
+				       data.otherNode.moveTo(node, data.hitMode);
+				     }
+				    },
 			});
 			
-			$(".fancytree-expander")[0].click();
+
+			$("#tree").fancytree("getTree").visit(function(node) {
+				node.setExpanded(true);
+			});
+
 			
 		});
 	</script>

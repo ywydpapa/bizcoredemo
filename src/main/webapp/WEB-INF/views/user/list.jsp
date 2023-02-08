@@ -427,6 +427,16 @@
 		//node.setSelected(true);
 	});
 	
+	// 사용자 추가 하기 버튼 클릭 이벤트 
+	$(".insertMemBtn").click(function(){
+		let url; 
+		if (location.href.includes("local")) {
+			url = "/sderp/user/write.do";
+		} else {
+			url = "/user/write.do"; 
+		} 
+		 location.href = url;
+	})
 	
 	$(function(){
 		$('#userTable').DataTable({
@@ -494,16 +504,7 @@
 			location.href = "${path}/user/view.do?userNo="+user.userNo;
 		})
 		
-		// 사용자 추가 하기 버튼 클릭 이벤트 
-		$(".insertMemBtn").click(function(){
-			let url; 
-			if (location.href.includes("local")) {
-				url = "/sderp/user/write.do";
-			} else {
-				url = "/user/write.do"; 
-			} 
-			 location.href = url;
-		})
+		
 	}
 
 	

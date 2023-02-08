@@ -16,4 +16,5 @@ public interface OrganizService {
 	String listDeptForCalendarJson(HttpSession session);
 	ArrayList<HashMap<String, Object>> listDeptForCalendarArrList(HttpSession session);
 	List<OrganizDTO> listDeptChainExtend(HttpSession session, OrganizDTO organizDTO);
+	int insertOrg(OrganizDTO dto);
 }

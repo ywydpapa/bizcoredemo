@@ -53,7 +53,8 @@ public class OrganizServiceImpl implements OrganizService {
 				jsonObject.put("title", dto.getOrg_title());
 				jsonObject.put("expanded", false);
 				jsonObject.put("folder", true);
-
+				
+				
 				List<UserDTO> userList = userDAO.userListWithOrgId(dto.getOrg_id());
 				JSONArray array = new JSONArray();
 				for(UserDTO userDTO : userList){
@@ -92,6 +93,8 @@ public class OrganizServiceImpl implements OrganizService {
 				objDto.put("depth", 1);
 				objDto.put("expanded", false);
 				objDto.put("folder", true);
+				objDto.put("id", dto.getOrg_id());
+				objDto.put("code", dto.getOrg_code());
 
 				List<UserDTO> userList = userDAO.userListWithOrgId(dto.getOrg_id());
 				ArrayList<HashMap<String, Object>> array = new ArrayList<>();
@@ -119,5 +122,11 @@ public class OrganizServiceImpl implements OrganizService {
 
         return organizDao.listDeptChainExtend(organizDTO);
     }
+
+	@Override
+	public int insertOrg(OrganizDTO dto) {
+		return organizDao.insertOrg(dto);
+		
+	}
 
 }

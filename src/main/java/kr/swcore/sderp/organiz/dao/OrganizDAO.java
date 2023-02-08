@@ -9,4 +9,5 @@ public interface OrganizDAO {
 	List<OrganizDTO> listDept(int compNo);
 	List<OrganizDTO> listDept2(int compNo);
 	List<OrganizDTO> listDeptChainExtend(OrganizDTO organizDTO);
+	int insertOrg(OrganizDTO dto);
 }

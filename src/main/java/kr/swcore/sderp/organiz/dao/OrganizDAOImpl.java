@@ -31,5 +31,10 @@ public class OrganizDAOImpl implements OrganizDAO {
 		return sqlSession.selectList("organiz.listDeptChainExtend", organizDTO);
 	}
 
+	@Override
+	public int insertOrg(OrganizDTO dto) {
+		return sqlSession.insert("organiz.insertOrg", dto);
+	}
+
 
 }
