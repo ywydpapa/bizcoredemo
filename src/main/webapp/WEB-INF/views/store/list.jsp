@@ -55,17 +55,21 @@
                         <table id="productTable" class="table table-striped table-bordered nowrap dataTable">
                             <colgroup>
                                 <col width="5%"/>
+                                <col width="5%"/>
+                                <col width="20%"/>
                                 <col width="15%"/>
-                                <col width="15%"/>
-                                <col width="15%"/>
+                                <col width="20%"/>
+                                <col width="10%"/>
                                 <col width="20%"/>
                             </colgroup>
                             <thead>
                             <tr>
                                 <th class="text-center">상품 번호</th>
-                                <th class="text-center">시리얼번호</th>
                                 <th class="text-center">제품그룹</th>
                                 <th class="text-center">상품명</th>
+                                <th class="text-center">시리얼번호</th>
+                                <th class="text-center">상품위치</th>
+                                <th class="text-center">상품수량</th>
                                 <th class="text-center">상품설명</th>
                             </tr>
                             </thead>
@@ -73,9 +77,11 @@
                             <c:forEach var="row" items="${store}">
                                 <tr align="center">
                                     <td>${row.productNo}</td>
-                                    <td>${row.serialNo}</td>
                                     <td>${row.storeType}</td>
+                                    <td>${row.productNo}</td>
                                     <td><a href="javascript:location='${path}/store/detail/${row.serialNo}'" style="text-decoration:underline;">${row.serialNo}</a></td>
+                                    <td>${row.locationNo}</td>
+                                    <td>${row.storeQty}</td>
                                     <td>${row.comment}</td>
                                 </tr>
                             </c:forEach>

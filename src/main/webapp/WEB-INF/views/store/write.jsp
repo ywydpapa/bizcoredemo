@@ -91,7 +91,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" class="requiredTextCss">제품그룹</th>
+                                <th scope="row" class="requiredTextCss">제품</th>
                                 <td>
                                     <div class="input-group input-group-sm mb-0">
                                         <input type="text" class="form-control" name="product" id="productCategoryName" value="" />
@@ -127,12 +127,6 @@
                                 <th scope="row" class="requiredTextCss">시리얼번호</th>
                                 <td>
                                     <input type="text" name="serial" id ="serialNo" class="form-control form-control-sm" >
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="requiredTextCss">상품명</th>
-                                <td>
-                                    <input type="text" name="storeName" id ="storeName" class="form-control form-control-sm" >
                                 </td>
                             </tr>
                             <tr>
