@@ -129,4 +129,17 @@ public class OrganizServiceImpl implements OrganizService {
 		
 	}
 
+	@Override
+	public OrganizDTO getOrgDataByCode(String org_code) {
+		return organizDao.getOrgByCode(org_code);
+	
+	}
+
+	@Override
+	public int updateOrg(OrganizDTO dto) {
+	
+		return organizDao.updateOrg(dto);
+		
+	}
+
 }

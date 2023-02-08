@@ -66,7 +66,7 @@
 			</div>
 		</div>
 	</div>
- 	<div style="text-align:right; margin:5px;"><button class="btn btn-sm btn-inverse">선택 부서 편집</button>
+ 	<div style="text-align:right; margin:5px;"><button class="btn btn-sm btn-inverse" onclick="$('.orgModifyDiv').show();">선택 부서 편집</button>
  	<button class="btn btn-sm btn-inverse" onclick="javascript:location='${path}/organiz/write.do'">부서 생성</button></div>
 	<div style="display:grid;grid-template-columns:20% 80%;column-gap: 10px;">
 		<div id="tree" style="display: inline-block;">
@@ -101,46 +101,36 @@
 								<tr>
 									<th scope="row">부서명</th>
 									<td>
-										<input name="orgName" id=""orgName"" value="${userInfo.userId}" class="form-control form-control-sm" readonly ><input type="hidden" id="userNo" value="${userInfo.userNo}" readonly >
+										<input name="org_title" id="org_title" class="form-control form-control-sm"  ><input type="hidden" id="hiddenCode" >
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">부서 코드</th>
 									<td>
-										<input name="userName" id="userName"  value="${userInfo.userName}" class="form-control form-control-sm">
+										<input name="org_code" id="org_code" class="form-control form-control-sm" >
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">부서 레벨</th>
 									<td>
-										<select name="userRole" id="userRole"  class="form-control form-control-sm">
-										<option value="CUSER">일반사용자</option>
-										<option value="PUSER">조직관리자</option>
-										<option value="ADMIN">시스템관리자</option>
-										<option value="DUSER">데모사용자</option>
-										</select>
+									<input name="org_level" id="org_level" class="form-control form-control-sm" >
 									</td>
 								</tr>
 								<tr>
 									<td>영업목표 설정 여부</td>
-									<td><select class="form-control" id="userAttrib">
+									<td><select class="form-control" id="org_salesTarget" >
 										<option value="0">Y</option>
 										<option value="1">N</option>
 										</select></td>
 								</tr>
 								<tr>
-									<td>생성일</td>
-									<td><input type="text" class="form-control form-control-sm" id="userTel" name="userTel" value="${userInfo.userTel}" placeholder="000-0000-0000">
-									</td>
-								</tr>
-								<tr>
 									<td>부서색상</td>
-									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
+									<td><input type="text" class="form-control form-control-sm" id="org_color"></input>
 									</td>
 								</tr>
 								<tr>
 									<td>비고</td>
-									<td><input type="text" class="form-control form-control-sm" id="userEmail" name="userEmail" value="${userInfo.userEmail}">
+									<td><input type="text" class="form-control form-control-sm" id="org_desc"></input>
 									</td>
 								</tr>
 							</tbody>
@@ -149,6 +139,9 @@
 				</div>
 			</div>
 		</div>
+		<div style="text-align:right; margin:5px;display:none;" class="orgModifyDiv">
+		<button class="btn btn-sm btn-inverse" onclick="toModifyOrg()">수정</button>
+        <button class="btn btn-sm btn-inverse" onclick="$(this.parentElement).hide()">취소</button></div>
 	</div>
 		
 	</div>
@@ -269,7 +262,26 @@
 				click : function(event, data) {
 					//부서가 클릭된 경우의 이벤트 처리 
 					if(data.node.isFolder()) {
-						console.log(data.node.title)
+					let org_code = data.node.title;
+					org_code = org_code.split("(")[1].split(")")[0];
+					
+					console.log(org_code);
+					
+					let url; 
+					if (location.href.includes("local")) {
+						url = "/sderp/api/organiz/"+org_code;
+					} else {
+						url = "/api/organiz/"+org_code;
+					}
+					$.ajax({
+						url : url ,
+						method : "get",
+						dataType : "json",
+						success : (result) => {
+							setOrgData(result); 
+						}
+						
+					}); 
 					}
 				},
 				 extensions: ["dnd"], // 필요한 확장 요소들
@@ -302,6 +314,63 @@
 
 			
 		});
+		
+		function setOrgData(org){
+		  let org_title, org_code, org_level, org_salesTarget, org_color, org_desc;  
+		  org_title = org.org_title ; 
+		  org_code = org.org_code;
+		  org_level = org.org_level;
+	      org_salesTarget = org.org_salesTarget;
+		  org_color = org.org_color;
+		  org_desc  = org.org_desc; 
+		  $("#org_title").val(org_title); 
+		  $("#org_code").val(org_code); 
+		  $("#org_level").val(org.org_level); 
+		  $("#org_salesTarget").val(org.org_salesTarget); 
+		  $("#org_color").val(org_color);
+		  $("#org_desc").val(org_desc); 
+		  $("#hiddenCode").val(org.org_id); 
+		
+		}
+		
+		
+		
+		
+		function toModifyOrg(){
+			
+			 let orgData = {};
+			 orgData.org_id = $("#hiddenCode").val();
+			 orgData.org_title = $("#org_title").val(); 
+			 orgData.org_code = $("#org_code").val(); 
+			 orgData.org_level = $("#org_level").val(); 
+			 orgData.org_salesTarget =  $("#org_salesTarget").val(); 
+			 orgData.org_color = $("#org_color").val();
+			 orgData.org_desc = $("#org_desc").val(); 
+			
+			 $.ajax({ url: "${path}/organiz/update.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+					data: orgData , // HTTP 요청과 함께 서버로 보낼 데이터
+					method: "POST", // HTTP 요청 메소드(GET, POST 등)
+					dataType: "json" // 서버에서 보내줄 데이터의 타입
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+				.done(function(data) {
+					if(data.code == 10001){
+						alert("수정 성공");
+						var url = '${path}/organiz/list.do';
+						location.href = url;
+					}else{
+						alert("수정 실패");
+					}
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+			
+		}
+		
+		
+		
+		
+		
 	</script>
 </div>
 </html>

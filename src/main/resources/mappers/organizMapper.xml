@@ -45,7 +45,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by so2.org_id
 		
 </select>
-
 	<select id="listDeptChainExtend2" resultType="organizDto">
 
 		select so2.org_id, so.org_code, so2.org_title
@@ -70,13 +69,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insertOrg"> 
-insert into swc_organiz  
-(compNo,org_code,org_title,org_level,org_parentLv,org_mcode,org_salesTarget,org_regdatetime,org_desc,org_color) 
-select #{compNo},#{org_code},#{org_title}, (max(org_level)+1) as org_level,min(org_id),#{org_mcode},#{org_salesTarget},now(),#{org_desc},#{org_color} from swc_organiz where compNo = #{compNo};
-
-
-
-
+     insert into swc_organiz  
+     (compNo,org_code,org_title,org_level,org_parentLv,org_mcode,org_salesTarget,org_regdatetime,org_desc,org_color) 
+     select #{compNo},#{org_code},#{org_title}, (max(org_level)+1) as org_level,min(org_id),#{org_mcode},#{org_salesTarget},now(),
+     #{org_desc},#{org_color} from swc_organiz where compNo = #{compNo};
 	</insert>
+	
+	<select id="getOrgByCode" resultType="organizDto">
+SELECT * FROM swc_organiz   WHERE org_code = #{org_code}
+</select>
+	
+	  <update id="updateOrg">
+ 		update swc_organiz set 
+ 		org_title = #{org_title}, 
+ 		org_code = #{org_code },
+ 		org_level = #{org_level},
+ 		org_salesTarget = #{org_salesTarget},
+ 		org_color = #{org_color},
+ 		org_desc = #{org_desc},
+ 		org_modDatetime = now()
+ 		where org_id =#{org_id}
+  </update>
 
 </mapper>

@@ -36,5 +36,16 @@ public class OrganizDAOImpl implements OrganizDAO {
 		return sqlSession.insert("organiz.insertOrg", dto);
 	}
 
+	@Override
+	public OrganizDTO getOrgByCode(String org_code) {
+		return sqlSession.selectOne("organiz.getOrgByCode", org_code);
+
+	}
+
+	@Override
+	public int updateOrg(OrganizDTO dto) {
+		return sqlSession.update("organiz.updateOrg", dto);
+	}
+
 
 }

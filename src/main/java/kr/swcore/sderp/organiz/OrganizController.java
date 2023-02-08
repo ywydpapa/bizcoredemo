@@ -39,7 +39,6 @@ public class OrganizController {
 		mav.addObject("organizationArrList", organizService.listDeptForCalendarArrList(session));
 		return mav;
 	}
-	
 	@RequestMapping("write.do")
 	public ModelAndView write(HttpSession session, ModelAndView mav) {
 		mav.setViewName("organiz/write");
@@ -58,4 +57,18 @@ public class OrganizController {
         }
         return ResponseEntity.ok(param);
 	} 
+	
+	@RequestMapping("update.do")
+	public ResponseEntity<?> userUpdate(@ModelAttribute OrganizDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		int orgUpdate = organizService.updateOrg(dto);
+		if(orgUpdate > 0) {
+       	param.put("code","10001");
+      }
+       else {
+        	param.put("code","20001");
+        }
+        return ResponseEntity.ok(param);
+	}
+
 }
