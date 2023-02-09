@@ -21,7 +21,7 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/store/list.do' || path2 eq '/store/write.do' || path2 eq '/store/detail.do'}">pcoded-trigger</c:if>">
+                                <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/store/listStore.do' || path2 eq '/store/writeStore.do' || path2 eq '/store/detail.do'}">pcoded-trigger</c:if>">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="icon-calculator"></i></span>
                                         <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">재고 등록</span>

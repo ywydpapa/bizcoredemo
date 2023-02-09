@@ -13,19 +13,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		resultType="codeDto">
  		select codeNo, code01, desc01, value01 from swc_code where desc01 is not null and compNo = #{compNo} group by code01 
  </select>
-
+ 
+<!-- 23/02/09 code01 추가함  -->
 <select id="listCode02"
  		resultType="codeDto">
- 		select codeNo, code02, desc02, value02 from swc_code where desc02 is not null and compNo = #{compNo} group by code02
+ 		select codeNo, code01, code02, desc02, value02 from swc_code where desc02 is not null and compNo = #{compNo} group by code02
  </select>
  
  <select id="listCode02n" resultType="codeDto">
  		select * from swc_code where code01=#{code01} and code03 is null and code02 is not null 
  </select>
-
+<!-- 23/02/09 code02 추가함  -->
 <select id="listCode03"
  		resultType="codeDto">
- 		select codeNo, code03, desc03, value03 from swc_code where code02 is not null and code03 is not null
+ 		select codeNo, code02, code03, desc03, value03 from swc_code where code02 is not null and code03 is not null
  </select>
 
 <select id="listCode03n"
