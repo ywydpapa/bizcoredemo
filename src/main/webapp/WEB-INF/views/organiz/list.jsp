@@ -66,7 +66,7 @@
 			</div>
 		</div>
 	</div>
- 	<div style="text-align:right; margin:5px;"><button class="btn btn-sm btn-inverse" onclick="$('.orgModifyDiv').show();">선택 부서 편집</button>
+ 	<div style="text-align:right; margin:5px;"><button class="btn btn-sm btn-inverse" onclick="createModBtn()">선택 부서 편집</button>
  	<button class="btn btn-sm btn-inverse" onclick="javascript:location='${path}/organiz/write.do'">부서 생성</button></div>
 	<div style="display:grid;grid-template-columns:20% 80%;column-gap: 10px;">
 		<div id="tree" style="display: inline-block;">
@@ -330,7 +330,7 @@
 		  $("#org_color").val(org_color);
 		  $("#org_desc").val(org_desc); 
 		  $("#hiddenCode").val(org.org_id); 
-		
+			$('.orgModifyDiv').hide();
 		}
 		
 		
@@ -367,6 +367,11 @@
 			
 		}
 		
+		function createModBtn()  {
+			if($("#hiddenCode").val() != "") {
+				$('.orgModifyDiv').show();
+			}
+		}		
 		
 		
 		

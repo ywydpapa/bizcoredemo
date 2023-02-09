@@ -12,6 +12,8 @@ public interface StoreDAO {
 
     int deleteStore(StoreDTO dto);
 
+	StoreDTO getDetail(int storeNo);
+
 
 
 }

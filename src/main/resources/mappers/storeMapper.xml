@@ -5,17 +5,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="store">
 
 <select id="listStore" resultType="storeDto">
- 	select *
- 	from swc_store
- 	where compNo = #{compNo} and attrib not like 'XXX%'
+ 	<!--  select * from swc_store where compNo = #{compNo} and attrib not like 'XXX%'-->
+ 	<!-- 23/02/09 수정 사항  -->
+ 	select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not like 'XXX%';
 </select>
 
 <select id="detailStore" resultType="storeDto">
+select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.storeNo = #{storeNo} and a.attrib not like 'XXX%';
 </select>
  
 <insert id="insertStore">
-	insert into swc_store (compNo,productNo,serialNo,storeType,storeQty,storeAmount,locationNo,userNo,storeUnit,comment,regDate,attrib)
-	values (#{compNo},#{productNo},#{serialNo},#{storeType},#{storeQty},#{storeAmount},#{locationNo},#{userNo},#{storeUnit},#{comment},now(),'10000')
+	 insert into swc_store (compNo,productNo,serialNo,storeType,storeQty,storeAmount,locationNo,userNo,storeUnit,comment,regDate,attrib)
+     values (#{compNo},#{productNo},#{serialNo},#{storeType},#{storeQty},#{storeAmount},#{locationNo},#{userNo},#{storeUnit},#{comment},now(),'10000')
 </insert>
 
 <update id="updateStore">

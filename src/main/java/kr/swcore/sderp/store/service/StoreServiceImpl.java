@@ -41,4 +41,11 @@ public class StoreServiceImpl implements StoreService{
     public int deleteStgore(StoreDTO dto) {
         return storeDao.deleteStore(dto);
     }
+
+	@Override
+	public StoreDTO storeDetail(int storeNo) {
+	    return storeDao.getDetail(storeNo);
+	
+	}
+
 }

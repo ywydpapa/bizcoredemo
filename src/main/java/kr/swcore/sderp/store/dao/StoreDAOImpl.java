@@ -32,4 +32,10 @@ public class StoreDAOImpl implements StoreDAO{
     public int deleteStore(StoreDTO dto) {
         return sqlSession.delete("store.deleteStore", dto);
     }
+
+	@Override
+	public StoreDTO getDetail(int storeNo) {
+		 return sqlSession.selectOne("store.detailStore", storeNo);
+	
+	}
 }

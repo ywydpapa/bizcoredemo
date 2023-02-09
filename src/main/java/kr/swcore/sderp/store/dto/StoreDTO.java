@@ -24,9 +24,11 @@ public class StoreDTO {
     private String comment;
     private BigDecimal storeAmount;
     private String serialNo;
-
+    /* 23-02-09 Ãß°¡ÇÔ */  
+    private String productName;
+    
     public StoreDTO(){
         super();
     }
-
+    
 }

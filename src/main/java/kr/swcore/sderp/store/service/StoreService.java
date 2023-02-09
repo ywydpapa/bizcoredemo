@@ -14,4 +14,7 @@ public interface StoreService {
 
     int deleteStgore(StoreDTO dto);
 
+	StoreDTO storeDetail(int storeNo);
+
+
 }

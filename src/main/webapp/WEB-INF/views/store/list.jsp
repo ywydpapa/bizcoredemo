@@ -7,9 +7,24 @@
 <html>
 <jsp:include page="../head.jsp"/>
 <jsp:include page="../body-top5.jsp"/>
+<style>
 
+.storeList:hover {
+font-weight : 600;
+cursor:pointer;
+}
+
+
+</style>
 <div id="main_content">
     <script>
+    
+    
+    
+    
+    
+    
+    
         $(function(){
             $('#productTable').DataTable({
                 info:false,
@@ -64,8 +79,8 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th class="text-center">상품 번호</th>
-                                <th class="text-center">제품그룹</th>
+                                <th class="text-center">번호</th>
+                                <th class="text-center">구분</th>
                                 <th class="text-center">상품명</th>
                                 <th class="text-center">시리얼번호</th>
                                 <th class="text-center">상품위치</th>
@@ -75,11 +90,14 @@
                             </thead>
                             <tbody>
                             <c:forEach var="row" items="${store}">
-                                <tr align="center">
-                                    <td>${row.productNo}</td>
-                                    <td>${row.storeType}</td>
-                                    <td>${row.productNo}</td>
-                                    <td><a href="javascript:location='${path}/store/detail/${row.serialNo}'" style="text-decoration:underline;">${row.serialNo}</a></td>
+                                <tr align="center" onclick="location.href='${path}/store/detail/${row.storeNo}'" class="storeList">
+                                    <td>${row.storeNo}</td>
+                                    <c:choose>
+                                    <c:when test="${row.storeType == 'IN'}"><td>입고</td></c:when>
+                                    <c:when test="${row.storeType == 'OUT'}"><td>출고</td></c:when>
+                                    </c:choose>
+                                    <td>${row.productName}</td>
+                                    <td>${row.serialNo}</td>
                                     <td>${row.locationNo}</td>
                                     <td>${row.storeQty}</td>
                                     <td>${row.comment}</td>
