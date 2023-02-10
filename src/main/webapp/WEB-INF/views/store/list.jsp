@@ -14,17 +14,9 @@ font-weight : 600;
 cursor:pointer;
 }
 
-
 </style>
 <div id="main_content">
     <script>
-    
-    
-    
-    
-    
-    
-    
         $(function(){
             $('#productTable').DataTable({
                 info:false,
@@ -34,7 +26,7 @@ cursor:pointer;
 
         $(function(){
             $("#btnAdd").click(function(){
-                location.href="${path}/product/write.do "
+                location.href="${path}/store/writeStore.do "
             });
         });
     </script>
@@ -63,7 +55,7 @@ cursor:pointer;
         <div class="row">
             <div class="col-sm-12">
                 <div class="btn_wr text-right">
-                    <button class="btn btn-sm btn-primary f-right" type="button" id="btnAdd" onClick="javascript:location='${path}/product/write.do'"><i class="icofont icofont-plus"></i>상품등록</button>
+                    <button class="btn btn-sm btn-primary f-right" type="button" id="btnAdd"><i class="icofont icofont-plus"></i>재고등록</button>
                 </div>
                 <div class="card-block table-border-style">
                     <div class="dt-responsive table-responsive">
