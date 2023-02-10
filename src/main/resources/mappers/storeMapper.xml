@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <select id="listStore" resultType="storeDto">
  	<!--  select * from swc_store where compNo = #{compNo} and attrib not like 'XXX%'-->
  	<!-- 23/02/09 수정 사항  -->
- 	select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not like 'XXX%';
+ 	select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not like 'XXX%' order by a.storeNo desc;
 </select>
 
 <select id="detailStore" resultType="storeDto">
@@ -20,10 +20,22 @@ select a.*, b.productName from swc_store a  left join  swc_product b on a.produc
 </insert>
 
 <update id="updateStore">
+
+update swc_store set 
+serialNo = #{serialNo}, 
+storeType = #{storeType}, 
+storeQty = #{storeQty}, 
+storeAmount=#{storeAmount}, 
+locationNo = #{locationNo}, 
+storeUnit =#{storeUnit} , 
+comment = #{comment},
+modDate = now()
+where storeNo=#{storeNo}
+
 </update>
  
 <delete id="deleteStore">
-	update swc_store set attrib = 'XXXXX' where compNo=#{compNo} and storeNo=#{storeNo}
+	update swc_store set attrib = 'XXXXX', modDate = now() where storeNo=#{storeNo};
 </delete>
  		
 </mapper>

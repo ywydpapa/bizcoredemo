@@ -153,14 +153,70 @@
 	                   <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">상품설정</span>
 	                   <span class="pcoded-mcaret"></span>
 	               </a>
+	               
+	               </li>
+	               
+	               <li class="pcoded-hasmenu">
+						<a href="${path}/user/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-direction-alt"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">조직도설정</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+	               
+	               <li class="pcoded-hasmenu">
+						<a href="${path}/sales/setTarget.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">영업목표 설정</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					
+					
+				<!--  	<li class="pcoded-hasmenu">
+						<a href="${path}/user/list.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">사용자 목록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+					
+					<li class="pcoded-hasmenu">
+						<a href="${path}/user/write.do">
+							<span class="pcoded-micon">
+								<i class="ti-angle-right"></i>
+							</span>
+							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">사용자 등록</span>
+							<span class="pcoded-mcaret"></span>
+						</a>
+					</li>
+	           -->
+	               
+	               
+	               
+	               
 	               </ul>
 	           </li>
-	           <li class="pcoded-hasmenu">
+	           </ul>
+	           
+	           <!-- 23 02 09 수정 사항  -->
+	           
+	           
+	           
+	           
+	           
+	          <!--   <li class="pcoded-hasmenu">
 	               <a href="javascript:void(0)">
 	                   <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
 	                   <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">사용자 설정</span>
 	                   <span class="pcoded-mcaret"></span>
 	               </a>
-	           </li>
+	           </li>-->
 	       </ul>
    </nav>

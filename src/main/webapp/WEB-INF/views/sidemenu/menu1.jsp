@@ -378,7 +378,7 @@
 						</a>
 					</li>
 					<li class="pcoded-hasmenu">
-						<a href="${path}/organiz/list.do">
+						<a href="${path}/user/list.do">
 							<span class="pcoded-micon">
 								<i class="ti-direction-alt"></i>
 							</span>
@@ -428,7 +428,7 @@
 							<span class="pcoded-mcaret"></span>
 						</a>
 					</li>
-					<li class="pcoded-hasmenu">
+					<!--  <li class="pcoded-hasmenu">
 						<a href="${path}/user/list.do">
 							<span class="pcoded-micon">
 								<i class="ti-angle-right"></i>
@@ -446,12 +446,12 @@
 							<span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">사용자 등록</span>
 							<span class="pcoded-mcaret"></span>
 						</a>
-					</li>
+					</li>-->
 				</ul>
 			</li>
 		</ul>
 	</c:if>
-	<ul class="pcoded-item pcoded-left-item">
+	<!-- <ul class="pcoded-item pcoded-left-item">
 		<li class="">
 			<a href="${path}/user/logout.do">
 				<span class="pcoded-micon" style="background-color: #000 !important;">
@@ -462,5 +462,5 @@
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
-	</ul>
+	</ul> -->
 </nav>

@@ -182,20 +182,6 @@
                                             </a>
                                             </ul>
                                         </li>
-                                        <li class="pcoded-hasmenu">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">사용자 설정</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                        <li class="pcoded-hasmenu">
-                                            <a href="${path}/manager_book.do">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">도서관</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
                                     </ul>
                                     
 </nav>                                                        

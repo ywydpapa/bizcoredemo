@@ -286,6 +286,12 @@ tr.shown td.details-control {
 										style="text-align: right;" onkeyup="setNum(this)"></td>
 								</tr>
 								<tr>
+									<th scope="row" class="requiredTextCss">재고 단위</th>
+									<td><input type="text" name="storeqty" id="storeUnit"
+										class="form-control form-control-sm" value="1"
+										style="text-align: right;" onkeyup="setNum(this)"></td>
+								</tr>
+								<tr>
 									<th scope="row" class="requiredTextCss">상품 위치</th>
 									<td>
 										<!-- loct02 셀렉트 --> 
@@ -471,7 +477,9 @@ tr.shown td.details-control {
 			alert("상품을 선택하세요");
 		}else if ($("#storeQty").val() == 0) {
 			alert("상품 수량을 1 이상으로 입력하세요");
-		} else {
+		}else if ($("#storeUnit").val() == 0) {
+			alert("재고 단위를 1 이상으로 입력하세요");
+		}else {
 			var storeData = {};
 			storeData.productNo  = $("#productNo").val()*1; 
 			storeData.serialNo   = $("#serialNo").val(); 
@@ -480,6 +488,7 @@ tr.shown td.details-control {
 			storeData.storeAmount = $("#storeAmount").val().replaceAll(",","")*1;
 			storeData.locationNo = $("#storeLoc2").val(); 
 			storeData.comment = tinymce.get("comment").getContent();
+			storeData.storeUnit =  $("#storeUnit").val()*1; 
 
 			$.ajax({
 				url : "${path}/store/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소

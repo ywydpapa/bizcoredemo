@@ -33,12 +33,12 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public int updateStgore(StoreDTO dto) {
+    public int updateStore(HttpSession session,StoreDTO dto) {
         return storeDao.updateStore(dto);
     }
 
     @Override
-    public int deleteStgore(StoreDTO dto) {
+    public int deleteStore(HttpSession session, StoreDTO dto) {
         return storeDao.deleteStore(dto);
     }
 
@@ -48,4 +48,6 @@ public class StoreServiceImpl implements StoreService{
 	
 	}
 
+	
+	
 }

@@ -73,6 +73,31 @@ public class StoreController {
     	return mav;
     }
     
+    @RequestMapping("/update.do")
+    public ResponseEntity<?> storeUpdate(HttpSession session, @ModelAttribute StoreDTO dto) {
+    	Map<String, Object> param = new HashMap<>();
+    	int storeUpdate =storeService.updateStore(session, dto);
+    	if(storeUpdate > 0) {
+        param.put("code","10001");
+    	}
+    	else {
+        param.put("code","20001");
+        }
+        return ResponseEntity.ok(param);
+    }    
+    
+    @RequestMapping("/delete.do")
+    public ResponseEntity<?> storeDelete(HttpSession session, @ModelAttribute StoreDTO dto) {
+    	Map<String, Object> param = new HashMap<>();
+    	int storeUpdate =storeService.deleteStore(session, dto);
+    	if(storeUpdate > 0) {
+        param.put("code","10001");
+    	}
+    	else {
+        param.put("code","20001");
+        }
+        return ResponseEntity.ok(param);
+    }   
 
 }
 

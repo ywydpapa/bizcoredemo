@@ -76,10 +76,10 @@
 				</div>
 				<div class="btn_wr text-right mt-3">
 					<button class="btn btn-md btn-success f-left"
-						onClick="javascript:location='${path}/organiz/list.do'">목록</button>
+						onClick="javascript:location='${path}/user/list.do'">목록</button>
 					<button class="btn btn-md btn-primary" onclick="fn_orgInsert()">등록</button>
 					<button class="btn btn-md btn-inverse"
-						onClick="javascript:location='${path}/organiz/list.do'">취소</button>
+						onClick="javascript:location='${path}/user/list.do'">취소</button>
 				</div>
 			</div>
 		</div>
@@ -115,7 +115,7 @@
 				.done(function(data) {
 					if(data.code == 10001){
 						alert("저장 성공");
-						var url = '${path}/organiz/list.do';
+						var url = '${path}/user/list.do';
 						location.href = url;
 					}else{
 						alert("저장 실패");

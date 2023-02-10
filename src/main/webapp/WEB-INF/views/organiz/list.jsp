@@ -264,9 +264,6 @@
 					if(data.node.isFolder()) {
 					let org_code = data.node.title;
 					org_code = org_code.split("(")[1].split(")")[0];
-					
-					console.log(org_code);
-					
 					let url; 
 					if (location.href.includes("local")) {
 						url = "/sderp/api/organiz/"+org_code;

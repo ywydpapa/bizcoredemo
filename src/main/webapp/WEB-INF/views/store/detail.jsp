@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
@@ -133,10 +133,10 @@ tr.shown td.details-control {
 									<td>
 										<div id="select1" style="width: 100%;">
 											<div class="input-group input-group-sm mb-0">
-												<input type="hidden" id="productNo" value=""> 
-												<input
-													type="text" class="form-control" name="product"
-													id="data02Title" data-flag="true" value="${dto.productName}" readonly="">
+												<input type="hidden" id="productNo" value="${dto.productNo}">
+												<input type="text" class="form-control" name="product"
+													id="data02Title" data-flag="true"
+													value="${dto.productName}" readonly="">
 											</div>
 										</div>
 									</td>
@@ -147,45 +147,54 @@ tr.shown td.details-control {
 										class="form-control form-control-sm" value="${dto.serialNo}"></td>
 								</tr>
 								<tr>
-									<th scope="row" class="requiredTextCss" >입/출고 구분</th>
-									<td><select id="storeType"  >
-											<option value="IN" <c:if test="${dto.storeType eq 'IN'}">selected</c:if>>입고</option>
-											<option value="OUT" <c:if test="${dto.storeType eq 'OUT'}">selected</c:if>>출고</option>
+									<th scope="row" class="requiredTextCss">입/출고 구분</th>
+									<td><select id="storeType">
+											<option value="IN"
+												<c:if test="${dto.storeType eq 'IN'}">selected</c:if>>입고</option>
+											<option value="OUT"
+												<c:if test="${dto.storeType eq 'OUT'}">selected</c:if>>출고</option>
 									</select></td>
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">상품 기본가격</th>
-									<td><input type="text" name="netprice"
-										id="storeAmount" class="form-control form-control-sm"
-										value="${dto.storeAmount}" style="text-align: right;" onkeyup="setNum(this)"></td>
+									<td><input type="text" name="netprice" id="storeAmount"
+										class="form-control form-control-sm"
+										value="<fmt:formatNumber value="${dto.storeAmount}" pattern="#,###"/>" style="text-align: right;"
+										onkeyup="setNum(this)"></td>
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">상품 수량</th>
 									<td><input type="text" name="storeqty" id="storeQty"
-										class="form-control form-control-sm" value="${dto.storeQty}"
+										class="form-control form-control-sm" value="<fmt:formatNumber value="${dto.storeQty}" pattern="#,###"/>"
+										style="text-align: right;" onkeyup="setNum(this)"></td>
+								</tr>
+								<tr>
+									<th scope="row" class="requiredTextCss">재고 단위</th>
+									<td><input type="text" name="storeUnit" id="storeUnit"
+										class="form-control form-control-sm" value="<fmt:formatNumber value="${dto.storeUnit}" pattern="#,###"/>"
 										style="text-align: right;" onkeyup="setNum(this)"></td>
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">상품 위치</th>
 									<td>
-										<!-- loct02 셀렉트 --> 
-										<select onchange="setlist3Options(this)" id="storeLoc1">
+										<!-- loct02 셀렉트 --> <select onchange="setlist3Options(this)"
+										id="storeLoc1">
 											<option>-</option>
 											<c:forEach var="list2" items="${list2}">
 												<c:if test="${list2.code01 eq 'LOCT01'}">
-													<option value="${list2.code02}"<c:if test="${fn:split(dto.locationNo,'-')[1] eq list2.code02 }">selected</c:if>>${list2.desc02}</option>
+													<option value="${list2.code02}"
+														<c:if test="${fn:split(dto.locationNo,'-')[1] eq list2.code02 }">selected</c:if>>${list2.desc02}</option>
 												</c:if>
 											</c:forEach>
-									</select> 
-									<!-- loct03 셀렉트 --> 
-									<select id="storeLoc2">
+									</select> <!-- loct03 셀렉트 --> <select id="storeLoc2">
 											<option>-</option>
 											<c:forEach var="list3" items="${list3}">
 												<c:forEach var="list2" items="${list2}">
 													<c:if
 														test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
 														<option class="list3Options" style="display: none;"
-															value="${list2.code01}-${list3.code02}-${list3.code03}" <c:if test="${fn:split(dto.locationNo,'-')[2] eq list3.code03 }">selected</c:if>>${list3.desc03}</option>
+															value="${list2.code01}-${list3.code02}-${list3.code03}"
+															<c:if test="${fn:split(dto.locationNo,'-')[2] eq list3.code03 }">selected</c:if>>${list3.desc03}</option>
 													</c:if>
 												</c:forEach>
 											</c:forEach>
@@ -205,6 +214,10 @@ tr.shown td.details-control {
 						<!--<button class="btn btn-md btn-success f-left">목록</button>-->
 						<button class="btn btn-md btn-success f-left"
 							onClick="javascript:location='${path}/store/listStore.do'">목록</button>
+						<c:if test="${dto.userNo eq sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
+							<button class="btn btn-md btn-primary"onClick="fn_storeUpdate()">수정</button>
+							<button class="btn btn-md btn-danger" onClick="fn_storeDelete()">삭제 </button>
+						</c:if>
 					</div>
 				</div>
 			</div>
@@ -212,8 +225,6 @@ tr.shown td.details-control {
 	</div>
 
 	<script>
-	
-	
 		// 이벤트 영역 시작
 		$('#custModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
@@ -242,7 +253,7 @@ tr.shown td.details-control {
 			$(".modal-backdrop").remove();
 			$("#custModal").modal("hide");
 		}
-		
+
 		function setlist3Options(obj) {
 			// list 2 코드 
 			let list2_code = obj.value;
@@ -251,14 +262,13 @@ tr.shown td.details-control {
 			if (list2_code != "-") {
 				for (let i = 0; i < list3List.length; i++) {
 					if (list3List[i].value.includes(list2_code)) {
-						obj.nextElementSibling.value= "-";
+						obj.nextElementSibling.value = "-";
 						$(list3List[i]).show();
 					}
 				}
 			}
 
 		}
-		
 
 		function necessaryCheck() {
 			var rtn = false;
@@ -339,22 +349,19 @@ tr.shown td.details-control {
 				alert("통신 실패");
 			});
 		}
-		
-		
-		
-		
+
 		////////////// store insert 함수 
-		
-		
+
 		function fn_storeInsert() {
-	
+
 			var storeData = {};
-			storeData.productNo  = $("#productNo").val()*1; 
-			storeData.serialNo   = $("#serialNo").val(); 
-			storeData.storeType = $("#storeType").val(); 
-			storeData.storeQty = $("#storeQty").val()*1; 
-			storeData.storeAmount = $("#storeAmount").val().replaceAll(",","")*1;
-			storeData.locationNo = $("#storeLoc2").val(); 
+			storeData.productNo = $("#productNo").val() * 1;
+			storeData.serialNo = $("#serialNo").val();
+			storeData.storeType = $("#storeType").val();
+			storeData.storeQty = $("#storeQty").val().replaceAll(",", "") * 1;
+			storeData.storeUnit = $("#storeUnit").val().replaceAll(",", "") * 1;
+			storeData.storeAmount = $("#storeAmount").val().replaceAll(",", "") * 1;
+			storeData.locationNo = $("#storeLoc2").val();
 			storeData.comment = tinymce.get("comment").getContent();
 
 			$.ajax({
@@ -380,7 +387,7 @@ tr.shown td.details-control {
 				alert("통신 실패");
 			});
 		}
-		
+
 		$("#custRegSimple").on("click", function(event) {
 			if ($("#custRegSimple_div").is(':visible') == false) {
 				$("#custRegSimple_div").show();
@@ -494,9 +501,9 @@ tr.shown td.details-control {
 				});
 		// 페이지 특화 함수 끝
 
-		
-		
-		var productdataTable2 = $('#productdataTable2').DataTable({
+		var productdataTable2 = $('#productdataTable2')
+				.DataTable(
+						{
 							info : false,
 							searching : true,
 							oLanguage : {
@@ -514,40 +521,34 @@ tr.shown td.details-control {
 									sNext : "다음"
 								}
 							},
-							columns : [
-									{
-										"className" : 'details-control',
-										"orderable" : false,
-										"data" : null,
-										"defaultContent" : ''
-									},
-									{
-										data : 'productCategoryName'
-									},
-									{
-										data : 'productName'
-									},
-									{
-										data : 'productDesc'
-									},
-									{
-										data : 'custName'
-									},
-									{
-										data : 'productDefaultPrice'
-									}],
+							columns : [ {
+								"className" : 'details-control',
+								"orderable" : false,
+								"data" : null,
+								"defaultContent" : ''
+							}, {
+								data : 'productCategoryName'
+							}, {
+								data : 'productName'
+							}, {
+								data : 'productDesc'
+							}, {
+								data : 'custName'
+							}, {
+								data : 'productDefaultPrice'
+							} ],
 							columnDefs : [ {
-								"render" : function(data,type,row) {
+								"render" : function(data, type, row) {
 									// 마우스 올리면 또는 클릭하면 툴팁으로 데이터 상세 표시 ** AJAX로 구현이 필요
 									return '<a href="javascript:void(0);" onclick="fnSetproductdata2('
 											+ row.productNo
 											+ ',\''
-											+ data + '\''+
-											 ',\''
+											+ data
+											+ '\''
+											+ ',\''
 											+ row.productDefaultPrice
 											+ '\')">'
-											+ data
-											+ '</a>';
+											+ data + '</a>';
 								},
 								"targets" : 2
 							} ]
@@ -555,53 +556,107 @@ tr.shown td.details-control {
 
 		var productdataJson;
 		function fn_productdataTableReload2() {
-			$.ajax({
+			$
+					.ajax(
+							{
 								type : "get",
 								contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 								url : '/sderp/product/listAjax'
-							})
-					.done(
-							function(
-									result) {
-								var newData = JSON
-										.parse(result);
-								console
-										.dir(newData);
+							}).done(function(result) {
+						var newData = JSON.parse(result);
+						console.dir(newData);
 
-								if (newData.data != "") {
-									var arr = JSON
-											.parse(newData.data);
-									// 글로벌 변수에 저장한다. 상세보기때 참고할 변수!!
-									productdataJson = arr;
-									productdataTable2
-											.clear();
-									for (var i = 0; i < arr.length; i++) {
-										productdataTable2.row
-												.add(
-														arr[i])
-												.draw();
-									}
-								} else {
-									productdataTable2.row
-											.add(
-											"데이터 없음")
-											.draw();
-								}
-							})
+						if (newData.data != "") {
+							var arr = JSON.parse(newData.data);
+							// 글로벌 변수에 저장한다. 상세보기때 참고할 변수!!
+							productdataJson = arr;
+							productdataTable2.clear();
+							for (var i = 0; i < arr.length; i++) {
+								productdataTable2.row.add(arr[i]).draw();
+							}
+						} else {
+							productdataTable2.row.add("데이터 없음").draw();
+						}
+					})
 		}
-		function fnSetproductdata2(a,b,c){
+		function fnSetproductdata2(a, b, c) {
 			$("#productNo").val(a);
 			$("#data02Title").val(b);
-			$("#storeAmount").val((c*1).toLocaleString());
+			$("#storeAmount").val((c * 1).toLocaleString());
 			$("#productdataModal2").find(".modal-footer button").trigger('click');
 		}
+
+		function setNum(obj) {
+			obj.value = obj.value.replace(/[^0-9.]/g, "");
+			obj.value = Number(obj.value).toLocaleString();
+		}
+
+		function fn_storeUpdate() {
+			if ($("#storeQty").val() == 0) {
+				alert("상품 수량을 1 이상으로 입력하세요");
+			} else if ($("#storeUnit").val() == 0) {
+				alert("재고 단위를 1 이상으로 입력하세요");
+			} else {
+				let storeData = {};
+				storeData.storeNo = location.href.split("detail/")[1];
+				storeData.serialNo = $("#serialNo").val();
+				storeData.storeType = $("#storeType").val();
+				storeData.storeAmount =  $("#storeAmount").val().replaceAll(",", "") * 1;
+				storeData.storeQty = $("#storeQty").val().replaceAll(",", "") * 1;
+				storeData.storeUnit = $("#storeUnit").val().replaceAll(",", "") * 1;
+				storeData.locationNo = $("#storeLoc2").val();
+				storeData.comment = tinymce.get("comment").getContent();
+
+				$.ajax({
+					url : "${path}/store/update.do",
+					data : storeData,
+					method : "POST",
+					dataType : "json"
+				}).done(function(data) {
+					if (data.code == 10001) {
+						alert("수정 성공");
+						var url = '${path}/store/listStore.do';
+						location.href = url;
+					} else {
+						alert("수정 실패");
+					}
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+			}
+		}
 		
-		  function setNum(obj) {
-		        obj.value = obj.value.replace(/[^0-9.]/g, "");
-		        obj.value = Number(obj.value).toLocaleString();
-		      }
-
-
+		
+		function fn_storeDelete() {
+			let answer = confirm("삭제하시겠습니까?");
+			let storeData = {};
+			storeData.storeNo = location.href.split("detail/")[1];
+			if(answer == true) {
+				$.ajax({
+					url : "${path}/store/delete.do/",
+					data : storeData,
+					method : "POST",
+					dataType : "json"
+				}).done(function(data) {
+					if (data.code == 10001) {
+						alert("삭제 성공");
+						var url = '${path}/store/listStore.do';
+						location.href = url;
+					} else {
+						alert("삭제 실패");
+					}
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+			}
+		}
+		
+		
+		
+		
+		
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />
