@@ -70,5 +70,18 @@ public class OrganizController {
         }
         return ResponseEntity.ok(param);
 	}
+	
+	@RequestMapping("delete.do")
+	public ResponseEntity<?> deleteUpdate(@ModelAttribute OrganizDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		int orgDelete = organizService.deleteOrg(dto);
+		if(orgDelete > 0) {
+       	param.put("code","10001");
+      }
+       else {
+        	param.put("code","20001");
+        }
+        return ResponseEntity.ok(param);
+	}
 
 }

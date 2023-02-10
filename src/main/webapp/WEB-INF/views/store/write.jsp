@@ -266,13 +266,13 @@ tr.shown td.details-control {
 									<td><input type="text" name="serial" id="serialNo"
 										class="form-control form-control-sm" value="-"></td>
 								</tr>
-								<tr>
+								<!--  <tr>
 									<th scope="row" class="requiredTextCss" >입/출고 구분</th>
 									<td><select id="storeType">
 											<option value="IN">입고</option>
 											<option value="OUT">출고</option>
 									</select></td>
-								</tr>
+								</tr>-->
 								<tr>
 									<th scope="row" class="requiredTextCss">상품 기본가격</th>
 									<td><input type="text" name="netprice"

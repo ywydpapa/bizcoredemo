@@ -47,5 +47,11 @@ public class OrganizDAOImpl implements OrganizDAO {
 		return sqlSession.update("organiz.updateOrg", dto);
 	}
 
+	@Override
+	public int deleteOrg(OrganizDTO dto) {
+		return sqlSession.update("organiz.deleteOrg", dto);
+	
+	}
+
 
 }

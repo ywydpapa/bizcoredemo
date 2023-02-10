@@ -142,4 +142,10 @@ public class OrganizServiceImpl implements OrganizService {
 		
 	}
 
+	@Override
+	public int deleteOrg(OrganizDTO dto) {
+		return organizDao.deleteOrg(dto);
+		
+	}
+
 }

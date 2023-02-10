@@ -12,4 +12,5 @@ public interface OrganizDAO {
 	int insertOrg(OrganizDTO dto);
 	OrganizDTO getOrgByCode(String org_code);
 	int updateOrg(OrganizDTO dto);
+	int deleteOrg(OrganizDTO dto);
 }

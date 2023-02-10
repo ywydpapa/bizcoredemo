@@ -19,4 +19,5 @@ public interface OrganizService {
 	int insertOrg(OrganizDTO dto);
 	OrganizDTO getOrgDataByCode(String org_code);
 	int updateOrg(OrganizDTO dto);
+	int deleteOrg(OrganizDTO dto);
 }

@@ -282,6 +282,7 @@
 							<c:if
 								test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
 								<button class="btn btn-md btn-primary"  onclick="fn_userUpdate(this)">수정</button>
+								<button class="btn btn-md btn-danger" onClick= "fn_userUpdate(this)">삭제</button>
 							</c:if>
 						</div>
 					</div>
@@ -335,9 +336,10 @@
 								</tbody>
 							</table>
 						</div>
-						<div style="text-align: right; margin: 5px;" class="orgModifyDiv">
+						<div style="text-align: right; margin: 5px; display:none;" class="orgModifyDiv">
 					    <c:if test="${userInfo.userNo == sessionScope.userNo || sessionScope.userRole eq 'ADMIN'}">
-						<button class="btn btn-sm btn-primary" onclick="toModifyOrg()">수정</button>
+						<button class="btn btn-md btn-primary" onclick="toModifyOrg()">수정</button>
+						<button class="btn btn-md btn-danger" onclick="todeleteOrg()">삭제</button>
 						</c:if>
 					</div>
 					</div>
@@ -345,11 +347,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
-
 
 </div>
 <!--//table-->
@@ -453,6 +450,7 @@
 			}
 			} else {
 				let org_code = data.node.title;
+			data.node.children != null
 				org_code = org_code.split("(")[1].split(")")[0];
 				let url; 
 				if (location.href.includes("local")) {
@@ -468,6 +466,11 @@
 						setOrgData(result); 
 						$(".userDetailDiv").hide();
 						$(".orgDetailDiv").show();
+						if(data.node.children != null) {
+							$(".orgModifyDiv")[0].children[1].setAttribute("style","display:none;");
+						} else {
+							$(".orgModifyDiv")[0].children[1].setAttribute("style","display:inline;");
+						}
 					}
 					
 				}); 
@@ -500,30 +503,6 @@
 			pageLength: 10 // 한 페이지에 기본으로 보열줄 항목 수
 		});
 	});
-	
-
-	/*$('.fancytree-title').click(function(){
-		let url; 
-		let userNo = $(this).html();
-		userNo = userNo.split("("); 
-		if(userNo.length > 1) {
-			userNo = userNo[1]; 
-			userNo = userNo.split(")")[0]; 
-			if (location.href.includes("local")) {
-				url = "/sderp/api/user/"+userNo;
-			} else {
-				url = "/api/user/"+userNo;
-			}
-		$.ajax({
-			url : url,
-			method : "get",
-			dataType: "json",
-			success: (result) => {
-				setEachData(result);
-			    }
-		}); 
-	}})*/
-	
 	
 	
 	function setEachData(user){
@@ -576,6 +555,7 @@
 		  $("#org_color").val(org_color);
 		  $("#org_desc").val(org_desc); 
 		  $("#hiddenCode").val(org.org_id); 
+		  $(".orgModifyDiv").show();
 
 		}
 		
@@ -616,14 +596,6 @@
 	function fn_userUpdate(obj) {
 		
 		var userData = {};
-		//전화번도 유효성 검사
-		var regExp = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/;
-		var userTel		= $("#userTel").val();
-		
-		if( !regExp.test(userTel)) {
-		     alert("전화번호를 다시 입력해주세요.");
-		     return;
-		};
 		//전화번도 유효성 검사
 		userData.userNo 		= $("#userNo").val();
 		userData.userId 		= $("#userId").val();
@@ -681,6 +653,32 @@
 		
 		}
 	
+	
+
+	function todeleteOrg(){
+		 let orgData = {};
+		 orgData.org_id = $("#hiddenCode").val();
+		 $.ajax({ url: "${path}/organiz/delete.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+				data: orgData , // HTTP 요청과 함께 서버로 보낼 데이터
+				method: "POST", // HTTP 요청 메소드(GET, POST 등)
+				dataType: "json" // 서버에서 보내줄 데이터의 타입
+			}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
+			.done(function(data) {
+				if(data.code == 10001){
+					alert("삭제 성공");
+					var url = '${path}/user/list.do';
+					location.href = url;
+				}else{
+					alert("수정 실패");
+				}
+			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+			.fail(function(xhr, status, errorThrown) {
+				alert("통신 실패");
+			});
+		
+		
+		
+	}
 	
 	
 

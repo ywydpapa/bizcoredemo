@@ -91,4 +91,11 @@ SELECT * FROM swc_organiz   WHERE org_code = #{org_code}
  		where org_id =#{org_id}
   </update>
 
+ <update id="deleteOrg">
+ 		update swc_organiz set 
+ 		attrib = "XXXXX"
+ 		where org_id =#{org_id}
+  </update>
+
+
 </mapper>
