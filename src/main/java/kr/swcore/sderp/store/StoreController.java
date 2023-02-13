@@ -8,6 +8,7 @@ import kr.swcore.sderp.store.dto.StoreInoutDTO;
 import kr.swcore.sderp.store.service.StoreInoutService;
 import kr.swcore.sderp.store.service.StoreService;
 
+import org.apache.ibatis.session.SqlSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/store/")
 public class StoreController {
 	
+	@Inject
+	SqlSession sqlSession;
 
     @Inject
     StoreService storeService;
@@ -39,7 +42,7 @@ public class StoreController {
 
     @Inject
     CodeService codeService;
-    //¸®½ºÆ® ÆäÀÌÁö Á¶È¸ 
+    //ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ 
     @RequestMapping("listStore.do")
     public ModelAndView list(HttpSession session, StoreDTO dto, ModelAndView mav) {
         mav.addObject("store", storeService.listStore(session, dto));
@@ -47,7 +50,7 @@ public class StoreController {
         return mav;
     }
 
-    // µî·Ï ÆäÀÌÁö Á¶È¸ 
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ 
     @RequestMapping("writeStore.do")
     public ModelAndView write(HttpSession session, CodeDTO dto, ModelAndView mav) {
     	mav.addObject("list1", codeService.listCode01(session));
@@ -58,7 +61,7 @@ public class StoreController {
     }
     
     
-    // Àç°í insert 
+    // ï¿½ï¿½ï¿½ insert 
     @RequestMapping("insert.do") 
     public ResponseEntity<?> storeInsert(HttpSession session, @ModelAttribute StoreDTO dto){
     	
@@ -87,6 +90,7 @@ public class StoreController {
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
     	mav.addObject("dtoList", storeService.storeDetail(productNo)); 
+    	mav.addObject ("inoutList", storeInoutService.getInoutStoreList(productNo));
     	mav.setViewName("store/detail");
     	return mav;
     }
@@ -141,20 +145,30 @@ public class StoreController {
     	Map<String, Object> param = new HashMap<>();
     	String data = requestbody; 
       StoreInoutDTO dto = new StoreInoutDTO();
+      StoreDTO storeDto = new StoreDTO();
        int storeInsert = 0;
+       int temp = 0; 
     	org.json.JSONArray jarr = new org.json.JSONArray(data);
     	org.json.JSONObject json = null; 
     	for(int i = 0 ; i < jarr.length(); i ++) {
+    		temp = 0; 
     		json = jarr.getJSONObject(i);
     		dto.setInoutQty(json.getInt("inoutQty"));
     		dto.setComment(json.getString("comment"));
     		dto.setInoutType(json.getString("inoutType"));
     		dto.setStoreNo(json.getInt("storeNo"));
     		storeInsert =storeInoutService.insertInoutStore(dto);
+    		if(json.getString("inoutType").equals("IN")) {
+    			storeDto.setStoreQty(json.getInt("inoutQty"));
+    		} else {
+    			storeDto.setStoreQty(json.getInt("inoutQty")*-1);
+    		}
+    		storeDto.setStoreNo(json.getInt("storeNo"));
     	if(storeInsert > 0) {
+    		
+    		storeInsert = storeInsert +sqlSession.update("store.plusStoreQty", storeDto);
 	        param.put("code","10001");
-	    	}
-	    	else {
+	    }else {
 	        param.put("code","20001");
 	        }
     	}

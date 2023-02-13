@@ -16,7 +16,7 @@ public interface StoreInoutService {
 
 	int deleteStore(HttpSession session, StoreInoutDTO dto);
 
-	List<StoreInoutDTO> storeList(HttpSession session, StoreInoutDTO dto);
+	List<StoreInoutDTO> getInoutStoreList(int prodcutNo);
 
 
 }

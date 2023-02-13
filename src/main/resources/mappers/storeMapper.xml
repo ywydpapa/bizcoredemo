@@ -55,6 +55,10 @@ where storeNo=#{storeNo}
 <insert id="insertInoutStore"> 
 insert into swc_store_inout (inoutType, inoutQty, storeNo,locationNo, comment ,regDate,attrib)
      values (#{inoutType},#{inoutQty},#{storeNo},#{locationNo},#{comment},now(),'10000');
-</insert>
- 		
+</insert> 
+
+<update id="plusStoreQty" > 
+update swc_store set storeQty = storeQty + #{storeQty} where storeNo = #{storeNo}</update>
+
+
 </mapper>

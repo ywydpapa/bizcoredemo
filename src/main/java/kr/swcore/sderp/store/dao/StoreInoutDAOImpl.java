@@ -1,6 +1,5 @@
 package kr.swcore.sderp.store.dao;
 
-import kr.swcore.sderp.store.dto.StoreDTO;
 import kr.swcore.sderp.store.dto.StoreInoutDTO;
 
 import org.apache.ibatis.session.SqlSession;
@@ -46,9 +45,8 @@ public class StoreInoutDAOImpl implements StoreInoutDAO{
 	}
 
 	@Override
-	public List<StoreInoutDTO> getStoreList(StoreInoutDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<StoreInoutDTO> getInoutStoreList(int prodcutNo) {
+		  return sqlSession.selectList("storeInout.inoutList", prodcutNo);
 	}
 
 	

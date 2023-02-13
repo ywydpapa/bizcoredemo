@@ -49,9 +49,9 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	}
 
 	@Override
-	public List<StoreInoutDTO> storeList(HttpSession session, StoreInoutDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<StoreInoutDTO> getInoutStoreList(int prodcutNo) {
+		return storeInoutDao.getInoutStoreList(prodcutNo);
+	
 	}
 
     

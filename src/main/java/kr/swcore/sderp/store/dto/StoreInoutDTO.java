@@ -14,7 +14,7 @@ public class StoreInoutDTO {
     private String inoutType;
     private int inoutQty;
     private int storeNo;
-    private int locationNo;
+    private String locationNo;
     private String comment;
     private String regDate;
     private String modDate;

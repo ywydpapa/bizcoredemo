@@ -14,7 +14,7 @@ public interface StoreInoutDAO {
 
 	List<StoreInoutDTO> getDetail(int productNo);
 
-	List<StoreInoutDTO> getStoreList(StoreInoutDTO dto);
+	List<StoreInoutDTO> getInoutStoreList(int prodcutNo);
 
 
 }

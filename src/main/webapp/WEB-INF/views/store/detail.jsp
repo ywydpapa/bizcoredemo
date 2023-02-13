@@ -176,29 +176,28 @@ tr.shown td.details-control {
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
 								<table  class="table table-sm bst02">
-									<colgroup>
-										
+									<colgroup>	
 									</colgroup>
 									<thead>
 										<tr>
 											<th class="text-center">재고 번호</th>
-											<!--<th class="text-center">구분</th>-->
-											<th class="text-center">상품명</th>
-											<th class="text-center">시리얼번호</th>
+											<th class="text-center">구분</th>
 											<th class="text-center">상품위치</th>
 											<th class="text-center">상품수량</th>
 											<th class="text-center">상품설명</th>
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="row" items="">
+										<c:forEach var="row" items="${inoutList}">
 											<tr align="center"  class="storeList">
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
+												<td>${row.storeNo}</td>
+												<c:choose >
+												<c:when test="${row.inoutType eq 'IN'}"><td style="color:blue;">입고</td></c:when>
+												<c:when test="${row.inoutType eq 'OUT'}"><td style="color:red;">출고</td></c:when>
+												</c:choose>
+												<td>${row.locationNo}</td>
+												<td>${row.inoutQty}</td>
+												<td>${row.comment}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
