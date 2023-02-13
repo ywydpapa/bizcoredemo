@@ -12,7 +12,9 @@ public interface StoreDAO {
 
     int deleteStore(StoreDTO dto);
 
-	StoreDTO getDetail(int storeNo);
+	List<StoreDTO> getDetail(int productNo);
+
+	List<StoreDTO> getStoreList(StoreDTO dto);
 
 
 

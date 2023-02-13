@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 
 <!DOCTYPE html>
@@ -34,189 +33,201 @@ tr.shown td.details-control {
 }
 </style>
 
+
 <div id="main_content">
 	<!-- Page-header start 페이지 타이틀-->
 	<div class="page-header2">
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
-					<div class="d-inline">재고 상세 조회</div>
+					<div class="d-inline">입출고 등록</div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 	<!--Page-header end 페이지 타이틀 -->
 
-
 	<div class="cnt_wr">
-		<!-- Row start -->
 		<div class="row">
-			<div class="col-lg-12 col-xl-12">
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs  tabs" role="tablist" id="tablist">
-					<li class="nav-item"><a class="nav-link active"
-						data-toggle="tab" href="#tab01" role="tab">기본정보</a></li>
-					<li class="nav-item"><a class="nav-link" data-toggle="tab"
-						href="#tab02" role="tab" id="dataType01_tab02">상세 조회</a></li>
-					<li class="nav-item"><a class="nav-link" data-toggle="tab"
-						href="#tab03" role="tab" id="dataType01_tab03">입출고 내역</a></li>
-					<!--  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab03" role="tab" id="dataType01_tab03">22</a></li>
-					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab04" role="tab">33)</a></li>-->
-
-				</ul>
-				<!-- Tab panes -->
-				<div class="tab-content tabs m-t-20">
-					<div class="tab-pane active" id="tab01" role="tabpanel">
-						<div class="card-block table-border-style">
-							<div class="table-responsive">
-								<table class="table table-sm bst02">
-									<colgroup>
-										<col width="25%" />
-										<col width="75%" />
-									</colgroup>
-									<tbody>
-										<tr>
-											<th scope="row" class="requiredTextCss">상품명</th>
-											<td>
-												<div id="select1" style="width: 100%;">
-													<div class="input-group input-group-sm mb-0">
-														<input type="hidden" id="productNo" value=""> <input
-															type="text" class="form-control" name="product"
-															id="data02Title" data-flag="true"
-															value="${dtoList[0].productName}" readonly="">
+			<div class="col-sm-12">
+				<div class="card-block table-border-style">
+					<div class="table-responsive">
+						<table class="table table-sm bst02">
+							<colgroup>
+								<col width="20%" />
+								<col width="30%" />
+								<col width="5%" />
+								<col width="5%" />
+								<col width="10%" />
+								<col width="30%" />
+								<col width="10%" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th class="text-center">상품명</th>
+									<th class="text-center">재고 선택</th>
+									<th class="text-center">입출고 구분</th>
+									<th class="text-center">수량</th>
+									<th class="text-center">위치</th>
+									<th class="text-center">비고</th>
+									<td class="text-center" rowspan="2" colspan="1">
+										<button id="data01Addbtn" class="btn btn-success btn-sm"
+											onclick="inoutTablePlus()">추가</button>
+									</td>
+								</tr>
+								<tr>
+									<td><div id="select1" style="width: 100%;">
+											<div class="input-group input-group-sm mb-0">
+												<input type="hidden" id="productNo" value=""> <input
+													type="text" class="form-control" name="product"
+													id="data02Title" data-flag="true" value="" readonly="">
+												<span class="input-group-btn">
+													<button class="btn btn-primary sch-company"
+														onclick="fn_productdataTableReload2()" type="button"
+														data-toggle="modal" data-target="#productdataModal2">
+														<i class="icofont icofont-search"></i>
+													</button>
+												</span>
+											</div>
+											<!--모달 팝업-->
+											<div class="modal fade" id="productdataModal2" tabindex="-1"
+												role="dialog" aria-hidden="true" style="display: none;">
+												<div class="modal-dialog modal-80size" role="document">
+													<div class="modal-content modal-80size">
+														<div class="modal-header">
+															<h4 class="modal-title">상품목록</h4>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">×</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<div class="dt-responsive table-responsive">
+																<div id="productdataTable2_wrapper"
+																	class="dataTables_wrapper dt-bootstrap4 no-footer">
+																	<div class="row">
+																		<div class="col-xs-12 col-sm-12">
+																			<table id="productdataTable2"
+																				class="table table-striped table-bordered nowrap dataTable no-footer"
+																				role="grid">
+																				<thead>
+																					<tr role="row">
+																						<th class="details-control sorting_asc"
+																							rowspan="1" colspan="1" aria-label="-"
+																							style="width: 0px;">-</th>
+																						<th class="sorting" tabindex="0"
+																							aria-controls="productdataTable2" rowspan="1"
+																							colspan="1"
+																							aria-label="제품코드명: activate to sort column ascending"
+																							style="width: 0px;">제품코드명</th>
+																						<th class="sorting" tabindex="0"
+																							aria-controls="productdataTable2" rowspan="1"
+																							colspan="1"
+																							aria-label="상품명: activate to sort column ascending"
+																							style="width: 0px;">상품명</th>
+																						<th class="sorting" tabindex="0"
+																							aria-controls="productdataTable2" rowspan="1"
+																							colspan="1"
+																							aria-label="상품설명(상세): activate to sort column ascending"
+																							style="width: 0px;">상품설명(상세)</th>
+																						<th class="sorting" tabindex="0"
+																							aria-controls="productdataTable2" rowspan="1"
+																							colspan="1"
+																							aria-label="거래처: activate to sort column ascending"
+																							style="width: 0px;">거래처</th>
+																						<th class="sorting" tabindex="0"
+																							aria-controls="productdataTable2" rowspan="1"
+																							colspan="1"
+																							aria-label="기본 가격: activate to sort column ascending"
+																							style="width: 0px;">기본 가격</th>
+																					</tr>
+																				</thead>
+																			</table>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-xs-12 col-sm-12 col-md-5"></div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<button type="button"
+																class="btn btn-default waves-effect"
+																data-dismiss="modal">Close</button>
+														</div>
 													</div>
 												</div>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row" class="requiredTextCss">상품 기본가격</th>
-											<td><input type="text" name="netprice" id="storeAmount"
-												class="form-control form-control-sm"
-												value="<fmt:formatNumber value="${dtoList[0].storeAmount}" pattern="#,###"/>"
-												style="text-align: right;" onkeyup="setNum(this)"></td>
-										</tr>
-										<tr>
-											<th scope="row" class="requiredTextCss">상품 수량</th>
-											<td><input type="text" name="storeqty" id="storeQty"
-												class="form-control form-control-sm"
-												<c:forEach var="row" items="${dtoList}">
-												   <c:set var="total" value ="${total + row.storeQty}"/>
-                                   </c:forEach>
-												value="<fmt:formatNumber value="${total}" pattern="#,###"/>"
-												style="text-align: right;" onkeyup="setNum(this)">
-										</tr>
-										<tr>
-											<th scope="row" class="requiredTextCss">재고 단위</th>
-											<td><input type="text" name="storeUnit" id="storeUnit"
-												class="form-control form-control-sm"
-												value="<fmt:formatNumber value="${dtoList[0].storeUnit}" pattern="#,###"/>"
-												style="text-align: right;" onkeyup="setNum(this)"></td>
-										</tr>
-										<tr>
-											<th scope="row">상품설명</th>
-											<td><textarea name="comment" id="comment" rows="8"
-													class="form-control">${dtoList[0].comment}</textarea></td>
-										</tr>
-									</tbody>
-								</table>
-
-
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane " id="tab02" role="tabpanel">
-						<div class="card-block table-border-style">
-							<div class="table-responsive" style="overflow-x: hidden;">
-								<table  class="table table-sm bst02">
-									<colgroup>
-										<col width="10%" />
-										<col width="10%" />
-										<col width="10%" />
-										<col width="20%" />
-										<col width="20%" />
-										<col width="30%" />
-									</colgroup>
-									<thead>
-										<tr>
-											<th class="text-center">재고 번호</th>
-											<!--<th class="text-center">구분</th>-->
-											<th class="text-center">상품명</th>
-											<th class="text-center">시리얼번호</th>
-											<th class="text-center">상품위치</th>
-											<th class="text-center">상품수량</th>
-											<th class="text-center">상품설명</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach var="row" items="${dtoList}">
-											<tr align="center"  class="storeList">
-												<td>${row.storeNo}</td>
-											<!--	<c:choose>
-													<c:when test="${row.storeType == 'IN'}">
-														<td>입고</td>
-													</c:when>
-													<c:when test="${row.storeType == 'OUT'}">
-														<td>출고</td>
-													</c:when>
-												</c:choose>  -->
-												<td>${row.productName}</td>
-												<td>${row.serialNo}</td>
-												<td>${row.locationNo}</td>
-												<td>${row.storeQty}</td>
-												<td>${row.comment}</td>
-											</tr>
+											</div>
+										</div></td>
+									<td>
+									<input type="text" id="storeNo" class="form-control form-control-sm" style="min-width: 80px;"
+										list="storeList">
+										<datalist id="storeList">
+										<c:forEach var="row" items="${storeList}">
+										<option  value="${row.storeNo}/${row.serialNo}(${row.storeQty}ea)"/>
 										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-						</div>
+										</datalist>
+										</td>
+									<td><select id="storeType"
+										class="form-control form-control-sm" style="min-width: 80px;">
+											<option value="IN">입고</option>
+											<option value="OUT">출고</option>
+									</select></td>
+									<td><input type="text" id="storeQty"
+										class="form-control form-control-sm" value="1"
+										style="min-width: 80px; text-align: right;"
+										onkeyup="setNum(this)"></td>
+									<td><input type="text" id="locationNo"
+										class="form-control form-control-sm" style="min-width: 80px;"></td>
+									<td><input type="text" id="comment"
+										class="form-control form-control-sm" style="min-width: 80px;"></input></td>
+								</tr>
+							</tbody>
+						</table>
+						<br />
+						<table class="table table-sm bst02" id="inoutlist">
+							<colgroup>
+								<col width="5%">
+								<col width="20%">
+								<col width="25%">
+								<col width="5%">
+								<col width="20%">
+								<col width="20%">
+								<col width="5%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th class="text-center">구분</th>
+									<th class="text-center">상품명</th>
+									<th class="text-center">시리얼번호</th>
+									<th class="text-center">수량</th>
+									<th class="text-center">위치</th>
+									<th class="text-center">비고</th>
+									<th class="text-center">삭제</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="itemIn">
+									<td colspan="8"style="text-align: center; background: #80808030;">입고</td>
+								</tr>
+								<tr class="itemOut" style="text-align: right">
+									<td colspan="8"
+										style="text-align: center; background: #80808030;">출고</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<div class="tab-pane " id="tab03" role="tabpanel">
-						<div class="card-block table-border-style">
-							<div class="table-responsive" style="overflow-x: hidden;">
-								<table  class="table table-sm bst02">
-									<colgroup>
-										
-									</colgroup>
-									<thead>
-										<tr>
-											<th class="text-center">재고 번호</th>
-											<!--<th class="text-center">구분</th>-->
-											<th class="text-center">상품명</th>
-											<th class="text-center">시리얼번호</th>
-											<th class="text-center">상품위치</th>
-											<th class="text-center">상품수량</th>
-											<th class="text-center">상품설명</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach var="row" items="">
-											<tr align="center"  class="storeList">
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-												<td></td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-						</div>
+					<div class="btn_wr text-right mt-3">
+						<button class="btn btn-md btn-success f-left"
+							onClick="javascript:location='${path}/store/listStore.do'">목록</button>
+						<button class="btn btn-md btn-primary" onClick="storeInOutInsert()"
+							value="등록">등록</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- Row end -->
 	</div>
-
-
-
-
-
-
 
 	<script>
 		// 이벤트 영역 시작
@@ -261,7 +272,6 @@ tr.shown td.details-control {
 					}
 				}
 			}
-
 		}
 
 		function necessaryCheck() {
@@ -347,39 +357,48 @@ tr.shown td.details-control {
 		////////////// store insert 함수 
 
 		function fn_storeInsert() {
+			if ($("#productNo").val() == "") {
+				alert("상품을 선택하세요");
+			} else if ($("#storeQty").val() == 0) {
+				alert("상품 수량을 1 이상으로 입력하세요");
+			} else if ($("#storeUnit").val() == 0) {
+				alert("재고 단위를 1 이상으로 입력하세요");
+			} else {
+				var storeData = {};
+				storeData.productNo = $("#productNo").val() * 1;
+				storeData.serialNo = $("#serialNo").val();
+				storeData.storeType = $("#storeType").val();
+				storeData.storeQty = $("#storeQty").val() * 1;
+				storeData.storeAmount = $("#storeAmount").val().replaceAll(",",
+						"") * 1;
+				storeData.locationNo = $("#storeLoc2").val();
+				storeData.comment = tinymce.get("comment").getContent();
+				storeData.storeUnit = $("#storeUnit").val() * 1;
 
-			var storeData = {};
-			storeData.productNo = $("#productNo").val() * 1;
-			storeData.serialNo = $("#serialNo").val();
-			storeData.storeType = $("#storeType").val();
-			storeData.storeQty = $("#storeQty").val().replaceAll(",", "") * 1;
-			storeData.storeUnit = $("#storeUnit").val().replaceAll(",", "") * 1;
-			storeData.storeAmount = $("#storeAmount").val().replaceAll(",", "") * 1;
-			storeData.locationNo = $("#storeLoc2").val();
-			storeData.comment = tinymce.get("comment").getContent();
-
-			$.ajax({
-				url : "${path}/store/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
-				data : storeData, // HTTP 요청과 함께 서버로 보낼 데이터
-				method : "POST", // HTTP 요청 메소드(GET, POST 등)
-				dataType : "json" // 서버에서 보내줄 데이터의 타입
-			}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨..
-			.done(function(data) {
-				if (data.code == 10001) {
-					alert("저장 성공");
-					var url = '${path}/store/listStore.do';
-					location.href = url;
-				} else {
-					if (data.msg != '') {
-						alert("등록 실패 \n 사유 : " + data.msg);
+				$.ajax({
+					url : "${path}/store/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
+					data : storeData, // HTTP 요청과 함께 서버로 보낼 데이터
+					method : "POST", // HTTP 요청 메소드(GET, POST 등)
+					dataType : "json" // 서버에서 보내줄 데이터의 타입
+				}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨..
+				.done(function(data) {
+					if (data.code == 10001) {
+						alert("저장 성공");
+						var url = '${path}/store/listStore.do';
+						location.href = url;
 					} else {
-						alert("등록 실패");
+						if (data.msg != '') {
+							alert("등록 실패 \n 사유 : " + data.msg);
+						} else {
+							alert("등록 실패");
+						}
 					}
-				}
-			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-			.fail(function(xhr, status, errorThrown) {
-				alert("통신 실패");
-			});
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+			}
+
 		}
 
 		$("#custRegSimple").on("click", function(event) {
@@ -493,7 +512,6 @@ tr.shown td.details-control {
 						alert("통신 실패");
 					});
 				});
-		// 페이지 특화 함수 끝
 
 		var productdataTable2 = $('#productdataTable2')
 				.DataTable(
@@ -559,7 +577,6 @@ tr.shown td.details-control {
 							}).done(function(result) {
 						var newData = JSON.parse(result);
 						console.dir(newData);
-
 						if (newData.data != "") {
 							var arr = JSON.parse(newData.data);
 							// 글로벌 변수에 저장한다. 상세보기때 참고할 변수!!
@@ -573,6 +590,7 @@ tr.shown td.details-control {
 						}
 					})
 		}
+
 		function fnSetproductdata2(a, b, c) {
 			$("#productNo").val(a);
 			$("#data02Title").val(b);
@@ -585,68 +603,102 @@ tr.shown td.details-control {
 			obj.value = obj.value.replace(/[^0-9.]/g, "");
 			obj.value = Number(obj.value).toLocaleString();
 		}
-
-		function fn_storeUpdate() {
-			if ($("#storeQty").val() == 0) {
-				alert("상품 수량을 1 이상으로 입력하세요");
-			} else if ($("#storeUnit").val() == 0) {
-				alert("재고 단위를 1 이상으로 입력하세요");
-			} else {
-				let storeData = {};
-				storeData.storeNo = location.href.split("detail/")[1];
-				storeData.serialNo = $("#serialNo").val();
-				storeData.storeType = $("#storeType").val();
-				storeData.storeAmount = $("#storeAmount").val().replaceAll(",",
-						"") * 1;
-				storeData.storeQty = $("#storeQty").val().replaceAll(",", "") * 1;
-				storeData.storeUnit = $("#storeUnit").val().replaceAll(",", "") * 1;
-				storeData.locationNo = $("#storeLoc2").val();
-				storeData.comment = tinymce.get("comment").getContent();
-
-				$.ajax({
-					url : "${path}/store/update.do",
-					data : storeData,
-					method : "POST",
-					dataType : "json"
-				}).done(function(data) {
-					if (data.code == 10001) {
-						alert("수정 성공");
-						var url = '${path}/store/listStore.do';
-						location.href = url;
-					} else {
-						alert("수정 실패");
-					}
-				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-				.fail(function(xhr, status, errorThrown) {
-					alert("통신 실패");
-				});
-			}
+		 
+		
+		
+		function inoutTablePlus(){
+		let productName, storeNo, storeType, storeQty, locationNo, comment; 
+		productName = $("#data02Title").val();
+		storeNo = $("#storeNo").val();
+		storeType = $("#storeType").val();
+	    storeQty = $("#storeQty").val();
+	    locationNo = $("#locationNo").val();
+	    comment = $("#comment").val();
+	    
+	    
+	    if(productName == "") {
+	    	alert("상품명을 선택하세요")
+	    } else if (storeNo =="") {
+	    	alert("재고 종류를 선택하세요")
+	    } else if (storeQty <= 0) {
+	    	alert("입/출고 수량을 1개 이상으로 설정하세요")
+	    } else {
+	    	
+	    let html = ""; 
+	    html += "<td>"+storeType+"</td>"; 
+	    html += "<td>"+productName+"</td>"; 
+	    html += "<td>"+storeNo+"</td>"; 
+	    html += "<td>"+storeQty+"</td>"; 
+	    html += "<td>"+locationNo+"</td>"; 
+	    html += "<td>"+comment+"</td>"; 
+	    html += "<td><button onclick='deltedData(this)'>삭제</button></td>"; 
+	    let target; 
+	    	    let tr = document.createElement("tr");
+	    if (storeType == "IN") {
+	    	 target = $(".itemIn")[$(".itemIn").length -1];
+	    	 tr.className = "itemIn";
+	    } else {
+	    	 target = $(".itemOut")[$(".itemOut").length -1];
+	    	 tr.className = "itemOut";
+	    } 
+	    
+	    tr.innerHTML = html; 
+	    target.after(tr);
+	    }
+	    
+		} 
+		
+		function deltedData(obj) {
+			obj.parentElement.parentElement.remove();
 		}
-
-		function fn_storeDelete() {
-			let answer = confirm("삭제하시겠습니까?");
-			let storeData = {};
-			storeData.storeNo = location.href.split("detail/")[1];
-			if (answer == true) {
-				$.ajax({
-					url : "${path}/store/delete.do/",
-					data : storeData,
-					method : "POST",
-					dataType : "json"
-				}).done(function(data) {
-					if (data.code == 10001) {
-						alert("삭제 성공");
-						var url = '${path}/store/listStore.do';
-						location.href = url;
-					} else {
-						alert("삭제 실패");
-					}
-				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-				.fail(function(xhr, status, errorThrown) {
-					alert("통신 실패");
-				});
+		 
+		
+		function storeInOutInsert() {
+			let storeDatas = []; 
+			let eachData ;
+			for(let i = 1 ; i < $(".itemIn").length ; i ++) {
+				eachData = {};  
+				eachData.inoutType = $(".itemIn")[i].children[0].innerHTML;
+				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
+				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML.split("/")[0];
+				eachData.locationNo = $(".itemIn")[i].children[4].innerHTML;
+				eachData.comment = $(".itemIn")[i].children[5].innerHTML;
+				storeDatas.push(eachData);
 			}
+			
+			for(let i = 1 ; i < $(".itemOut").length ; i ++) {
+				eachData = {};  
+				eachData.inoutType = $(".itemOut")[i].children[0].innerHTML;
+				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
+				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("/")[0];
+				eachData.locationNo = $(".itemOut")[i].children[4].innerHTML;
+				eachData.comment = $(".itemOut")[i].children[5].innerHTML;
+				storeDatas.push(eachData);
+			}
+			
+			storeDatas = JSON.stringify(storeDatas);
+		
+			$.ajax({
+				url : "${path}/store/inOutInsert.do" ,
+				method : "POST" ,
+				data : storeDatas, 
+				dataType: "json",
+				traditional: true,
+			    contentType: "text/plain",
+			}).done(function(result) {
+				if (result.code == 10001) {
+					alert("등록 성공");
+					location.href = "${path}/store/writeInout.do";
+				} else {
+					alert("등록 실패");
+				}
+			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+			.fail(function(xhr, status, errorThrown) {
+				alert("통신 실패");
+			});
+			
 		}
+	
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />

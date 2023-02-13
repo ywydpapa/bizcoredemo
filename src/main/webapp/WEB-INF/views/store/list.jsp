@@ -61,38 +61,34 @@ cursor:pointer;
                     <div class="dt-responsive table-responsive">
                         <table id="productTable" class="table table-striped table-bordered nowrap dataTable">
                             <colgroup>
-                                <col width="5%"/>
-                                <col width="5%"/>
-                                <col width="20%"/>
-                                <col width="15%"/>
-                                <col width="20%"/>
                                 <col width="10%"/>
-                                <col width="20%"/>
+                                <col width="65%"/>
+                                <col width="25%"/>
                             </colgroup>
                             <thead>
                             <tr>
-                                <th class="text-center">번호</th>
-                                <th class="text-center">구분</th>
+                                <th class="text-center">상품 번호</th>
+                              <!--<th class="text-center">구분</th> --> 
                                 <th class="text-center">상품명</th>
-                                <th class="text-center">시리얼번호</th>
-                                <th class="text-center">상품위치</th>
+                              <!-- <th class="text-center">시리얼번호</th> -->
+                              <!-- <th class="text-center">상품위치</th>--> 
                                 <th class="text-center">상품수량</th>
-                                <th class="text-center">상품설명</th>
+                              <!-- <th class="text-center">상품설명</th>--> 
                             </tr>
                             </thead>
                             <tbody>
                             <c:forEach var="row" items="${store}">
-                                <tr align="center" onclick="location.href='${path}/store/detail/${row.storeNo}'" class="storeList">
-                                    <td>${row.storeNo}</td>
-                                    <c:choose>
+                                <tr align="center" onclick="location.href='${path}/store/detail/${row.productNo}'" class="storeList">
+                                    <td>${row.productNo}</td>
+                                 <!--   <c:choose>
                                     <c:when test="${row.storeType == 'IN'}"><td>입고</td></c:when>
                                     <c:when test="${row.storeType == 'OUT'}"><td>출고</td></c:when>
-                                    </c:choose>
+                                    </c:choose> --> 
                                     <td>${row.productName}</td>
-                                    <td>${row.serialNo}</td>
-                                    <td>${row.locationNo}</td>
+                                    <!-- <td>${row.serialNo}</td> --> 
+                                    <!-- <td>${row.locationNo}</td>-->  
                                     <td>${row.storeQty}</td>
-                                    <td>${row.comment}</td>
+                                   <!--  <td>${row.comment}</td>--> 
                                 </tr>
                             </c:forEach>
                             </tbody>

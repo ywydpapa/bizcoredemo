@@ -43,8 +43,16 @@ public class StoreServiceImpl implements StoreService{
     }
 
 	@Override
-	public StoreDTO storeDetail(int storeNo) {
-	    return storeDao.getDetail(storeNo);
+	public List<StoreDTO> storeDetail(int prodcutNo) {
+	    return storeDao.getDetail(prodcutNo);
+	
+	}
+
+	@Override
+	public List<StoreDTO> storeList(HttpSession session, StoreDTO dto) {
+	    Integer compNo = SessionInfoGet.getCompNo(session);
+        dto.setCompNo(compNo);
+		return storeDao.getStoreList(dto);
 	
 	}
 

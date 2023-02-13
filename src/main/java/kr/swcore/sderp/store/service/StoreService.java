@@ -10,11 +10,14 @@ public interface StoreService {
 
     int insertStore(HttpSession session, StoreDTO dto);
 
-	StoreDTO storeDetail(int storeNo);
+    List<StoreDTO> storeDetail(int prodcutNo);
 
 	int updateStore(HttpSession session, StoreDTO dto);
 
 	int deleteStore(HttpSession session, StoreDTO dto);
 
+	List<StoreDTO> storeList(HttpSession session, StoreDTO dto);
+
 
 }
+ 
