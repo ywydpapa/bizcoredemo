@@ -63,7 +63,6 @@ tr.shown td.details-control {
 						href="#tab03" role="tab" id="dataType01_tab03">입출고 내역</a></li>
 					<!--  <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab03" role="tab" id="dataType01_tab03">22</a></li>
 					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab04" role="tab">33)</a></li>-->
-
 				</ul>
 				<!-- Tab panes -->
 				<div class="tab-content tabs m-t-20">
@@ -113,8 +112,8 @@ tr.shown td.details-control {
 												value="<fmt:formatNumber value="${dtoList[0].storeUnit}" pattern="#,###"/>"
 												style="text-align: right;" onkeyup="setNum(this)"></td>
 										</tr>
-										
-										
+
+
 										<tr>
 											<th scope="row">상품설명</th>
 											<td><textarea name="comment" id="comment" rows="8"
@@ -130,7 +129,7 @@ tr.shown td.details-control {
 					<div class="tab-pane " id="tab02" role="tabpanel">
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
-								<table  id="storeDataTable" class="table table-sm bst02">
+								<table id="storeDataTable" class="table table-sm bst02">
 									<colgroup>
 										<col width="10%" />
 										<col width="10%" />
@@ -152,25 +151,30 @@ tr.shown td.details-control {
 									</thead>
 									<tbody>
 										<c:forEach var="row" items="${dtoList}">
-											<tr align="center"  class="storeList">
+											<tr align="center" class="storeList">
 												<td>${row.storeNo}</td>
 												<td>${row.productName}</td>
 												<td>${row.serialNo}</td>
 												<c:choose>
-												<c:when test ="${row.locationNo eq '' || row.locationNo eq '-'}"><td></td></c:when>
-												<c:otherwise>
-												<c:forEach var="list2" items="${list2}">
-												<c:if test="${fn:split(row.locationNo,'-')[1] eq list2.code02}">
-												<td>${list2.desc02} -
-												<c:forEach var="list3" items="${list3}">
-												<c:if test="${fn:split(row.locationNo,'-')[2] eq list3.code03}">
+													<c:when
+														test="${row.locationNo eq '' || row.locationNo eq '-'}">
+														<td></td>
+													</c:when>
+													<c:otherwise>
+														<c:forEach var="list2" items="${list2}">
+															<c:if
+																test="${fn:split(row.locationNo,'-')[1] eq list2.code02}">
+																<td>${list2.desc02}- <c:forEach var="list3"
+																		items="${list3}">
+																		<c:if
+																			test="${fn:split(row.locationNo,'-')[2] eq list3.code03}">
 												${list3.desc03} 
 												</c:if>
-												</c:forEach>
-												</td>
-												</c:if>
-												</c:forEach>
-												</c:otherwise>
+																	</c:forEach>
+																</td>
+															</c:if>
+														</c:forEach>
+													</c:otherwise>
 												</c:choose>
 												<td>${row.storeQty}</td>
 												<td>${row.comment}</td>
@@ -184,32 +188,65 @@ tr.shown td.details-control {
 					<div class="tab-pane " id="tab03" role="tabpanel">
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
-								<table id="inoutDataTable"  class="table table-sm bst02">
-									<colgroup>	
+								<table class="table table-sm bst02">
+									<colgroup>
 									</colgroup>
 									<thead>
 										<tr>
-										<th class="text-center">구분</th>
+											<th class="text-center">상품명</th>
+											<th class="text-center">현 재고 수량</th>
+											<th class="text-center">비고</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr align="center" class="storeList">
+											<td>${dtoList[0].productName}</td>
+											<td>${dtoList[0].storeQty}</td>
+											<td>${dtoList[0].comment}</td>
+										</tr>
+									</tbody>
+								</table>
+								</br>
+								<table id="inoutDataTable" class="table table-sm bst02">
+									<colgroup>
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="text-center">구분</th>
 											<th class="text-center">일자</th>
 											<th class="text-center">상품명</th>
 											<th class="text-center">재고 번호(시리얼번호)</th>
-											<th class="text-center">상품위치</th>
-											<th class="text-center">상품수량</th>
-											<th class="text-center">상품설명</th>
+											<th class="text-center">위치</th>
+											<th class="text-center">입고수량</th>
+											<th class="text-center">출고 수량</th>
+											<th class="text-center">비고</th>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach var="row" items="${inoutList}">
-											<tr align="center"  class="storeList">
-												<c:choose >
-												<c:when test="${row.inoutType eq 'IN'}"><td style="color:blue;">입고</td></c:when>
-												<c:when test="${row.inoutType eq 'OUT'}"><td style="color:red;">출고</td></c:when>
+											<tr align="center" class="storeList">
+												<c:choose>
+													<c:when test="${row.inoutType eq 'IN'}">
+														<td style="color: blue;">입고</td>
+													</c:when>
+													<c:when test="${row.inoutType eq 'OUT'}">
+														<td style="color: red;">출고</td>
+													</c:when>
 												</c:choose>
-											    <td>${row.regDate}</td>
-											    <td>${row.productName}</td>
-												<td>${row.storeNo} (${row.serialNo})</td>
+												<td>${row.regDate}</td>
+												<td>${row.productName}</td>
+												<td>${row.storeNo}(${row.serialNo})</td>
 												<td>${row.locationNo}</td>
-												<td>${row.inoutQty}</td>
+												<c:choose>
+													<c:when test="${row.inoutType eq 'IN'}">
+														<td>${row.inoutQty}</td>
+														<td></td>
+													</c:when>
+													<c:otherwise>
+														<td></td>
+														<td>${row.inoutQty}</td>
+													</c:otherwise>
+												</c:choose>
 												<td>${row.comment}</td>
 											</tr>
 										</c:forEach>
@@ -219,21 +256,16 @@ tr.shown td.details-control {
 						</div>
 					</div>
 				</div>
+				<div class="btn_wr text-right mt-3">
+					<button class="btn btn-md btn-success f-left"
+						onclick="javascript:location='${path}/store/listStore.do'">목록</button>
+				</div>
 			</div>
 		</div>
 		<!-- Row end -->
 	</div>
 
-
-
-
-
-
-
 	<script>
-	
- 
-	
 		// 이벤트 영역 시작
 		$('#custModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
