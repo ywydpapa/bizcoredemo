@@ -13,11 +13,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +45,7 @@ public class StoreController {
 
     @Inject
     CodeService codeService;
-    //����Ʈ ������ ��ȸ 
+    //占쏙옙占쏙옙트 占쏙옙占쏙옙占쏙옙 占쏙옙회 
     @RequestMapping("listStore.do")
     public ModelAndView list(HttpSession session, StoreDTO dto, ModelAndView mav) {
         mav.addObject("store", storeService.listStore(session, dto));
@@ -50,7 +53,7 @@ public class StoreController {
         return mav;
     }
 
-    // ��� ������ ��ȸ 
+    // 占쏙옙占� 占쏙옙占쏙옙占쏙옙 占쏙옙회 
     @RequestMapping("writeStore.do")
     public ModelAndView write(HttpSession session, CodeDTO dto, ModelAndView mav) {
     	mav.addObject("list1", codeService.listCode01(session));
@@ -61,7 +64,7 @@ public class StoreController {
     }
     
     
-    // ��� insert 
+    // 占쏙옙占� insert 
     @RequestMapping("insert.do") 
     public ResponseEntity<?> storeInsert(HttpSession session, @ModelAttribute StoreDTO dto){
     	
@@ -81,7 +84,7 @@ public class StoreController {
          mav.addObject("storeList", storeService.storeList(session,dto));
     	 mav.setViewName("store/inoutWrite");
         return mav;
-    }
+    } 
     
     
     @RequestMapping("/detail/{productNo}")

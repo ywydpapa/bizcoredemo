@@ -161,13 +161,12 @@ tr.shown td.details-control {
 											</div>
 										</div></td>
 									<td>
-									<input type="text" id="storeNo" class="form-control form-control-sm" style="min-width: 80px;"
-										list="storeList">
-										<datalist id="storeList">
-										<c:forEach var="row" items="${storeList}">
-										<option  value="${row.storeNo}/${row.serialNo}(${row.storeQty}ea)"/>
-										</c:forEach>
-										</datalist>
+										<select id="storeNo" class="form-control form-control-sm" style="min-width: 80px;">
+										<option>-</option>
+										<c:forEach var='row' items='${storeList}'>
+												<option class="storeOptions"  value='${row.productNo}-${row.storeNo}' style="display:none;">재고번호 :${row.storeNo}, 시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
+											</c:forEach>
+										</select>
 										</td>
 									<td><select id="storeType"
 										class="form-control form-control-sm" style="min-width: 80px;">
@@ -209,7 +208,8 @@ tr.shown td.details-control {
 							</thead>
 							<tbody>
 								<tr class="itemIn">
-									<td colspan="8"style="text-align: center; background: #80808030;">입고</td>
+									<td colspan="8"
+										style="text-align: center; background: #80808030;">입고</td>
 								</tr>
 								<tr class="itemOut" style="text-align: right">
 									<td colspan="8"
@@ -221,8 +221,8 @@ tr.shown td.details-control {
 					<div class="btn_wr text-right mt-3">
 						<button class="btn btn-md btn-success f-left"
 							onClick="javascript:location='${path}/store/listStore.do'">목록</button>
-						<button class="btn btn-md btn-primary" onClick="storeInOutInsert()"
-							value="등록">등록</button>
+						<button class="btn btn-md btn-primary"
+							onClick="storeInOutInsert()" value="등록">등록</button>
 					</div>
 				</div>
 			</div>
@@ -573,7 +573,7 @@ tr.shown td.details-control {
 							{
 								type : "get",
 								contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-								url : '/sderp/product/listAjax'
+								url : '${path}/product/listAjax'
 							}).done(function(result) {
 						var newData = JSON.parse(result);
 						console.dir(newData);
@@ -597,94 +597,96 @@ tr.shown td.details-control {
 			$("#storeAmount").val((c * 1).toLocaleString());
 			$("#productdataModal2").find(".modal-footer button").trigger(
 					'click');
+			let option = $(".storeOptions");
+			$("#storeNo").val("")
+			$(".storeOptions").hide();
+			for(let i = 0 ; i < option.length; i ++) { if(option[i].value.split("-")[0] == a) option[i].setAttribute("style", "display:inline");
+            }
+			
 		}
 
 		function setNum(obj) {
 			obj.value = obj.value.replace(/[^0-9.]/g, "");
 			obj.value = Number(obj.value).toLocaleString();
 		}
-		 
-		
-		
-		function inoutTablePlus(){
-		let productName, storeNo, storeType, storeQty, locationNo, comment; 
-		productName = $("#data02Title").val();
-		storeNo = $("#storeNo").val();
-		storeType = $("#storeType").val();
-	    storeQty = $("#storeQty").val();
-	    locationNo = $("#locationNo").val();
-	    comment = $("#comment").val();
-	    
-	    
-	    if(productName == "") {
-	    	alert("상품명을 선택하세요")
-	    } else if (storeNo =="") {
-	    	alert("재고 종류를 선택하세요")
-	    } else if (storeQty <= 0) {
-	    	alert("입/출고 수량을 1개 이상으로 설정하세요")
-	    } else {
-	    	
-	    let html = ""; 
-	    html += "<td>"+storeType+"</td>"; 
-	    html += "<td>"+productName+"</td>"; 
-	    html += "<td>"+storeNo+"</td>"; 
-	    html += "<td>"+storeQty+"</td>"; 
-	    html += "<td>"+locationNo+"</td>"; 
-	    html += "<td>"+comment+"</td>"; 
-	    html += "<td><button onclick='deltedData(this)'>삭제</button></td>"; 
-	    let target; 
-	    	    let tr = document.createElement("tr");
-	    if (storeType == "IN") {
-	    	 target = $(".itemIn")[$(".itemIn").length -1];
-	    	 tr.className = "itemIn";
-	    } else {
-	    	 target = $(".itemOut")[$(".itemOut").length -1];
-	    	 tr.className = "itemOut";
-	    } 
-	    
-	    tr.innerHTML = html; 
-	    target.after(tr);
-	    }
-	    
-		} 
-		
+
+		function inoutTablePlus() {
+			let productName, storeNo, storeType, storeQty, locationNo, comment;
+			productName = $("#data02Title").val();
+			storeNo = $("#storeNo").val();
+			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
+			storeQty = $("#storeQty").val();
+			locationNo = $("#locationNo").val();
+			comment = $("#comment").val();
+
+			if (productName == "") {
+				alert("상품명을 선택하세요")
+			} else if (storeNo == "") {
+				alert("재고 종류를 선택하세요")
+			} else if (storeQty <= 0) {
+				alert("입/출고 수량을 1개 이상으로 설정하세요")
+			} else {
+
+				let html = "";
+				html += "<td>" + storeType + "</td>";
+				html += "<td>" + productName + "</td>";
+				html += "<td>" + storeNo + "</td>";
+				html += "<td>" + storeQty + "</td>";
+				html += "<td>" + locationNo + "</td>";
+				html += "<td>" + comment + "</td>";
+				html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
+				let target;
+				let tr = document.createElement("tr");
+				if (storeType == "입고") {
+					target = $(".itemIn")[$(".itemIn").length - 1];
+					tr.className = "itemIn";
+				} else {
+					target = $(".itemOut")[$(".itemOut").length - 1];
+					tr.className = "itemOut";
+				}
+
+				tr.innerHTML = html;
+				target.after(tr);
+			}
+
+		}
+
 		function deltedData(obj) {
 			obj.parentElement.parentElement.remove();
 		}
-		 
-		
+
 		function storeInOutInsert() {
-			let storeDatas = []; 
-			let eachData ;
-			for(let i = 1 ; i < $(".itemIn").length ; i ++) {
-				eachData = {};  
-				eachData.inoutType = $(".itemIn")[i].children[0].innerHTML;
+			let storeDatas = [];
+			let eachData;
+			for (let i = 1; i < $(".itemIn").length; i++) {
+				eachData = {};
+				eachData.inoutType = "IN";
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML.split("/")[0];
+				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML.split("-")[1]*1
 				eachData.locationNo = $(".itemIn")[i].children[4].innerHTML;
 				eachData.comment = $(".itemIn")[i].children[5].innerHTML;
 				storeDatas.push(eachData);
 			}
-			
-			for(let i = 1 ; i < $(".itemOut").length ; i ++) {
-				eachData = {};  
-				eachData.inoutType = $(".itemOut")[i].children[0].innerHTML;
+
+			for (let i = 1; i < $(".itemOut").length; i++) {
+				eachData = {};
+				eachData.inoutType = "OUT"
 				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("/")[0];
+				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("-")[1]*1;
 				eachData.locationNo = $(".itemOut")[i].children[4].innerHTML;
 				eachData.comment = $(".itemOut")[i].children[5].innerHTML;
 				storeDatas.push(eachData);
 			}
-			
+
 			storeDatas = JSON.stringify(storeDatas);
-		
+
 			$.ajax({
-				url : "${path}/store/inOutInsert.do" ,
-				method : "POST" ,
-				data : storeDatas, 
-				dataType: "json",
-				traditional: true,
-			    contentType: "text/plain",
+				url : "${path}/store/inOutInsert.do",
+				method : "POST",
+				data : storeDatas,
+				dataType : "json",
+				traditional : true,
+				contentType : "text/plain",
 			}).done(function(result) {
 				if (result.code == 10001) {
 					alert("등록 성공");
@@ -696,9 +698,8 @@ tr.shown td.details-control {
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
-			
+
 		}
-	
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />

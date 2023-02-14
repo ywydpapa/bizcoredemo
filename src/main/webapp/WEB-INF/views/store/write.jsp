@@ -692,7 +692,7 @@ tr.shown td.details-control {
 			$.ajax({
 								type : "get",
 								contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-								url : '/sderp/product/listAjax'
+								url : '${path}/product/listAjax'
 							})
 					.done(
 							function(

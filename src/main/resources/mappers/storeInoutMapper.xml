@@ -5,6 +5,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="storeInout">
 
 <select id="inoutList" resultType="kr.swcore.sderp.store.dto.StoreInoutDTO"> 
-select a.* from swc_store_inout a  left join  swc_store b on a.storeNo = b.storeNo 
-where b.productNo = #{productNo}; </select>
+<!--  select a.* from swc_store_inout a  left join  swc_store b on a.storeNo = b.storeNo 
+where b.productNo = #{productNo}; -->
+select a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
+left join  swc_store b on a.storeNo = b.storeNo  
+left join swc_product c on b.productNo = c.productNo  where b.productNo = #{productNo} order by a.regDate desc;
+</select>
 </mapper>
