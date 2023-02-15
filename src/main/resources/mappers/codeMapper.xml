@@ -228,10 +228,15 @@ ifnull(concat("LOC",max(substring(code03,4))+1),(select concat("LOC",max(substri
 ifnull(concat("LOC",max(substring(code03,4))+1),(select concat("LOC",max(substring(b.code03,4))+1) from swc_code a inner join swc_code b on a.code02 = b.code02 where a.code01 = #{code01})) as value03, 
 "10001"  from swc_code where code02 = #{code02};-->
 
-
+<!--  
 insert into swc_code(compNo, code02, code03, desc03, value03, attrib)
 select distinct #{compNo},code02, (select concat("LOC",max(substring(b.code03,4))+1) from swc_code a  inner join swc_code b on a.code02 = b.code02 where a.code01 = #{code01}) as code03 , 
 #{desc03},  (select concat("LOC",max(substring(b.code03,4))+1) from swc_code a  inner join swc_code b on a.code02 = b.code02 where a.code01 = #{code01}) as value03, 
+"10001"  from swc_code where code02 = #{code02};-->
+
+insert into swc_code(compNo, code02, code03, desc03, value03, attrib)
+select  #{compNo}, max(code02), (select concat("LOC",max(substring(b.code03,4))+1) from swc_code a  inner join swc_code b on a.code02 = b.code02 where a.code01 = #{code01}) as code03 , 
+#{desc03}, (select concat("LOC",max(substring(b.code03,4))+1) from swc_code a  inner join swc_code b on a.code02 = b.code02 where a.code01 = #{code01}) as value03, 
 "10001"  from swc_code where code02 = #{code02};
 
  
