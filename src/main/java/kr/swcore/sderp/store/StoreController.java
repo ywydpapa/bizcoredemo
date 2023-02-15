@@ -7,6 +7,7 @@ import kr.swcore.sderp.store.dto.StoreDTO;
 import kr.swcore.sderp.store.dto.StoreInoutDTO;
 import kr.swcore.sderp.store.service.StoreInoutService;
 import kr.swcore.sderp.store.service.StoreService;
+import kr.swcore.sderp.user.dto.UserDTO;
 
 import org.apache.ibatis.session.SqlSession;
 import org.json.simple.JSONArray;
@@ -175,5 +176,26 @@ public class StoreController {
 
 		return ResponseEntity.ok(param);
 	}
+	
+	
+	
+	@RequestMapping("/inOutList.do")
+	public ModelAndView storeInOutList(HttpSession session, StoreInoutDTO dto, ModelAndView mav) {
+		String compNo = (String) session.getAttribute("compNo");
+		dto.setCompNo(Integer.valueOf(compNo));
+		mav.addObject("list1", codeService.listCode01(session));
+		mav.addObject("list2", codeService.listCode02(session));
+		mav.addObject("list3", codeService.listCode03(session));
+		mav.addObject("inOutAllList", storeInoutService.getAllList(session, dto));
+		mav.setViewName("store/inoutList");
+		return mav;
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }

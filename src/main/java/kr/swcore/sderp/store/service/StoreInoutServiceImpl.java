@@ -54,6 +54,12 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	
 	}
 
+	@Override
+	public List<StoreInoutDTO> getAllList(HttpSession session, StoreInoutDTO dto) {
+		return storeInoutDao.getAllList(dto);
+	
+	}
+
     
 
 	

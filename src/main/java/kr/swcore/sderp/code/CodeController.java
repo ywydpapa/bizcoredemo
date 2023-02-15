@@ -198,4 +198,36 @@ public class CodeController {
 		return mav;
 	}
 	
+	// 재고 관련한 코드 컨트롤러 
+	@RequestMapping("writeLoc.do")
+	public ModelAndView writeLoc(HttpSession session,CodeDTO dto, ModelAndView mav) {
+		String compNo = (String) session.getAttribute("compNo");
+		dto.setCompNo(Integer.valueOf(compNo));
+		dto.setCode01("LOCT01");
+		mav.setViewName("store/location");
+		mav.addObject("listLoc", codeService.listLoc(dto));
+		return mav;
+	}
+	
+	@RequestMapping("codeAutoInsert.do")
+	public ResponseEntity<?> codAutoInsert(HttpSession session,CodeDTO dto) {
+		Map<String, Object> param = new HashMap<>();
+		String compNo = (String) session.getAttribute("compNo");
+		dto.setCompNo(Integer.valueOf(compNo));
+		dto.setCode01("LOCT01");
+		int codeAuto = 0;
+		if(dto.getCode02() != null){
+			codeAuto = codeService.autoInsert3(dto);
+		}
+		else {
+		codeAuto =  codeService.autoInsert(dto);
+		}
+		if (codeAuto >0) {
+			param.put("code","10001"); 
+		}
+		else {param.put("code","20001");
+		}
+		return ResponseEntity.ok(param);
+	}
+	
 }

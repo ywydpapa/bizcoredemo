@@ -16,5 +16,7 @@ public interface StoreInoutDAO {
 
 	List<StoreInoutDTO> getInoutStoreList(int prodcutNo);
 
+	List<StoreInoutDTO> getAllList(StoreInoutDTO dto);
+
 
 }

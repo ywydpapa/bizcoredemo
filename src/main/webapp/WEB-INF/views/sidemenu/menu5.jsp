@@ -21,7 +21,7 @@
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/store/listStore.do' || path2 eq '/store/writeStore.do' || path2 eq '/store/detail.do'}">pcoded-trigger</c:if>">
+                                <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/store/inOutList.do' ||path2 eq '/store/listStore.do' || path2 eq '/store/writeStore.do' || path2 eq '/store/detail.do' || path2 eq '/store/writeInout.do'}">pcoded-trigger</c:if>">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="icon-calculator"></i></span>
                                         <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">재고 등록</span>
@@ -45,7 +45,21 @@
                                          <li class="pcoded-hasmenu">
                                             <a href="${path}/store/writeInout.do">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">입출고 등록</span>
+                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">입출고 등록</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                         <li class="pcoded-hasmenu">
+                                            <a href="${path}/store/inOutList.do">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">입출고 내역</span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                         <li class="pcoded-hasmenu">
+                                            <a href="${path}/code/writeLoc.do">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-24">위치 등록</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
@@ -55,9 +69,9 @@
                          
                          <div class="pcoded-navigatio-lavel" data-i18n="nav.category.other">설정</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu ">
+                                <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/cust/list.do' || path2 eq '/product/list.do'}">pcoded-trigger</c:if>  ">
                                     <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="ti-settings"></i><b>M</b></span>
+                                        <span class="pcoded-micon"><i class="ti-settings"></i></span>
                                         <span class="pcoded-mtext" data-i18n="nav.menu-levels.main">설정</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
@@ -69,7 +83,7 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                        <li class="pcoded-hasmenu">
+                                        <li class="pcoded-hasmenu" >
                                             <a href="${path}/product/list.do">
                                                 <span class="pcoded-micon"><i class="ti-direction-alt"></i></span>
                                                 <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">상품설정</span>
@@ -89,7 +103,7 @@
 	              						<span class="pcoded-micon">
          								<i class="ti-angle-right"></i>
             							</span>
-                                        <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-21">기초코드 설정</span>
+                                        <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-23">기초코드 설정</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>

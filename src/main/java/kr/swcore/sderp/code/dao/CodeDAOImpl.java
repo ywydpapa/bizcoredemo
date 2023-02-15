@@ -273,4 +273,20 @@ public class CodeDAOImpl implements CodeDAO {
 	public List<CodeDTO> listAreaType(int compNo) {
 		return sqlSession.selectList("code.listAreaType", compNo);
 	}
+
+	@Override
+	public List<CodeDTO> listLoc(CodeDTO dto) {
+		return sqlSession.selectList("code.listLoc", dto);
+	}
+
+	@Override
+	public int autoInsert(CodeDTO dto) {
+		return sqlSession.insert("code.autoInsert", dto);
+	}
+
+	@Override
+	public int autoInsert3(CodeDTO dto) {
+		return sqlSession.insert("code.autoInsert3", dto);
+		
+	}
 }

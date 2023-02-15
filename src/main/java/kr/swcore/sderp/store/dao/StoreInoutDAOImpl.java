@@ -49,6 +49,12 @@ public class StoreInoutDAOImpl implements StoreInoutDAO{
 		  return sqlSession.selectList("storeInout.inoutList", prodcutNo);
 	}
 
+	@Override
+	public List<StoreInoutDTO> getAllList(StoreInoutDTO dto) {
+		 return sqlSession.selectList("storeInout.inoutAllList", dto);
+	
+	}
+
 	
 	}
 

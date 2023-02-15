@@ -18,6 +18,8 @@ public interface StoreInoutService {
 
 	List<StoreInoutDTO> getInoutStoreList(int prodcutNo);
 
+	List<StoreInoutDTO> getAllList(HttpSession session, StoreInoutDTO dto);
+
 
 }
  

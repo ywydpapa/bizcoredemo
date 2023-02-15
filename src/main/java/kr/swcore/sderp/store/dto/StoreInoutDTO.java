@@ -19,12 +19,14 @@ public class StoreInoutDTO {
     private String regDate;
     private String modDate;
     private String attrib;
+    private int compNo;
     
     
     /* 23-02-14 Ãß°¡ */ 
     private int productNo;
     private String productName;
     private String serialNo;
+    
     
     
     
