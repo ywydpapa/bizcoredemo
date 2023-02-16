@@ -18,6 +18,10 @@ public interface StoreService {
 
 	List<StoreDTO> storeList(HttpSession session, StoreDTO dto);
 
+	int insertStore2(HttpSession session, StoreDTO storeDto);
+
+	int getLastStoreNo(HttpSession session, StoreDTO storeDto);
+
 
 }
  

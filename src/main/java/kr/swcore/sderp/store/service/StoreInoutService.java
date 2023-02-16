@@ -12,7 +12,7 @@ public interface StoreInoutService {
 
     List<StoreInoutDTO> storeDetail(int prodcutNo);
 
-	int updateStore(HttpSession session, StoreInoutDTO dto);
+	int updateInoutStore(HttpSession session, StoreInoutDTO dto);
 
 	int deleteStore(HttpSession session, StoreInoutDTO dto);
 

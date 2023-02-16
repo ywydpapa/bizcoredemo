@@ -18,5 +18,7 @@ public interface StoreInoutDAO {
 
 	List<StoreInoutDTO> getAllList(StoreInoutDTO dto);
 
+	int updateInout(StoreInoutDTO dto);
+
 
 }

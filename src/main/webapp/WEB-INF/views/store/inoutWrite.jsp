@@ -44,7 +44,12 @@ tr.shown td.details-control {
 				</div>
 			</div>
 		</div>
+		
 	</div>
+	<div style="margin:10px 0"><select id="storeType" class="form-control form-control-sm" style="width: 80px;" onchange="inoutChange(this)">
+		<option value="IN">입고</option>
+		<option value="OUT">출고</option>
+									</select></div>
 	<!--Page-header end 페이지 타이틀 -->
 
 	<div class="cnt_wr">
@@ -55,8 +60,7 @@ tr.shown td.details-control {
 						<table class="table table-sm bst02">
 							<colgroup>
 								<col width="20%" />
-								<col width="30%" />
-								<col width="5%" />
+								<col width="35%" />
 								<col width="5%" />
 								<col width="15%" />
 								<col width="25%" />
@@ -65,13 +69,13 @@ tr.shown td.details-control {
 							<tbody>
 								<tr>
 									<th class="text-center">상품명</th>
-									<th class="text-center">재고 선택</th>
-									<th class="text-center">입출고 구분</th>
+									<th class="text-center">시리얼 번호</th>
 									<th class="text-center">수량</th>
 									<th class="text-center">위치</th>
 									<th class="text-center">비고</th>
 									<td class="text-center" rowspan="2" colspan="1">
-									<button id="data01Addbtn" class="btn btn-success btn-sm" onclick="inoutTablePlus()">추가</button>
+										<button id="data01Addbtn" class="btn btn-success btn-sm"
+											onclick="inoutTablePlus()">추가</button>
 									</td>
 								</tr>
 								<tr>
@@ -158,37 +162,34 @@ tr.shown td.details-control {
 													</div>
 												</div>
 											</div>
-										</div>
-										</td>
-									<td>
-										<select id="storeNo" class="form-control form-control-sm" style="min-width: 80px;">
-										<option></option>
-										<c:forEach var='row' items='${storeList}'>
-												<option class="storeOptions"  value='${row.productNo}-${row.storeNo}' style="display:none;">재고번호 :${row.storeNo}, 시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
+										</div></td>
+
+
+									<td><input type="text" class="form-control form-control-sm" id="inSerialNo"></input> 
+										<select id="outStoreNo" class="form-control form-control-sm" style="min-width: 80px; display: none">
+											<option></option>
+											<c:forEach var='row' items='${storeList}'>
+												<option class="storeOptions"
+													value='${row.productNo}-${row.storeNo}'
+													style="display: none;">재고번호 :${row.storeNo},
+													시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
 											</c:forEach>
-										</select>
-										</td>
-									<td><select id="storeType"
-										class="form-control form-control-sm" style="min-width: 80px;">
-											<option value="IN">입고</option>
-											<option value="OUT">출고</option>
 									</select></td>
 									<td><input type="text" id="storeQty"
 										class="form-control form-control-sm" value="1"
 										style="min-width: 80px; text-align: right;"
 										onkeyup="setNum(this)"></td>
 									<td>
-										<!-- loct02 셀렉트 --> 
-										<select   onchange="setlist3Options(this)" id="storeLoc1">
+										<!-- loct02 셀렉트 -->
+										<div class="inLocationSelect"> <select onchange="setlist3Options(this)"
+										id="storeLoc1">
 											<option></option>
 											<c:forEach var="list2" items="${list2}">
 												<c:if test="${list2.code01 eq 'LOCT01'}">
 													<option value="${list2.code02}">${list2.desc02}</option>
 												</c:if>
 											</c:forEach>
-									</select> 
-									<!-- loct03 셀렉트 --> 
-									<select  id="storeLoc2">
+									</select> <!-- loct03 셀렉트 --> <select id="storeLoc2">
 											<option></option>
 											<c:forEach var="list3" items="${list3}">
 												<c:forEach var="list2" items="${list2}">
@@ -199,11 +200,46 @@ tr.shown td.details-control {
 													</c:if>
 												</c:forEach>
 											</c:forEach>
-									</select>
-										
-										
-										
-										</td>
+									</select></div>
+
+										<div class="input-group input-group-sm mb-0 outLocationSelect" style="display:none;">
+											<input type="text" class="form-control" name="custName"
+												id="custName" value="" readonly> <input
+												type="hidden" name="custNo" id="custNo" value="" /> <span
+												class="input-group-btn">
+												<button class="btn btn-primary sch-company"
+													data-remote="${path}/modal/popup.do?popId=cust"
+													type="button" data-toggle="modal" data-target="#custModal">
+													<i class="icofont icofont-search"></i>
+												</button>
+											</span>
+											<div class="modal fade " id="custModal" tabindex="-1"
+												role="dialog">
+												<div class="modal-dialog modal-80size" role="document">
+													<div class="modal-content modal-80size">
+														<div class="modal-header">
+															<h4 class="modal-title">출고 위치</h4>
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<h5>위치목록</h5>
+															<p>Loading!!!</p>
+														</div>
+														<div class="modal-footer">
+															<button type="button"
+																class="btn btn-default waves-effect "
+																data-dismiss="modal">Close</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</td>
+
+
 									<td><input type="text" id="comment"
 										class="form-control form-control-sm" style="min-width: 80px;"></input></td>
 								</tr>
@@ -296,8 +332,8 @@ tr.shown td.details-control {
 						$(list3List[i]).show();
 					}
 				}
-			}else {
-				obj.nextElementSibling.value="";
+			} else {
+				obj.nextElementSibling.value = "";
 			}
 		}
 
@@ -627,9 +663,11 @@ tr.shown td.details-control {
 			let option = $(".storeOptions");
 			$("#storeNo").val("")
 			$(".storeOptions").hide();
-			for(let i = 0 ; i < option.length; i ++) { if(option[i].value.split("-")[0] == a) option[i].setAttribute("style", "display:inline");
-            }
-			
+			for (let i = 0; i < option.length; i++) {
+				if (option[i].value.split("-")[0] == a)
+					option[i].setAttribute("style", "display:inline");
+			}
+
 		}
 
 		function setNum(obj) {
@@ -638,34 +676,47 @@ tr.shown td.details-control {
 		}
 
 		function inoutTablePlus() {
-			let productName, storeNo, storeType, storeQty,location, locationNo, comment, locationName; 
+			let productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, productNo;
 			productName = $("#data02Title").val();
-			storeNo = $("#storeNo").val();
-			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
+			productNo = $("#productNo").val();
 			storeQty = $("#storeQty").val();
-			location = $("#storeLoc2").val();
-			if (location == "") {
+			
+			
+			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
+			// 입고인 경우 재고 번호와 위치번호 
+			if(storeType == "입고") {
+				storeNo = $("#inSerialNo").val();
+			    location = $("#storeLoc2").val();
+			    if (location == "") {
 				locationNo = "";
 				locationName = "";
 			} else {
 				locationNo = location.split("^")[0];
 				locationName = location.split("^")[1];
 			}
+			// 출고인 경우 재고 번호와 거래처 번호 
+			} else {
+			   storeNo = $("#outStoreNo").val();
+			   locationNo = $("#custNo").val(); 
+			   locationName = $("#custName").val(); 
+			} 
+			
 			comment = $("#comment").val();
 
 			if (productName == "") {
 				alert("상품명을 선택하세요");
-			} else if (storeNo == "") {
+			} else if (storeType == "출고" && storeNo == "") {
 				alert("재고 종류를 선택하세요");
 			} else if (storeQty <= 0) {
 				alert("입/출고 수량을 1개 이상으로 설정하세요");
 			} else {
 				let html = "";
 				html += "<td>" + storeType + "</td>";
-				html += "<td>" + productName + "</td>";
-				html += "<td>" + storeNo + "</td>";
+				html += "<td data-no='"+productNo+"''>" + productName + "</td>";
+				html += "<td>" + storeNo + "</td>";	
 				html += "<td>" + storeQty + "</td>";
-				html += "<td data-no='"+locationNo+"'>" + locationName + "</td>";
+				html += "<td data-no='"+locationNo+"'>" + locationName
+						+ "</td>";
 				html += "<td>" + comment + "</td>";
 				html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
 				let target;
@@ -694,8 +745,9 @@ tr.shown td.details-control {
 			for (let i = 1; i < $(".itemIn").length; i++) {
 				eachData = {};
 				eachData.inoutType = "IN";
+				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML.split("-")[1]*1
+				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML;
 				eachData.locationNo = $(".itemIn")[i].children[4].dataset.no;
 				eachData.comment = $(".itemIn")[i].children[5].innerHTML;
 				storeDatas.push(eachData);
@@ -704,8 +756,9 @@ tr.shown td.details-control {
 			for (let i = 1; i < $(".itemOut").length; i++) {
 				eachData = {};
 				eachData.inoutType = "OUT"
+					eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("-")[1]*1;
+				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("-")[1];
 				eachData.locationNo = $(".itemOut")[i].children[4].dataset.no;
 				eachData.comment = $(".itemOut")[i].children[5].innerHTML;
 				storeDatas.push(eachData);
@@ -733,6 +786,29 @@ tr.shown td.details-control {
 			});
 
 		}
+		
+		
+		
+		// 입고 출고 셀렉트 온체인지 이벤트 
+		
+		function inoutChange(obj){
+			if(obj.value =="IN") {
+				$("#inSerialNo").show();
+				$("#outStoreNo").hide();
+				$(".inLocationSelect").show();	
+				$(".outLocationSelect").hide();
+			} else {
+				$(".inLocationSelect").hide();
+				$(".outLocationSelect").show();
+				$("#inSerialNo").hide();
+				$("#outStoreNo").show();
+			}
+			
+		} 
+		
+		
+		
+		
 		
 		
 	</script>

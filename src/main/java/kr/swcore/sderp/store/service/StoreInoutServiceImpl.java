@@ -37,9 +37,8 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	}
 
 	@Override
-	public int updateStore(HttpSession session, StoreInoutDTO dto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateInoutStore(HttpSession session, StoreInoutDTO dto) {
+		return storeInoutDao.updateInout(dto);
 	}
 
 	@Override

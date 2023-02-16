@@ -38,6 +38,7 @@
 	    <typeAlias alias="allimDto" type="kr.swcore.sderp.allim.dto.AllimDTO"/>
 		<typeAlias alias="misDto" type="kr.swcore.sderp.mis.dto.MisDTO"/>
 		<typeAlias alias="storeDto" type="kr.swcore.sderp.store.dto.StoreDTO"/>
+		<typeAlias alias="storeInoutDto" type="kr.swcore.sderp.store.dto.StoreInoutDTO"/>
     </typeAliases>
  
 </configuration>

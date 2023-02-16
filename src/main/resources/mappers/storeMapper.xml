@@ -4,61 +4,99 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="store">
 
-<!-- 상품으로 조회시  -->
-<select id="listStore" resultType="storeDto">
- 	<!--  select * from swc_store where compNo = #{compNo} and attrib not like 'XXX%'-->
- 	<!-- 23/02/09 수정 사항  -->
- 	<!--  select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not like 'XXX%' order by a.storeNo desc;-->
-    <!-- 23.02.13 수정사항 -->
-    select a.productNo ,  sum(a.storeQty) as storeQty, b.productName  from swc_store a  left join  swc_product b on a.productNo = b.productNo group by productNo ;
-</select> 
+	<!-- 상품으로 조회시 -->
+	<select id="listStore" resultType="storeDto">
+		<!-- select * from swc_store where compNo = #{compNo} and attrib not like 
+			'XXX%' -->
+		<!-- 23/02/09 수정 사항 -->
+		<!-- select a.*, b.productName from swc_store a left join swc_product b 
+			on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not 
+			like 'XXX%' order by a.storeNo desc; -->
+		<!-- 23.02.13 수정사항 -->
+		<!-- select a.productNo , sum(a.storeQty) as storeQty, b.productName, b.custNo, 
+			b.productCategoryNo, b.productCategoryName from swc_store a left join swc_product 
+			b on a.productNo = b.productNo group by productNo ; -->
+		select a.productNo , sum(a.storeQty) as storeQty, b.productName,
+		b.custNo, b.productCategoryNo, b.productCategoryName, c.custName from
+		swc_store a
+		left join swc_product b on a.productNo = b.productNo
+		left join swc_cust c on b.custNo = c.custNo
+		group by productNo ;
+	</select>
 
-<select id="storeList" resultType="storeDto" >
+	<select id="storeList" resultType="storeDto">
 
-select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not like 'XXX%';
+		select a.*, b.productName from swc_store a left join swc_product b on
+		a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not
+		like 'XXX%';
 
- </select>
+	</select>
 
 
-<select id="detailStore" resultType="storeDto">
+	<select id="detailStore" resultType="storeDto">
 
-<!-- select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.storeNo = #{storeNo} and a.attrib not like 'XXX%'; -->
-<!-- 23/02/13 수정  -->
-select a.*, b.productName from swc_store a  left join  swc_product b on a.productNo = b.productNo where a.productNo = #{productNo} and a.attrib not like 'XXX%';
+		<!-- select a.*, b.productName from swc_store a left join swc_product b 
+			on a.productNo = b.productNo where a.storeNo = #{storeNo} and a.attrib not 
+			like 'XXX%'; -->
+		<!-- 23/02/13 수정 -->
+		select a.*, b.productName from swc_store a left join swc_product b on
+		a.productNo = b.productNo where a.productNo = #{productNo} and
+		a.attrib not like 'XXX%';
 
-</select>
- 
-<insert id="insertStore">
-	 insert into swc_store (compNo,productNo,serialNo,storeType,storeQty,storeAmount,locationNo,userNo,storeUnit,comment,regDate,attrib)
-     values (#{compNo},#{productNo},#{serialNo},#{storeType},#{storeQty},#{storeAmount},#{locationNo},#{userNo},#{storeUnit},#{comment},now(),'10000')
-</insert>
+	</select>
 
-<update id="updateStore">
+	<insert id="insertStore">
+		insert into swc_store
+		(compNo,productNo,serialNo,storeType,storeQty,storeAmount,locationNo,userNo,storeUnit,comment,regDate,attrib)
+		values
+		(#{compNo},#{productNo},#{serialNo},#{storeType},#{storeQty},#{storeAmount},#{locationNo},#{userNo},#{storeUnit},#{comment},now(),'10000')
+	</insert>
 
-update swc_store set 
-serialNo = #{serialNo}, 
-storeType = #{storeType}, 
-storeQty = #{storeQty}, 
-storeAmount=#{storeAmount}, 
-locationNo = #{locationNo}, 
-storeUnit =#{storeUnit} , 
-comment = #{comment},
-modDate = now()
-where storeNo=#{storeNo}
+	<update id="updateStore">
+		update swc_store set
+		serialNo = #{serialNo},
+		storeType = #{storeType},
+		storeQty = #{storeQty},
+		storeAmount=#{storeAmount},
+		locationNo = #{locationNo},
+		storeUnit =#{storeUnit} ,
+		comment = #{comment},
+		modDate = now()
+		where storeNo=#{storeNo}
+	</update>
 
-</update>
- 
-<delete id="deleteStore">
-	update swc_store set attrib = 'XXXXX', modDate = now() where storeNo=#{storeNo};
-</delete>
+	<delete id="deleteStore">
+		update swc_store set attrib = 'XXXXX', modDate = now() where
+		storeNo=#{storeNo};
+	</delete>
 
-<insert id="insertInoutStore"> 
-insert into swc_store_inout (inoutType, inoutQty, storeNo,locationNo, comment ,regDate,attrib)
-     values (#{inoutType},#{inoutQty},#{storeNo},#{locationNo},#{comment},now(),'10000');
-</insert> 
+	<insert id="insertInoutStore">
+		insert into swc_store_inout (inoutType, inoutQty, storeNo,locationNo,
+		comment ,regDate,attrib)
+		values
+		(#{inoutType},#{inoutQty},#{storeNo},#{locationNo},#{comment},now(),'10000');
+	</insert>
 
-<update id="plusStoreQty" > 
-update swc_store set storeQty = storeQty + #{storeQty} where storeNo = #{storeNo}</update>
+	<update id="plusStoreQty">
+		update swc_store set storeQty = storeQty + #{storeQty} where storeNo =
+		#{storeNo}
+	</update>
 
+
+	<update id="setModQty">
+		update swc_store set storeQty = (storeQty + #{storeQty}) where storeNo = #{storNo}
+	</update>
+	
+
+<!--  2월 16일 수정사항 반영=================================================================================================== -->
+   <insert id = "insertStore2">Insert into swc_store (compNo,productNo,serialNo,storeQty,storeAmount,locationNo,userNo,comment,regDate,attrib)
+	values
+	(#{compNo},#{productNo},#{serialNo},0,#{storeAmount},#{locationNo},#{userNo},#{comment},now(),'10000')</insert>
+	
+	<select id ="getLastStoreNo" resultType="Integer">
+	
+	select max(storeNo) from swc_store where compNo = #{compNo} and productNo = #{productNo} and serialNo =#{serialNo} and  storeAmount = #{storeAmount}
+and locationNo =#{locationNo} and userNo = #{userNo} ; 
+	</select>
 
 </mapper>

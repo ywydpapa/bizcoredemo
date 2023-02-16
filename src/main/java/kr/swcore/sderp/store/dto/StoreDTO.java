@@ -26,6 +26,10 @@ public class StoreDTO {
     private String serialNo;
     /* 23-02-09 Ãß°¡ÇÔ */  
     private String productName;
+    private int custNo;
+    private String custName;
+    private String productCategoryNo; 
+    private String productCategoryName; 
     
     public StoreDTO(){
         super();

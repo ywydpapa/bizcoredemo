@@ -66,6 +66,7 @@
 									<th class="text-center">입고</th>
 									<th class="text-center">출고</th>
 									<th class="text-center">비고</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -86,33 +87,42 @@
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="list2" items="${list2}">
-												<c:if test="${fn:split(item.locationNo,'-')[1] eq list2.code02}">
-												<td>${list2.desc02}-<c:forEach var="list3" items="${list3}">
-												<c:if test="${fn:split(item.locationNo,'-')[2] eq list3.code03}">
-												${list3.desc03} 
-												</c:if>
-											    </c:forEach>
-												</td>
+													<c:if
+														test="${fn:split(item.locationNo,'-')[1] eq list2.code02}">
+														<td>${list2.desc02}-<c:forEach var="list3"
+																items="${list3}">
+																<c:if test="${fn:split(item.locationNo,'-')[2] eq list3.code03}"> ${list3.desc03}</c:if>
+															</c:forEach>
+														</td>
 													</c:if>
 												</c:forEach>
 											</c:otherwise>
 										</c:choose>
 										<c:choose>
 											<c:when test="${item.inoutType eq 'IN'}">
-												<td style="text-align: right">${item.inoutQty}</td>
-												<td></td>
+												<td><input placeholder="${item.inoutQty}"
+													style="text-align: right"
+													onkeyup="$(this).prop('style','color:red;text-align:right;font-size:bolder;')"
+													type="text" value="${item.inoutQty}" class="inoutQty"></input></td>
+												<td><input style="text-align: right" type="text"
+													value="0" disabled></input></td>
 											</c:when>
 											<c:otherwise>
-												<td></td>
-												<td style="text-align: right">${item.inoutQty}</td>
+												<td><input style="text-align: right" type="text"
+													value="0" disabled></input></td>
+												<td><input placeholder="${item.inoutQty}"
+													style="text-align: right" type="text"
+													value="${item.inoutQty}" class="inoutQty"></input></td>
 											</c:otherwise>
 										</c:choose>
 
 										<td>${item.comment}</td>
+										<td><button data-inoutno="${item.inoutNo}" onclick="doChange(this)">수정</button></td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
+
 					</div>
 				</div>
 			</div>
@@ -120,5 +130,40 @@
 	</div>
 </div>
 
+<script>
 
+	function doChange(obj,storeNo) {
+	
+		let inoutQty, storeNo, inoutNo; 
+		
+		inoutNo = obj.getAttribute("data-inoutNo");
+		
+		let inoutData = {}; 
+		inoutData.inoutNo = inoutNo;
+		inoutData.storeNo = "${item.storeNo}";
+		inoutData.inoutQty = inoutQty;
+		
+		
+		/*$.ajax({
+			url : "${path}/store/inOutUpate.do",
+			data : inoutData,
+			method : "POST",
+			dataType : "json"
+		}).done(function(data) {
+			if (data.code == 10001) {
+				alert("수정 성공");
+				var url = '${path}/store/inOutList.do';
+				location.href = url;
+			} else {
+				alert("수정 실패");
+			}
+		}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+		.fail(function(xhr, status, errorThrown) {
+			alert("통신 실패");
+		});*/
+		
+		
+		
+	}
+</script>
 <jsp:include page="../body-bottom.jsp" />

@@ -44,4 +44,18 @@ public class StoreDAOImpl implements StoreDAO{
 		 return sqlSession.selectList("store.storeList", dto);
 		
 	}
+	
+	
+	//////// 수정코드 =================================================================
+
+	@Override
+	public int insertStore2(StoreDTO storeDto) {
+		 return sqlSession.insert("store.insertStore2", storeDto);
+			
+	}
+
+	@Override
+	public int getLastStoreNo(StoreDTO storeDto) {
+		 return sqlSession.selectOne("store.getLastStoreNo", storeDto);
+	}
 }

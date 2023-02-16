@@ -24,7 +24,7 @@
                                 <li class="pcoded-hasmenu pcoded <c:if test="${path2 eq '/store/inOutList.do' ||path2 eq '/store/listStore.do' || path2 eq '/store/writeStore.do' || path2 eq '/store/detail.do' || path2 eq '/store/writeInout.do'}">pcoded-trigger</c:if>">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="icon-calculator"></i></span>
-                                        <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">재고 등록</span>
+                                        <span class="pcoded-mtext"  data-i18n="nav.basic-components.main">재고 관리</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
@@ -35,13 +35,13 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                        <li class="pcoded-hasmenu">
+                                        <!--  <li class="pcoded-hasmenu">
                                             <a href="${path}/store/writeStore.do">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">재고 등록</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
-                                        </li>
+                                        </li>-->
                                          <li class="pcoded-hasmenu">
                                             <a href="${path}/store/writeInout.do">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>

@@ -9,10 +9,10 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Repository
-public class StoreInoutDAOImpl implements StoreInoutDAO{
+public class StoreInoutDAOImpl implements StoreInoutDAO {
 
-    @Inject
-    SqlSession sqlSession;
+	@Inject
+	SqlSession sqlSession;
 
 	@Override
 	public List<StoreInoutDTO> listStore(StoreInoutDTO dto) {
@@ -22,14 +22,8 @@ public class StoreInoutDAOImpl implements StoreInoutDAO{
 
 	@Override
 	public int insertInoutStore(StoreInoutDTO dto) {
-    return sqlSession.insert("store.insertInoutStore", dto);
-		
-	}
+		return sqlSession.insert("store.insertInoutStore", dto);
 
-	@Override
-	public int updateStore(StoreInoutDTO dto) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
@@ -46,15 +40,25 @@ public class StoreInoutDAOImpl implements StoreInoutDAO{
 
 	@Override
 	public List<StoreInoutDTO> getInoutStoreList(int prodcutNo) {
-		  return sqlSession.selectList("storeInout.inoutList", prodcutNo);
+		return sqlSession.selectList("storeInout.inoutList", prodcutNo);
 	}
 
 	@Override
 	public List<StoreInoutDTO> getAllList(StoreInoutDTO dto) {
-		 return sqlSession.selectList("storeInout.inoutAllList", dto);
-	
+		return sqlSession.selectList("storeInout.inoutAllList", dto);
+
 	}
 
-	
+	@Override
+	public int updateInout(StoreInoutDTO dto) {
+		return sqlSession.update("storeInout.updateInout", dto);
+
 	}
 
+	@Override
+	public int updateStore(StoreInoutDTO dto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}

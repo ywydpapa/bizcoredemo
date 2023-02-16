@@ -16,6 +16,10 @@ public interface StoreDAO {
 
 	List<StoreDTO> getStoreList(StoreDTO dto);
 
+	int insertStore2(StoreDTO storeDto);
+
+	int getLastStoreNo(StoreDTO storeDto);
+
 
 
 }
