@@ -185,7 +185,7 @@ public class StoreController {
 					logger.error("check last StoreNo : " + lastStoreNo);
 					if(lastStoreNo != -1) {
 						dto.setStoreNo(lastStoreNo);
-						storeInoutInsert = storeInoutService.insertInoutStore(dto);
+						storeInoutInsert = storeInoutService.insertInoutStore(session,dto);
 						storeDto.setStoreQty(json.getInt("inoutQty"));
 						storeDto.setStoreNo(lastStoreNo);
 					}
@@ -195,7 +195,7 @@ public class StoreController {
 				}
 				
 			} else {
-				storeInoutInsert = storeInoutService.insertInoutStore(dto);
+				storeInoutInsert = storeInoutService.insertInoutStore(session,dto);
 				storeDto.setStoreQty(json.getInt("inoutQty") * -1);
 				storeDto.setStoreNo(dto.getStoreNo());
 			}

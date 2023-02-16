@@ -23,7 +23,6 @@ public class StoreServiceImpl implements StoreService{
         return storeDao.listStore(dto);
     }
     
-    
 
     @Override
     public int insertStore(HttpSession session, StoreDTO dto) {
@@ -62,7 +61,7 @@ public class StoreServiceImpl implements StoreService{
 	
 	
 	
-	// ¼öÁ¤ ÈÄ ÄÚµå =============================================================================================================== 
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Úµï¿½ =============================================================================================================== 
 	@Override
 	public int insertStore2(HttpSession session, StoreDTO storeDto) {
 		 Integer userNo = SessionInfoGet.getUserNo(session);

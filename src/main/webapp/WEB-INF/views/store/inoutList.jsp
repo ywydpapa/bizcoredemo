@@ -132,7 +132,7 @@
 
 <script>
 
-	function doChange(obj,storeNo) {
+	function doChange(obj) {
 	
 		let inoutQty, storeNo, inoutNo; 
 		

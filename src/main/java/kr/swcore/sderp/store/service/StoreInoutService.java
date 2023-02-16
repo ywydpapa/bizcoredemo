@@ -8,7 +8,7 @@ public interface StoreInoutService {
 
     List<StoreInoutDTO> listStore(HttpSession session,StoreInoutDTO dto);
 
-    int insertInoutStore(StoreInoutDTO dto);
+    int insertInoutStore(HttpSession session,StoreInoutDTO dto);
 
     List<StoreInoutDTO> storeDetail(int prodcutNo);
 

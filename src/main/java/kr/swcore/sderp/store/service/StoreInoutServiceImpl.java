@@ -25,7 +25,9 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	}
 
 	@Override
-	public int insertInoutStore( StoreInoutDTO dto) {
+	public int insertInoutStore(HttpSession session, StoreInoutDTO dto) {
+	    Integer compNo = SessionInfoGet.getCompNo(session);
+        dto.setCompNo(compNo);
 	return storeInoutDao.insertInoutStore(dto);
 	
 	}
