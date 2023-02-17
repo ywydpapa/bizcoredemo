@@ -62,8 +62,9 @@ tr.shown td.details-control {
 								<col width="20%" />
 								<col width="35%" />
 								<col width="5%" />
+									<col width="10%" />
 								<col width="15%" />
-								<col width="25%" />
+								<col width="15%" />
 								<col width="10%" />
 							</colgroup>
 							<tbody>
@@ -71,6 +72,7 @@ tr.shown td.details-control {
 									<th class="text-center">상품명</th>
 									<th class="text-center">시리얼 번호</th>
 									<th class="text-center">수량</th>
+									<th class="text-center">금액</th>
 									<th class="text-center">위치</th>
 									<th class="text-center">비고</th>
 									<td class="text-center" rowspan="2" colspan="1">
@@ -165,7 +167,7 @@ tr.shown td.details-control {
 										</div></td>
 
 
-									<td><input type="text" class="form-control form-control-sm" id="inSerialNo"></input> 
+									<td><input type="text" class="form-control form-control-sm" id="inSerialNo" ></input> 
 										<select id="outStoreNo" class="form-control form-control-sm" style="min-width: 80px; display: none">
 											<option></option>
 											<c:forEach var='row' items='${storeList}'>
@@ -178,24 +180,28 @@ tr.shown td.details-control {
 									<td><input type="text" id="storeQty"
 										class="form-control form-control-sm" value="1"
 										style="min-width: 80px; text-align: right;"
-										onkeyup="setNum(this)"></td>
+										onkeyup="setNum(this)">
+										</td>
+										<td><input type="text" id="storeAmount"
+										class="form-control form-control-sm" value="1"
+										style="min-width: 80px; text-align: right;"
+										onkeyup="setNum(this)">
+										</td>
 									<td>
 										<!-- loct02 셀렉트 -->
 										<div class="inLocationSelect"> <select onchange="setlist3Options(this)"
 										id="storeLoc1">
-											<option></option>
 											<c:forEach var="list2" items="${list2}">
 												<c:if test="${list2.code01 eq 'LOCT01'}">
 													<option value="${list2.code02}">${list2.desc02}</option>
 												</c:if>
 											</c:forEach>
 									</select> <!-- loct03 셀렉트 --> <select id="storeLoc2">
-											<option></option>
 											<c:forEach var="list3" items="${list3}">
 												<c:forEach var="list2" items="${list2}">
 													<c:if
 														test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
-														<option class="list3Options" style="display: none;"
+														<option class="list3Options" <c:if test="${list2.code02 != 'LOC201'}" >style="display: none;"</c:if>
 															value="${list2.code01}-${list3.code02}-${list3.code03}^${list3.desc03}">${list3.desc03}</option>
 													</c:if>
 												</c:forEach>
@@ -252,8 +258,9 @@ tr.shown td.details-control {
 								<col width="20%">
 								<col width="25%">
 								<col width="5%">
-								<col width="20%">
-								<col width="20%">
+								<col width="10%">
+								<col width="20%">	
+								<col width="10%">
 								<col width="5%">
 							</colgroup>
 							<thead>
@@ -262,19 +269,20 @@ tr.shown td.details-control {
 									<th class="text-center">상품명</th>
 									<th class="text-center">시리얼번호</th>
 									<th class="text-center">수량</th>
+									<th class="text-center">금액</th>
 									<th class="text-center">위치</th>
 									<th class="text-center">비고</th>
 									<th class="text-center">삭제</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="itemIn">
-									<td colspan="8"
-										style="text-align: center; background: #80808030;">입고</td>
+								<tr class="itemIn" style="display:none">
+									<!--  <td colspan="8"
+										style="text-align: center; background: #80808030;">입고</td>-->
 								</tr>
-								<tr class="itemOut" style="text-align: right">
-									<td colspan="8"
-										style="text-align: center; background: #80808030;">출고</td>
+								<tr class="itemOut" style="display:none;text-align: right">
+									<!-- <td colspan="8"
+										style="text-align: center; background: #80808030;">출고</td>-->
 								</tr>
 							</tbody>
 						</table>
@@ -426,7 +434,10 @@ tr.shown td.details-control {
 				alert("상품 수량을 1 이상으로 입력하세요");
 			} else if ($("#storeUnit").val() == 0) {
 				alert("재고 단위를 1 이상으로 입력하세요");
-			} else {
+			} else if ( $("#storeType").val() == "IN" &&$("#storeLoc2").val() == "") {
+				alert("상세 위치를 선택하세요")
+				
+			}else {
 				var storeData = {};
 				storeData.productNo = $("#productNo").val() * 1;
 				storeData.serialNo = $("#serialNo").val();
@@ -676,10 +687,11 @@ tr.shown td.details-control {
 		}
 
 		function inoutTablePlus() {
-			let productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, productNo;
+			let productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, storeAmount, productNo;
 			productName = $("#data02Title").val();
 			productNo = $("#productNo").val();
 			storeQty = $("#storeQty").val();
+			storeAmount = $("#storeAmount").val();
 			
 			
 			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
@@ -687,7 +699,7 @@ tr.shown td.details-control {
 			if(storeType == "입고") {
 				storeNo = $("#inSerialNo").val();
 			    location = $("#storeLoc2").val();
-			    if (location == "") {
+		    if (location == "" || location == null) {
 				locationNo = "";
 				locationName = "";
 			} else {
@@ -709,12 +721,19 @@ tr.shown td.details-control {
 				alert("재고 종류를 선택하세요");
 			} else if (storeQty <= 0) {
 				alert("입/출고 수량을 1개 이상으로 설정하세요");
-			} else {
+			} else if (storeType =="입고" && ($("#storeLoc2").val() == "" || $("#storeLoc2").val() == null)) {
+				alert("입고 상세 위치를 선택하세요");
+			} else if (storeType =="출고" &&   ($("#custName").val() == "" ||  $("#custName").val() == null)) {
+				alert("출고 위치를 선택하세요");
+			}
+				
+				else {
 				let html = "";
 				html += "<td>" + storeType + "</td>";
 				html += "<td data-no='"+productNo+"''>" + productName + "</td>";
 				html += "<td>" + storeNo + "</td>";	
 				html += "<td>" + storeQty + "</td>";
+				html += "<td>" + storeAmount + "</td>";
 				html += "<td data-no='"+locationNo+"'>" + locationName
 						+ "</td>";
 				html += "<td>" + comment + "</td>";
@@ -748,19 +767,21 @@ tr.shown td.details-control {
 				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
 				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML;
-				eachData.locationNo = $(".itemIn")[i].children[4].dataset.no;
-				eachData.comment = $(".itemIn")[i].children[5].innerHTML;
+				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML.replaceAll(",","")*1;
+				eachData.locationNo = $(".itemIn")[i].children[5].dataset.no;
+				eachData.comment = $(".itemIn")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
 			}
 
 			for (let i = 1; i < $(".itemOut").length; i++) {
 				eachData = {};
 				eachData.inoutType = "OUT"
-					eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
+				eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
 				eachData.storeNo = $(".itemOut")[i].children[2].innerHTML.split("-")[1];
-				eachData.locationNo = $(".itemOut")[i].children[4].dataset.no;
-				eachData.comment = $(".itemOut")[i].children[5].innerHTML;
+				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML.replaceAll(",","")*1;
+				eachData.locationNo = $(".itemOut")[i].children[5].dataset.no;
+				eachData.comment = $(".itemOut")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
 			}
 
@@ -792,11 +813,14 @@ tr.shown td.details-control {
 		// 입고 출고 셀렉트 온체인지 이벤트 
 		
 		function inoutChange(obj){
+			let inItem =$(".itemIn");
+			let outItem =$(".itemOut");
 			if(obj.value =="IN") {
 				$("#inSerialNo").show();
 				$("#outStoreNo").hide();
 				$(".inLocationSelect").show();	
 				$(".outLocationSelect").hide();
+
 			} else {
 				$(".inLocationSelect").hide();
 				$(".outLocationSelect").show();
@@ -804,10 +828,20 @@ tr.shown td.details-control {
 				$("#outStoreNo").show();
 			}
 			
+			for(let i = 1; i <inItem.length; i ++) {
+				$(inItem[i]).remove(); 
+			}
+			
+			for(let i = 1; i < outItem.length; i ++) {
+				$(outItem[i]).remove(); 
+			}
+
+			
 		} 
 		
 		
 		
+
 		
 		
 		

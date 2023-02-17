@@ -144,11 +144,11 @@ public class CustServiceImpl implements CustService {
 		dto.setCustName(custName);
 
 		if(custMemberName.equals("")) {
-			dto.setCustMname("담당자");		// 담당자 이름
-			dto.setCustMrank("담당");		// 직급
+			dto.setCustMname("�떞�떦�옄");		// �떞�떦�옄 �씠由�
+			dto.setCustMrank("�떞�떦");		// 吏곴툒
 		} else {
 			dto.setCustMname(custMemberName);
-			dto.setCustMrank("담당");
+			dto.setCustMrank("�떞�떦");
 		}
 
 		try {
@@ -227,5 +227,12 @@ public class CustServiceImpl implements CustService {
 	public int tempSelectCustInsert(CustDTO dto) {
 		// TODO Auto-generated method stub
 		return custDao.tempSelectCustInsert(dto);
+	}
+
+	@Override
+	public List<CustDTO> getAllDataList(HttpSession session) {
+		int compNo = SessionInfoGet.getCompNo(session);
+		return custDao.getAllDataList(compNo);
+
 	}
 }

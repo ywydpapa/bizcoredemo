@@ -34,4 +34,5 @@ public interface CustDAO {
 	int insertCust04(CustDTO dto);
 	CustDTO sessionSelectCust(int custCompNo);
 	int tempSelectCustInsert(CustDTO dto);
+	List<CustDTO> getAllDataList(int compNo);
 }

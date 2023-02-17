@@ -166,4 +166,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	order by custNo
 </select>
 
+
+<select id="getAllCustDataList" resultType="custDto">
+select * from swc_cust where attrib not like 'XXX%' and compNo = #{compNo};
+</select>
+
 </mapper>

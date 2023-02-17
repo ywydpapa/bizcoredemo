@@ -190,6 +190,8 @@ tr.shown td.details-control {
 							<div class="table-responsive" style="overflow-x: hidden;">
 								<table class="table table-sm bst02">
 									<colgroup>
+								
+									
 									</colgroup>
 									<thead>
 										<tr>
@@ -201,14 +203,23 @@ tr.shown td.details-control {
 									<tbody>
 										<tr align="center" class="storeList">
 											<td>${dtoList[0].productName}</td>
-											<td>${dtoList[0].storeQty}</td>
+											<td>${total}</td>
 											<td>${dtoList[0].comment}</td>
 										</tr>
 									</tbody>
 								</table>
 								</br>
-								<table id="inoutDataTable" class="table table-sm bst02">
+								<table id="inoutDataTable" class="table table-sm bst02" ">
 									<colgroup>
+									<col width="5%" />
+									<col width="10%" />
+									<col width="20%" />
+									<col width="20%" />
+									<col width="15%" />
+									<col width="5%" />
+									<col width="5%" />
+									<col width="10%" />
+									<col width="10%" />
 									</colgroup>
 									<thead>
 										<tr>
@@ -219,24 +230,54 @@ tr.shown td.details-control {
 											<th class="text-center">위치</th>
 											<th class="text-center">입고수량</th>
 											<th class="text-center">출고 수량</th>
+											<th class="text-center">금액</th>
 											<th class="text-center">비고</th>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach var="row" items="${inoutList}">
-											<tr align="center" class="storeList">
+											<tr align="center" class="storeList" <c:if test="${row.inoutType eq 'OUT'}"> style="background-color:#f6d3cb38;"</c:if>>
 												<c:choose>
 													<c:when test="${row.inoutType eq 'IN'}">
-														<td style="color: blue;">입고</td>
+														<td style="color: blue;font-weight: 600;">입고</td>
 													</c:when>
 													<c:when test="${row.inoutType eq 'OUT'}">
-														<td style="color: red;">출고</td>
+														<td style="color: red;font-weight: 600;">출고</td>
 													</c:when>
 												</c:choose>
 												<td>${row.regDate}</td>
 												<td>${row.productName}</td>
 												<td>${row.storeNo}(${row.serialNo})</td>
-												<td>${row.locationNo}</td>
+									
+												<c:choose>
+												<c:when
+											       test="${(row.locationNo eq '' || row.locationNo eq '-') && row.inoutType eq 'IN'}">
+												<td></td>
+											</c:when>
+											<c:when   test="${row.inoutType eq 'OUT'}">
+											<td><c:forEach var="custList" items="${custDataList}">
+											<c:if test="${row.locationNo eq custList.custNo}">
+												${custList.custName}	
+											</c:if>
+											</c:forEach></td>
+											</c:when>
+													<c:otherwise>
+														<c:forEach var="list2" items="${list2}">
+															<c:if
+																test="${fn:split(row.locationNo,'-')[1] eq list2.code02}">
+																<td>${list2.desc02}- <c:forEach var="list3"
+																		items="${list3}">
+																		<c:if
+																			test="${fn:split(row.locationNo,'-')[2] eq list3.code03}">
+												${list3.desc03} 
+												</c:if>
+																	</c:forEach>
+																</td>
+															</c:if>
+														</c:forEach>
+													</c:otherwise>
+												</c:choose>
+									
 												<c:choose>
 													<c:when test="${row.inoutType eq 'IN'}">
 														<td>${row.inoutQty}</td>
@@ -247,6 +288,7 @@ tr.shown td.details-control {
 														<td>${row.inoutQty}</td>
 													</c:otherwise>
 												</c:choose>
+									<td style="text-align:right;"><fmt:formatNumber value="${row.inoutAmount}" pattern="#,###"/></td>
 												<td>${row.comment}</td>
 											</tr>
 										</c:forEach>

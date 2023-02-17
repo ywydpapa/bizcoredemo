@@ -25,7 +25,7 @@ SELECT (-inoutQty + #{inoutQty}) as inoutQty FROM swc_store_inout  WHERE inoutNo
 </select>
 
 <update id="updateInout">
-UPDATE swc_store_inout SET inoutQty = #{inoutQty} WHERE inoutNo = #{inoutNo};
+UPDATE swc_store_inout SET inoutQty = (inoutQty + #{inoutQty}) WHERE inoutNo = #{inoutNo};
 </update>
 
 </mapper>

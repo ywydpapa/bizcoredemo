@@ -26,6 +26,7 @@ public class StoreInoutDTO {
     private int productNo;
     private String productName;
     private String serialNo;
+    private BigDecimal inoutAmount;
     
     
     
