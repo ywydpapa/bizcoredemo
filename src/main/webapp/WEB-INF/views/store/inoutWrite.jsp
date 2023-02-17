@@ -40,13 +40,17 @@ tr.shown td.details-control {
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
+				
+				
+				
+				
 					<div class="d-inline">입출고 등록</div>
 				</div>
 			</div>
 		</div>
 		
 	</div>
-	<div style="margin:10px 0"><select id="storeType" class="form-control form-control-sm" style="width: 80px;" onchange="inoutChange(this)">
+	<div style="margin:10px 0; display:flex"><h6 class="cont_title" style="line-height: 2.5;margin-right:5px;"><i class="icofont icofont-square-right"></i> 입/출고 선택  :  </h6><select id="storeType" class="form-control form-control-sm" style="width: 80px;" onchange="inoutChange(this)">
 		<option value="IN">입고</option>
 		<option value="OUT">출고</option>
 									</select></div>
