@@ -20,6 +20,8 @@ public interface StoreInoutService {
 
 	List<StoreInoutDTO> getAllList(HttpSession session, StoreInoutDTO dto);
 
+	List<StoreInoutDTO> search(HttpSession session, StoreInoutDTO sdto);
+
 
 }
  

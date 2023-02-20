@@ -28,6 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,13 +249,13 @@ public class StoreController {
 		sdto.setCompNo(Integer.valueOf(compNo));
 		sdto.setStoreNo(idto.getStoreNo()); // 수정할 store 의 수량을 구함
 		// 재고 수량과 입출고 기록에 더해주면 됨
-		
-		if(idto.getInoutType().equals("IN")) {
-		sdto.setStoreQty(idto.getInoutQty());	
+
+		if (idto.getInoutType().equals("IN")) {
+			sdto.setStoreQty(idto.getInoutQty());
 		} else {
-			sdto.setStoreQty(idto.getInoutQty()*-1);	
+			sdto.setStoreQty(idto.getInoutQty() * -1);
 		}
-		
+
 		process1 = sqlSession.update("store.plusStoreQty", sdto);
 
 		if (process1 > 0) {
@@ -265,6 +270,40 @@ public class StoreController {
 
 		}
 		return ResponseEntity.ok(param);
+	}
+
+	@RequestMapping("/inoutSearch")
+	public ModelAndView getSearchResult(@RequestBody String reqeuestBody, ModelAndView mav, HttpSession session)
+			throws SQLException {
+		String data = null, inOutType = null, productName = null, storeNo = null, serialNo = null, locationNo = null,
+				from = null, to = null;
+		data = reqeuestBody;
+		// JSON 문자열 > JSON 오브젝트
+		org.json.JSONObject json = new org.json.JSONObject(data);
+		StoreInoutDTO sdto = new StoreInoutDTO();
+
+		inOutType = json.isNull("inOutType") ? null : json.getString("inOutType");
+		productName = json.isNull("productName") ? null : json.getString("productName");
+		storeNo = json.isNull("storeNo") ? null : json.getString("storeNo");
+		serialNo = json.isNull("serialNo") ? null : json.getString("serialNo");
+		locationNo = json.isNull("locationNo") ? null : json.getString("locationNo");
+		from = json.isNull("from") ? null : json.getString("from");
+		to = json.isNull("to") ? null : json.getString("to");
+
+		sdto.setInoutType(inOutType);
+		sdto.setProductName(productName);
+		if(storeNo != null) {
+			sdto.setStoreNo(Integer.valueOf(storeNo));
+		}
+		sdto.setSerialNo(serialNo);
+		sdto.setRegDate(from);
+
+		mav.addObject("inOutAllList", storeInoutService.search(session, sdto));
+
+		mav.setViewName("store/inoutList");
+
+		return mav;
+
 	}
 
 }

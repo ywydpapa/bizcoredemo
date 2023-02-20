@@ -36,6 +36,68 @@
 	</div>
 	<!--Page-header end 페이지 타이틀 -->
 	<!--재고 리스트  table-->
+	
+					<div class="col-sm-12">
+						<div class="card_box sch_it">
+							<!--row-->
+							<div class="form-group row">
+								<!--구분-->
+								<div class="col-sm-12 col-xl-2">
+									<label class="col-form-label" for="inOutType_Sch">구분</label>
+									<div class="input-group input-group-sm mb-0">
+									<select id="inOutType_Sch" class="form-control">
+									<option></option>
+									<option value="IN">입고</option>
+									<option value="OUT">출고</option>
+									</select>
+									</div>
+								</div>
+								<!--//구분-->
+								<!--상품명-->
+								<div class="col-sm-12 col-xl-2">
+									<label class="col-form-label" for="productName_Sch">상품명</label>
+									<div class="input-group input-group-sm">
+										<input type="text" class="form-control" id="productName_Sch"  >
+										<input type="hidden"  id="productNo" value="">
+									
+									</div>
+								</div>
+								<!--//상품명-->
+								<div class="col-sm-12 col-xl-2">
+									<label class="col-form-label" for="storeNo_Sch">재고번호</label>
+									<div class="input-group input-group-sm mb-0">
+										<input type="text" class="form-control"  id="storeNo_Sch" >
+									</div>
+								</div>
+								<div class="col-sm-12 col-xl-2">
+									<label class="col-form-label" for="serialNo_Sch">시리얼번호</label>
+									<div class="input-group input-group-sm mb-0">
+										<input type="text" class="form-control"id="serialNo_Sch" >
+									</div>
+								</div>
+							</div>
+							<!--//row-->
+							<div class="form-group row">
+							<div class="col-sm-12 col-xl-3">
+									<label class="col-form-label">위치</label>
+									<p class="input_inline mb-0">
+										<input class="form-control form-control-sm col-xl-12" type="text" id="locationNo_Sch"  style="width:100%;">
+									</p>
+								</div>
+								<div class="col-sm-12 col-xl-3">
+									<label class="col-form-label">입출고 일자</label>
+									<p class="input_inline mb-0">
+										<input class="form-control form-control-sm col-xl-6" type="date" max="9999-12-30" id="targetDatefrom_Sch"> ~
+										<input class="form-control form-control-sm col-xl-6" type="date" max="9999-12-31" id="targetDateto_Sch">
+									</p>
+								</div>
+								<!--//등록/수정일-->
+								
+								<div><button onclick="multiSearch()">검색</button></div>
+							</div>
+						</div>
+					</div>
+			</br>
 	<div class="cnt_wr">
 		<div class="row">
 			<div class="col-sm-12">
@@ -218,6 +280,80 @@
 		
 	}
 	
+	
+	function multiSearch(){
+		let inOutType , productName, storeNo, serialNo, locationNo, from , to ; 
+		
+		inOutType =$("#inOutType_Sch").val() ;
+		productName = $("#productName_Sch").val() ;
+		storeNo = $("#storeNo_Sch").val();
+	    serialNo = $("#serialNo_Sch").val();
+	    locationNo = $("#locationNo_Sch").val();
+	    from = $("#targetDatefrom_Sch").val();
+	    to = $("#targetDateto_Sch").val();
+	    
+		
+		let inOutData = {};
+		
+		inOutData.inoutType = inOutType == "" ? null : inOutType; 
+		inOutData.productName = productName == "" ? null : productName; 
+		inOutData.storeNo = storeNo == "" ? null : storeNo; 
+		inOutData.serialNo = serialNo == "" ? null : serialNo; 
+		inOutData.locationNo = locationNo == "" ? null : locationNo; 
+		inOutData.from = from == "" ? null : from; 
+		
+		
+		
+		let param = "?";
+		let paramFirst = true;
+		for (variable in inOutData) {
+			if(inOutData[variable] != null && esinOutDatatData[variable] != 0) {
+				if(paramFirst){
+					param = param + variable + "=" + inOutData[variable];
+					paramFirst = false;
+				} else {
+					param = param + "&" + variable + "=" + inOutData[variable];
+				}
+			}
+		}
+
+		if(param == "?"){
+			param = "";
+		}
+		
+		localStorage.setItem("custNo", estData.custNo);
+		localStorage.setItem("custName", $("#custName").val());
+		localStorage.setItem("userName", estData.userName);
+
+		
+		
+	} 
+	
+	
+	function fnListcon() {
+		var estData = {};
+		estData.custNo = $("#custNo").val() ? Number($("#custNo").val()) : 0;
+		estData.userName = $("#userName").val() ? $("#userName").val() : null;
+		var param = "?";
+		var paramFirst = true;
+		for (variable in estData) {
+			console.log("key: " + variable + ", value: " + estData[variable]);
+			if(estData[variable] != null && estData[variable] != 0) {
+				if(paramFirst){
+					param = param + variable + "=" + estData[variable];
+					paramFirst = false;
+				} else {
+					param = param + "&" + variable + "=" + estData[variable];
+				}
+			}
+		}
+
+		if(param == "?"){
+			param = "";
+		}
+		
+	
+	}
 	
 	
 	

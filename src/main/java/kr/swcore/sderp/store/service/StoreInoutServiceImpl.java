@@ -61,6 +61,13 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	
 	}
 
+	@Override
+	public List<StoreInoutDTO> search(HttpSession session, StoreInoutDTO sdto) {
+		Integer compNo = SessionInfoGet.getCompNo(session);
+        sdto.setCompNo(compNo);
+        return storeInoutDao.search(sdto);
+	}
+
     
 
 	

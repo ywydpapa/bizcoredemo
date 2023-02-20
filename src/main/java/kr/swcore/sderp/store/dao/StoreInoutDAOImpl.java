@@ -61,4 +61,11 @@ public class StoreInoutDAOImpl implements StoreInoutDAO {
 		return 0;
 	}
 
+	@Override
+	public List<StoreInoutDTO> search(StoreInoutDTO sdto) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storeInout.search", sdto);
+
+	}
+
 }

@@ -151,7 +151,8 @@ tr.shown td.details-control {
 									</thead>
 									<tbody>
 										<c:forEach var="row" items="${dtoList}">
-											<tr align="center" class="storeList">
+										<!-- 재고 수량 0이 아닌 것만 출력함  -->
+											<c:if test="${row.storeQty != 0 }"><tr align="center" class="storeList">
 												<td>${row.storeNo}</td>
 												<td>${row.productName}</td>
 												<td>${row.serialNo}</td>
@@ -179,6 +180,7 @@ tr.shown td.details-control {
 												<td>${row.storeQty}</td>
 												<td>${row.comment}</td>
 											</tr>
+											</c:if>
 										</c:forEach>
 									</tbody>
 								</table>
@@ -188,33 +190,13 @@ tr.shown td.details-control {
 					<div class="tab-pane " id="tab03" role="tabpanel">
 						<div class="card-block table-border-style">
 							<div class="table-responsive" style="overflow-x: hidden;">
-								<table class="table table-sm bst02">
-									<colgroup>
-								
-									
-									</colgroup>
-									<thead>
-										<tr>
-											<th class="text-center">상품명</th>
-											<th class="text-center">현 재고 수량</th>
-											<th class="text-center">비고</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr align="center" class="storeList">
-											<td>${dtoList[0].productName}</td>
-											<td>${total}</td>
-											<td>${dtoList[0].comment}</td>
-										</tr>
-									</tbody>
-								</table>
-								</br>
-								<table id="inoutDataTable" class="table table-sm bst02" ">
+								<table id="inoutDataTable" class="table table-sm bst02">
 									<colgroup>
 									<col width="5%" />
 									<col width="10%" />
 									<col width="20%" />
-									<col width="20%" />
+									<col width="5%" />
+									<col width="15%" />
 									<col width="15%" />
 									<col width="5%" />
 									<col width="5%" />
@@ -226,7 +208,8 @@ tr.shown td.details-control {
 											<th class="text-center">구분</th>
 											<th class="text-center">일자</th>
 											<th class="text-center">상품명</th>
-											<th class="text-center">재고 번호(시리얼번호)</th>
+											<th class="text-center">재고 번호</th>
+								   			<th class="text-center">시리얼번호</th>
 											<th class="text-center">위치</th>
 											<th class="text-center">입고수량</th>
 											<th class="text-center">출고 수량</th>
@@ -247,8 +230,8 @@ tr.shown td.details-control {
 												</c:choose>
 												<td>${row.regDate}</td>
 												<td>${row.productName}</td>
-												<td>${row.storeNo}(${row.serialNo})</td>
-									
+												<td>${row.storeNo}</td>
+												<td>${row.serialNo}</td>
 												<c:choose>
 												<c:when
 											       test="${(row.locationNo eq '' || row.locationNo eq '-') && row.inoutType eq 'IN'}">
@@ -292,6 +275,11 @@ tr.shown td.details-control {
 												<td>${row.comment}</td>
 											</tr>
 										</c:forEach>
+											<tr align="center" class="storeList" style="background-color: cornsilk; font-weight: 600;">
+											<td colspan="6">현재고 수량</td>
+											<td colspan="2">${total}</td>
+											<td colspan="2"></td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -639,13 +627,11 @@ tr.shown td.details-control {
 
 		var productdataJson;
 		function fn_productdataTableReload2() {
-			$
-					.ajax(
-							{
-								type : "get",
-								contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-								url : '/sderp/product/listAjax'
-							}).done(function(result) {
+			$.ajax({
+					type : "get",
+					contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+					url : '/sderp/product/listAjax'
+					}).done(function(result) {
 						var newData = JSON.parse(result);
 						console.dir(newData);
 
@@ -685,8 +671,7 @@ tr.shown td.details-control {
 				storeData.storeNo = location.href.split("detail/")[1];
 				storeData.serialNo = $("#serialNo").val();
 				storeData.storeType = $("#storeType").val();
-				storeData.storeAmount = $("#storeAmount").val().replaceAll(",",
-						"") * 1;
+				storeData.storeAmount = $("#storeAmount").val().replaceAll(",","") * 1;
 				storeData.storeQty = $("#storeQty").val().replaceAll(",", "") * 1;
 				storeData.storeUnit = $("#storeUnit").val().replaceAll(",", "") * 1;
 				storeData.locationNo = $("#storeLoc2").val();

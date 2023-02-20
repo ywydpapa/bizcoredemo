@@ -15,9 +15,9 @@ left join swc_product c on b.productNo = c.productNo  where b.productNo = #{prod
 <select id="inoutAllList" resultType="storeInoutDto"> 
 <!--  select a.* from swc_store_inout a  left join  swc_store b on a.storeNo = b.storeNo 
 where b.productNo = #{productNo}; -->
-select a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
-left join  swc_store b on a.storeNo = b.storeNo  
-left join swc_product c on b.productNo = c.productNo  where a.compNo = #{compNo} order by a.regDate desc;
+SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
+left join swc_store b on a.storeNo = b.storeNo  
+left join swc_product c on b.productNo = c.productNo  WHERE a.compNo = #{compNo} order by a.regDate desc;
 </select>
 
 <select id="calcStoreQty">
@@ -28,4 +28,25 @@ SELECT (-inoutQty + #{inoutQty}) as inoutQty FROM swc_store_inout  WHERE inoutNo
 UPDATE swc_store_inout SET inoutQty = (inoutQty + #{inoutQty}) WHERE inoutNo = #{inoutNo};
 </update>
 
-</mapper>
+
+
+<!-- 검색 관련 쿼리 -->
+<select id="search" resultType="storeInoutDto">
+SELECT a.* ,b.serialNo , b.productNo, c.productName as productName FROM swc_store_inout a 
+left join swc_store b on a.storeNo = b.storeNo 
+left join swc_product c on c.productNo = b.productNo 
+WHERE b.compNo = #{compNo}
+<if test="inoutType != null and inoutType != ''">
+AND a.inoutType = #{inoutType}
+</if>
+<if test="productName != null and productName != ''">
+AND c.productName like "%#{productName}%"	
+</if>
+<if test="storeNo != null and storeNo != ''">
+AND a.storeNo = #{storeNo}
+</if>
+<if test="serialNo != null and serialNo != ''">
+ AND b.serialN like "%#{serialNo}%";	
+</if>
+</select>
+</mapper> 

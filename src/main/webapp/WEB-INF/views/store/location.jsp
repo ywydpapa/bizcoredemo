@@ -42,7 +42,7 @@
 						<div style="padding: 0 10px;">
 							<div class="input-group input-group-sm mb-0">
 								<input type="text" placeholder="추가할 위치명을 입력하세요"
-									class="form-control" name="product" data-flag="true" value="">
+									class="form-control" name="product" data-flag="true" value="" autofocus>
 								<span class="input-group-btn">
 									<button class="btn btn-primary sch-company"
 										onclick="insertCode02(this)" type="button">
