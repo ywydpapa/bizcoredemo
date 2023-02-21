@@ -258,10 +258,10 @@ public class StoreController {
 			}
 			if (from != null) {
 				dto.setFrom(from);
-			} 
+			}
 			if (to != null) {
 				dto.setTo(to);
-			} 
+			}
 			mav.addObject("inOutAllList", storeInoutService.search(session, dto));
 		} else {
 
@@ -282,33 +282,24 @@ public class StoreController {
 
 		Map<String, Object> param = new HashMap<>();
 		int process1 = 0;
-		int process2 = 0;
+	
 		String compNo = (String) session.getAttribute("compNo");
 		StoreDTO sdto = new StoreDTO();
 		idto.setCompNo(Integer.valueOf(compNo));
 		sdto.setCompNo(Integer.valueOf(compNo));
 		sdto.setStoreNo(idto.getStoreNo()); // 수정할 store 의 수량을 구함
 		// 재고 수량과 입출고 기록에 더해주면 됨
-
+       
 		if (idto.getInoutType().equals("IN")) {
-			sdto.setStoreQty(idto.getInoutQty());
+			sdto.setStoreQty(dto.getInoutQty());
 		} else {
-			sdto.setStoreQty(idto.getInoutQty() * -1);
+			sdto.setStoreQty(dto.getInoutQty() * -1);
 		}
 
 		process1 = sqlSession.update("store.plusStoreQty", sdto);
-
-		if (process1 > 0) {
-
-			process2 = storeInoutService.updateInoutStore(session, dto);
-			if (process2 > 0) {
-				param.put("code", "10001");
-			} else {
-				param.put("code", "20001");
-
-			}
-
-		}
+        process1 = storeInoutService.updateInoutStore(session, dto);
+		process1 = storeInoutService.updateEtc(session, dto);
+		param.put("code", "10001");
 		return ResponseEntity.ok(param);
 	}
 
@@ -344,6 +335,22 @@ public class StoreController {
 
 		return mav;
 
+	}
+
+	@RequestMapping("/inOutDetail/{inoutNo}")
+	public ModelAndView getInoutDetail(@PathVariable int inoutNo, ModelAndView mav, HttpSession session,
+			StoreInoutDTO dto) {
+		mav.addObject("custDataList", custService.getAllDataList(session));
+		mav.setViewName("store/inoutDetail");
+		mav.addObject("list1", codeService.listCode01(session));
+		mav.addObject("list2", codeService.listCode02(session));
+		mav.addObject("list3", codeService.listCode03(session));
+		String compNo = (String) session.getAttribute("compNo");
+		dto.setCompNo(Integer.valueOf(inoutNo));
+		dto.setInoutNo(inoutNo);
+		mav.addObject("detail", storeInoutService.getInout(dto));
+
+		return mav;
 	}
 
 }

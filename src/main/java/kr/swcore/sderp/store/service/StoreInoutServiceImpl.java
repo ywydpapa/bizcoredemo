@@ -68,6 +68,17 @@ public class StoreInoutServiceImpl implements StoreInoutService{
         return storeInoutDao.search(sdto);
 	}
 
+	@Override
+	public StoreInoutDTO getInout(StoreInoutDTO dto) {
+		  return storeInoutDao.getInOut(dto);
+	}
+
+	@Override
+	public int updateEtc(HttpSession session, StoreInoutDTO idto) {
+		// TODO Auto-generated method stub
+		return storeInoutDao.updateEtc(idto);
+	}
+
     
 
 	

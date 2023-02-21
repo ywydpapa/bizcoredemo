@@ -66,7 +66,7 @@
 				<div class="col-sm-12 col-xl-2">
 					<label class="col-form-label" for="storeNo_Sch">재고번호</label>
 					<div class="input-group input-group-sm mb-0">
-						<input type="text" class="form-control" id="storeNo_Sch" onkeyup="setNum(this)">
+						<input type="text" class="form-control" id="storeNo_Sch" onkeyup="setNum2(this)">
 					</div>
 				</div>
 				<div class="col-sm-12 col-xl-2">
@@ -151,8 +151,11 @@
 							</thead>
 							<tbody>
 								<c:forEach var="item" items="${inOutAllList}">
-									<tr
-										<c:if test="${ item.inoutType eq 'OUT'}"> style="background-color:#f6d3cb38;"</c:if>>
+									<tr onclick="location.href='${path}/store/inOutDetail/${item.inoutNo}'" <c:choose>
+										<c:when test="${item.inoutType eq 'OUT'}"> style="background-color:#f6d3cb38;"</c:when>
+										<c:when test="${item.inoutType eq 'IN'}"> style="background-color:#f0f8ff2e;"</c:when>
+										</c:choose>
+										>
 										<td style="text-align: center">${item.inoutNo}</td>
 										<td style="text-align: center">${item.regDate}</td>
 										<c:choose>
@@ -236,14 +239,13 @@
 
 		let inoutType, placeholder, inoutQty, storeNo, inoutNo;
 		// 입출고 구분 
-		inoutType = $(obj).parent().prev().prev().prev().prev().prev().prev()
+		inoutType = $(obj).parent().prev().prev().prev().prev().prev().prev().prev()
 				.prev().prev().html();
-
+	
 		if (inoutType == "입고") {
 			// 입고수량
 			inoutQty = $(obj).parent().prev().prev().prev().prev().children()[0].value;
-			placeholder = $(obj).parent().prev().prev().prev().prev()
-					.children()[0].getAttribute("placeholder");
+			placeholder = $(obj).parent().prev().prev().prev().prev().children()[0].placeholder
 		} else {
 			//출고수량
 			inoutQty = $(obj).parent().prev().prev().prev().children()[0].value;
@@ -255,7 +257,7 @@
 		inoutNo = obj.getAttribute("data-inoutNo");
 
 		// 재고 번호 
-		storeNo = $(obj).parent().prev().prev().prev().prev().prev().prev()
+		storeNo = $(obj).parent().prev().prev().prev().prev().prev().prev().prev()
 				.html();
 
 		if (placeholder == inoutQty) {
@@ -276,6 +278,8 @@
 				inoutData.inoutType = "OUT";
 				inoutData.inoutQty = ((placeholder * 1) + (inoutQty * -1)) * -1;
 			}
+			
+			console.log(inoutData); 
 
 			$.ajax({
 				url : "${path}/store/inOutUpate.do",
@@ -285,8 +289,8 @@
 			}).done(function(data) {
 				if (data.code == 10001) {
 					alert("수정 성공");
-					var url = '${path}/store/inOutList.do';
-					location.href = url;
+					//var url = '${path}/store/inOutList.do';
+					//location.href = url;
 				} else {
 					alert("수정 실패");
 				}
@@ -395,7 +399,7 @@
 	}
 	
 	
-	function setNum(obj) {
+	function setNum2(obj) {
 		obj.value = obj.value.replace(/[^0-9.]/g, "");
 		
 	}

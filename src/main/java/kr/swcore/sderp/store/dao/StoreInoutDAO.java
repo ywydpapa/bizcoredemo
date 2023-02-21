@@ -22,5 +22,9 @@ public interface StoreInoutDAO {
 
 	List<StoreInoutDTO> search(StoreInoutDTO sdto);
 
+	StoreInoutDTO getInOut(StoreInoutDTO dto);
+
+	int updateEtc(StoreInoutDTO idto);
+
 
 }

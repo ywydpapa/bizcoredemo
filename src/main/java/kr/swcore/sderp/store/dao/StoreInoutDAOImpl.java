@@ -68,4 +68,15 @@ public class StoreInoutDAOImpl implements StoreInoutDAO {
 
 	}
 
+	@Override
+	public StoreInoutDTO getInOut(StoreInoutDTO dto) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("storeInout.getInOut", dto);
+	}
+
+	@Override
+	public int updateEtc(StoreInoutDTO idto) {
+		return sqlSession.update("storeInout.updateEtc", idto);
+	}
+
 }

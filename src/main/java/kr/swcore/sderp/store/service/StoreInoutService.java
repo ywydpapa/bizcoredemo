@@ -22,6 +22,10 @@ public interface StoreInoutService {
 
 	List<StoreInoutDTO> search(HttpSession session, StoreInoutDTO sdto);
 
+	StoreInoutDTO getInout(StoreInoutDTO dto);
+
+	int updateEtc(HttpSession session, StoreInoutDTO idto);
+
 
 }
  
