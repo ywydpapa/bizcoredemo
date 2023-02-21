@@ -49,6 +49,16 @@ AND a.storeNo = #{storeNo}
  AND b.serialNo like  CONCAT('%', #{serialNo}, '%')
 </if>
 <if test="from != null and from != ''">
-AND a.regDate between CONCAT(#{from},' ','00:00:00') AND CONCAT(#{to},' ', '23:59:59');</if> 
+AND a.regDate between CONCAT(#{from},' ','00:00:00') AND CONCAT(#{to},' ', '23:59:59')
+</if>
+<if test="locationNo !=null and locationNo !=''">
+AND a.locationNo in 
+(select distinct a.locationNo from swc_store_inout a 
+left join swc_code b on substring_index(a.locationNo,"-",-1) = b.code03
+left join swc_code c on b.code02 = c.code02 
+left join swc_cust d on d.custNo = a.locationNo 
+where c.desc02 like CONCAT('%', #{locationNo}, '%') or b.desc03 like CONCAT('%', #{locationNo}, '%') or
+d.custName like CONCAT('%', #{locationNo}, '%'))
+</if>
 </select>
 </mapper> 

@@ -66,7 +66,7 @@
 				<div class="col-sm-12 col-xl-2">
 					<label class="col-form-label" for="storeNo_Sch">재고번호</label>
 					<div class="input-group input-group-sm mb-0">
-						<input type="text" class="form-control" id="storeNo_Sch">
+						<input type="text" class="form-control" id="storeNo_Sch" onkeyup="setNum(this)">
 					</div>
 				</div>
 				<div class="col-sm-12 col-xl-2">
@@ -393,5 +393,12 @@
 		}
 
 	}
+	
+	
+	function setNum(obj) {
+		obj.value = obj.value.replace(/[^0-9.]/g, "");
+		
+	}
+
 </script>
 <jsp:include page="../body-bottom.jsp" />
