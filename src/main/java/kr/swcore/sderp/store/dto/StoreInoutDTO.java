@@ -27,10 +27,10 @@ public class StoreInoutDTO {
     private String productName;
     private String serialNo;
     private BigDecimal inoutAmount;
+    private String from;
+    private String to;
     
-    
-    
-    
+  
     public StoreInoutDTO(){
         super();
     }

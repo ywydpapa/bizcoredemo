@@ -31,6 +31,8 @@ public class StoreDTO {
     private String productCategoryNo; 
     private String productCategoryName; 
     
+    
+    
     public StoreDTO(){
         super();
     }

@@ -40,13 +40,15 @@ WHERE b.compNo = #{compNo}
 AND a.inoutType = #{inoutType}
 </if>
 <if test="productName != null and productName != ''">
-AND c.productName like "%#{productName}%"	
+AND c.productName like CONCAT('%', #{productName}, '%')
 </if>
 <if test="storeNo != null and storeNo != ''">
 AND a.storeNo = #{storeNo}
 </if>
 <if test="serialNo != null and serialNo != ''">
- AND b.serialN like "%#{serialNo}%";	
+ AND b.serialNo like  CONCAT('%', #{serialNo}, '%')
 </if>
+<if test="from != null and from != ''">
+AND a.regDate between CONCAT(#{from},' ','00:00:00') AND CONCAT(#{to},' ', '23:59:59');</if> 
 </select>
 </mapper> 

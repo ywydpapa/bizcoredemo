@@ -3,6 +3,7 @@ package kr.swcore.sderp.store;
 import kr.swcore.sderp.code.dto.CodeDTO;
 import kr.swcore.sderp.code.service.CodeService;
 import kr.swcore.sderp.cust.service.CustService;
+import kr.swcore.sderp.gw.dto.GwDTO;
 import kr.swcore.sderp.organiz.dto.OrganizDTO;
 import kr.swcore.sderp.store.dto.StoreDTO;
 import kr.swcore.sderp.store.dto.StoreInoutDTO;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -225,14 +227,52 @@ public class StoreController {
 	}
 
 	@RequestMapping("/inOutList.do")
-	public ModelAndView storeInOutList(HttpSession session, StoreInoutDTO dto, ModelAndView mav) {
-		mav.addObject("custDataList", custService.getAllDataList(session));
+	public ModelAndView storeInOutList(HttpSession session, StoreInoutDTO dto, ModelAndView mav,
+			@RequestParam(value = "inoutType", required = false) String inoutType,
+			@RequestParam(value = "productName", required = false) String productName,
+			@RequestParam(value = "storeNo", required = false) Integer storeNo,
+			@RequestParam(value = "serialNo", required = false) String serialNo,
+			@RequestParam(value = "locationNo", required = false) String locationNo,
+			@RequestParam(value = "from", required = false) String from,
+			@RequestParam(value = "to", required = false) String to) {
+
 		String compNo = (String) session.getAttribute("compNo");
 		dto.setCompNo(Integer.valueOf(compNo));
+
+		if (inoutType != null || productName != null || storeNo != null || serialNo != null || locationNo != null
+				|| from != null || to != null) {
+			if (inoutType != null) {
+				dto.setInoutType(inoutType);
+			}
+			if (productName != null) {
+				dto.setProductName(productName);
+			}
+			if (storeNo != null) {
+				dto.setStoreNo(storeNo);
+			}
+			if (serialNo != null) {
+				dto.setSerialNo(serialNo);
+			}
+			if (locationNo != null) {
+				dto.setLocationNo(locationNo);
+			}
+			if (from != null) {
+				dto.setFrom(from);
+			} 
+			if (to != null) {
+				dto.setTo(to);
+			} 
+			mav.addObject("inOutAllList", storeInoutService.search(session, dto));
+		} else {
+
+			mav.addObject("inOutAllList", storeInoutService.getAllList(session, dto));
+		}
+
+		mav.addObject("custDataList", custService.getAllDataList(session));
 		mav.addObject("list1", codeService.listCode01(session));
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
-		mav.addObject("inOutAllList", storeInoutService.getAllList(session, dto));
+
 		mav.setViewName("store/inoutList");
 		return mav;
 	}
@@ -292,7 +332,7 @@ public class StoreController {
 
 		sdto.setInoutType(inOutType);
 		sdto.setProductName(productName);
-		if(storeNo != null) {
+		if (storeNo != null) {
 			sdto.setStoreNo(Integer.valueOf(storeNo));
 		}
 		sdto.setSerialNo(serialNo);
