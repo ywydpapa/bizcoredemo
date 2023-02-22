@@ -168,7 +168,9 @@
 													style="text-align: center; color: red; font-weight: 600;">출고</td>
 											</c:otherwise>
 										</c:choose>
-										<td onclick="location.href='${path}/store/inOutDetail/${item.inoutNo}'" >${item.productName}</td>
+										<td>
+										<a style="text-decoration: underline;"href="${path}/store/inOutDetail/${item.inoutNo}" >${item.productName}</a>
+										</td>
 										<td style="text-align: center">${item.storeNo}</td>
 										<td style="text-align: center">${item.serialNo}</td>
 										<c:choose>
