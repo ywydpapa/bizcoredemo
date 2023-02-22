@@ -74,7 +74,9 @@ left join swc_product c on b.productNo = c.productNo  WHERE a.inoutNo = #{inoutN
 </select>
 
 <update id="updateEtc">
-UPDATE swc_store_inout SET locationNo = #{locationNo} ,  comment =#{comment} WHERE inoutNo = #{inoutNo};
+UPDATE swc_store_inout SET locationNo = #{locationNo} , inoutAmount = #{inoutAmount},  comment =#{comment} WHERE inoutNo = #{inoutNo};
 </update>
+
+
 
 </mapper> 

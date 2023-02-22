@@ -151,7 +151,7 @@
 							</thead>
 							<tbody>
 								<c:forEach var="item" items="${inOutAllList}">
-									<tr onclick="location.href='${path}/store/inOutDetail/${item.inoutNo}'" <c:choose>
+									<tr  <c:choose>
 										<c:when test="${item.inoutType eq 'OUT'}"> style="background-color:#f6d3cb38;"</c:when>
 										<c:when test="${item.inoutType eq 'IN'}"> style="background-color:#f0f8ff2e;"</c:when>
 										</c:choose>
@@ -168,7 +168,7 @@
 													style="text-align: center; color: red; font-weight: 600;">출고</td>
 											</c:otherwise>
 										</c:choose>
-										<td>${item.productName}</td>
+										<td onclick="location.href='${path}/store/inOutDetail/${item.inoutNo}'" >${item.productName}</td>
 										<td style="text-align: center">${item.storeNo}</td>
 										<td style="text-align: center">${item.serialNo}</td>
 										<c:choose>

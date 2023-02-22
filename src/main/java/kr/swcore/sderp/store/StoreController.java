@@ -278,30 +278,42 @@ public class StoreController {
 	}
 
 	@RequestMapping("/inOutUpate.do")
-	public ResponseEntity<?> storeInOutUpated(HttpSession session, StoreInoutDTO dto, StoreInoutDTO idto) {
+	   public ResponseEntity<?> storeInOutUpated(HttpSession session, StoreInoutDTO dto, StoreInoutDTO idto) {
 
-		Map<String, Object> param = new HashMap<>();
-		int process1 = 0;
-	
-		String compNo = (String) session.getAttribute("compNo");
-		StoreDTO sdto = new StoreDTO();
-		idto.setCompNo(Integer.valueOf(compNo));
-		sdto.setCompNo(Integer.valueOf(compNo));
-		sdto.setStoreNo(idto.getStoreNo()); // 수정할 store 의 수량을 구함
-		// 재고 수량과 입출고 기록에 더해주면 됨
-       
-		if (idto.getInoutType().equals("IN")) {
-			sdto.setStoreQty(dto.getInoutQty());
-		} else {
-			sdto.setStoreQty(dto.getInoutQty() * -1);
-		}
+	      Map<String, Object> param = new HashMap<>();
+	      int process1 = 0;
+	   
+	      String compNo = (String) session.getAttribute("compNo");
+	      StoreDTO sdto = new StoreDTO();
+	      idto.setCompNo(Integer.valueOf(compNo));
+	      sdto.setCompNo(Integer.valueOf(compNo));
+	      sdto.setStoreNo(idto.getStoreNo()); // 수정할 store 의 수량을 구함
+	      sdto.setSerialNo(idto.getSerialNo());
+	      // 재고 수량과 입출고 기록에 더해주면 됨
+	       
+	      if (idto.getInoutType().equals("IN")) {
+	         sdto.setStoreQty(dto.getInoutQty());
+	      } else {
+	         sdto.setStoreQty(dto.getInoutQty() * -1);
+	      }
+	      
+	      if(sdto.getSerialNo() !=null) {
+	         sqlSession.update("store.serialUpdate", sdto);
+	      }
 
-		process1 = sqlSession.update("store.plusStoreQty", sdto);
-        process1 = storeInoutService.updateInoutStore(session, dto);
-		process1 = storeInoutService.updateEtc(session, dto);
-		param.put("code", "10001");
-		return ResponseEntity.ok(param);
-	}
+	      process1 = sqlSession.update("store.plusStoreQty", sdto);
+	        process1 = storeInoutService.updateInoutStore(session, dto);
+	        param.put("code", "10001");
+	        if (idto.getLocationNo() !=null || idto.getComment() !=null || idto.getInoutAmount() !=null) {
+	              process1 = storeInoutService.updateEtc(session, dto);
+	              if(process1 >0) {
+	               param.put("code", "10001");
+	              } else {
+	                 param.put("code", "20001");
+	              }
+	        }
+	         return ResponseEntity.ok(param);
+	   }
 
 	@RequestMapping("/inoutSearch")
 	public ModelAndView getSearchResult(@RequestBody String reqeuestBody, ModelAndView mav, HttpSession session)

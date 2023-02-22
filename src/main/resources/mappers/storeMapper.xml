@@ -98,5 +98,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	select max(storeNo) from swc_store where compNo = #{compNo} and productNo = #{productNo} and serialNo =#{serialNo} and  storeAmount = #{storeAmount}
 and locationNo =#{locationNo} and userNo = #{userNo} ; 
 	</select>
+	
+	<update id="serialUpdate">   
+ update swc_store set serialNo = #{serialNo} where storeNo = #{storeNo}</update>
 
 </mapper>
