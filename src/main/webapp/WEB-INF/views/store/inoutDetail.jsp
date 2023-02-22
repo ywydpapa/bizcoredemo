@@ -99,7 +99,10 @@ tr.shown td.details-control {
                         <tr>
                            <th scope="row" class="requiredTextCss">시리얼 번호</th>
                            <td><input type="text" id="serialNo"
-                              class="form-control form-control-sm" value="${detail.serialNo}"></td>
+                              class="form-control form-control-sm" value="${detail.serialNo}" 
+                              
+                              <c:if test="${detail.inoutType eq 'OUT' }"> readonly=""</c:if>
+                              ></td>
                         </tr>
                         <tr>
                            <th scope="row" class="requiredTextCss">위치</th>

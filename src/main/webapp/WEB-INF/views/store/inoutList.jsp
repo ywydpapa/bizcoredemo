@@ -289,8 +289,8 @@
 			}).done(function(data) {
 				if (data.code == 10001) {
 					alert("수정 성공");
-					//var url = '${path}/store/inOutList.do';
-					//location.href = url;
+					var url = '${path}/store/inOutList.do';
+					location.href = url;
 				} else {
 					alert("수정 실패");
 				}
