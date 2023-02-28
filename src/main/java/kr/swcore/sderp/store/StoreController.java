@@ -183,7 +183,6 @@ public class StoreController {
 			dto.setComment(json.getString("comment"));
 			dto.setInoutType(json.getString("inoutType"));
 			dto.setLocationNo(json.getString("locationNo"));
-
 			if (json.getString("inoutType").equals("IN")) {
 				storeDto.setCompNo(Integer.valueOf(compNo));
 				storeDto.setProductNo(json.getInt("productNo"));
@@ -191,7 +190,6 @@ public class StoreController {
 				storeDto.setLocationNo(json.getString("locationNo"));
 				storeDto.setComment(json.getString("comment"));
 				storeDto.setSerialNo(json.getString("serialNo"));
-				
 				String storeNo = "0"; 
                   // CASE 1 : 시리얼 번호가 입력된 경우 
 			     if(!json.getString("serialNo").equals("")) {
@@ -286,12 +284,10 @@ public class StoreController {
 
 			mav.addObject("inOutAllList", storeInoutService.getAllList(session, dto));
 		}
-
 		mav.addObject("custDataList", custService.getAllDataList(session));
 		mav.addObject("list1", codeService.listCode01(session));
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
-
 		mav.setViewName("store/inoutList");
 		return mav;
 	}
@@ -300,7 +296,6 @@ public class StoreController {
 	   public ResponseEntity<?> storeInOutUpated(HttpSession session, StoreInoutDTO dto, StoreInoutDTO idto) {
 	      Map<String, Object> param = new HashMap<>();
 	      int process1 = 0;
-	   
 	      String compNo = (String) session.getAttribute("compNo");
 	      StoreDTO sdto = new StoreDTO();
 	      idto.setCompNo(Integer.valueOf(compNo));
@@ -308,7 +303,6 @@ public class StoreController {
 	      sdto.setStoreNo(idto.getStoreNo()); // 수정할 store 의 수량을 구함
 	      sdto.setSerialNo(idto.getSerialNo());
 	      // 재고 수량과 입출고 기록에 더해주면 됨
-	       
 	      if (idto.getInoutType().equals("IN")) {
 	         sdto.setStoreQty(dto.getInoutQty());
 	      } else {
@@ -318,12 +312,11 @@ public class StoreController {
 	      if(sdto.getSerialNo() !=null) {
 	         sqlSession.update("store.serialUpdate", sdto);
 	      }
-
 	      process1 = sqlSession.update("store.plusStoreQty", sdto);
 	      process1 = storeInoutService.updateInoutStore(session, dto);
 	      param.put("code", "10001");
 	      
-	        if (idto.getLocationNo() !=null || idto.getComment() !=null || idto.getInoutAmount() !=null) {
+	        if (idto.getLocationNo() != null || idto.getComment() != null || idto.getInoutAmount() != null) {
 	              process1 = storeInoutService.updateEtc(session, dto);
 	              if(process1 > 0) {
 	               param.put("code", "10001");
@@ -359,7 +352,6 @@ public class StoreController {
 		}
 		sdto.setSerialNo(serialNo);
 		sdto.setRegDate(from);
-
 		mav.addObject("inOutAllList", storeInoutService.search(session, sdto));
 		mav.setViewName("store/inoutList");
 
@@ -380,6 +372,8 @@ public class StoreController {
 		mav.addObject("detail", storeInoutService.getInout(dto));
 		return mav;
 	}
+	
+	
 
 
 }
