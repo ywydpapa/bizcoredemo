@@ -12,13 +12,15 @@ public interface StoreDAO {
 
     int deleteStore(StoreDTO dto);
 
-	List<StoreDTO> getDetail(int productNo);
+	List<StoreDTO> getDetail(int storeNo);
 
 	List<StoreDTO> getStoreList(StoreDTO dto);
 
 	int insertStore2(StoreDTO storeDto);
 
 	int getLastStoreNo(StoreDTO storeDto);
+
+	int getStoreNo(int productNo);
 
 
 

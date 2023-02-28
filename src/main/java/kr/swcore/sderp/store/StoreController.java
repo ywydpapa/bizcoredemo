@@ -106,17 +106,19 @@ public class StoreController {
 		return mav;
 	}
 
-	@RequestMapping("/detail/{productNo}")
-	public ModelAndView detail(HttpSession session, @PathVariable("productNo") int productNo, ModelAndView mav) {
+	@RequestMapping("/detail/{storeNo}")
+	public ModelAndView detail(HttpSession session, @PathVariable("storeNo") int storeNo, ModelAndView mav) {
 		mav.addObject("custDataList", custService.getAllDataList(session));
 		mav.addObject("list1", codeService.listCode01(session));
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
-		mav.addObject("dtoList", storeService.storeDetail(productNo));
-		mav.addObject("inoutList", storeInoutService.getInoutStoreList(productNo));
+		//mav.addObject("dtoList", storeService.storeDetail(storeNo));
+		mav.addObject("inoutList", storeInoutService.getInoutStoreList(storeNo));
 		mav.setViewName("store/detail");
 		return mav;
 	}
+	
+	
 
 	@RequestMapping("/update.do")
 	public ResponseEntity<?> storeUpdate(HttpSession session, @ModelAttribute StoreDTO dto) {
@@ -184,18 +186,27 @@ public class StoreController {
 			if (json.getString("inoutType").equals("IN")) {
 				storeDto.setCompNo(Integer.valueOf(compNo));
 				storeDto.setProductNo(json.getInt("productNo"));
-				storeDto.setSerialNo(json.getString("storeNo"));
 				storeDto.setStoreAmount(BigDecimal.valueOf(json.getInt("inoutAmount")));
 				storeDto.setLocationNo(json.getString("locationNo"));
 				storeDto.setComment(json.getString("comment"));
-				// 재고가 0인 재고부터 생성함
-				process1 = storeService.insertStore2(session, storeDto);
-				logger.error("check last process1 : " + process1);
+				storeDto.setSerialNo(json.getString("serialNo"));
+				// 시리얼 번호가 없는 재고가 있는 경우에 재고 개수만 추가함 
+				String storeNo = "0"; 
+
+			     if(!json.getString("serialNo").equals("")) {
+			    	// 재고가 0인 재고 생성함
+			    	process1 = storeService.insertStore2(session, storeDto);
+			    	// 생성된 재고의 재고 번호를 구함
+			    	lastStoreNo = storeService.getLastStoreNo(session, storeDto);
+			    } else { 
+			    	storeNo =String.valueOf(storeService.getStoreNo(session, json.getInt("productNo")));
+			    	lastStoreNo = Integer.valueOf(storeNo); 
+			    	process1  = 1; 
+			    }
 				// 재고 생성에 성공한 경우
 				if (process1 > 0) {
 					// 생성된 재고의 재고 번호를 구함
-					lastStoreNo = storeService.getLastStoreNo(session, storeDto);
-					logger.error("check last StoreNo : " + lastStoreNo);
+					//lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 					if (lastStoreNo != -1) {
 						dto.setStoreNo(lastStoreNo);
 						storeInoutInsert = storeInoutService.insertInoutStore(session, dto);
@@ -364,5 +375,8 @@ public class StoreController {
 
 		return mav;
 	}
+	
+	
+
 
 }

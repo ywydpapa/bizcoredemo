@@ -34,8 +34,8 @@ public class StoreDAOImpl implements StoreDAO{
     }
 
 	@Override
-	public List<StoreDTO> getDetail(int productNo) {
-		 return sqlSession.selectList("store.detailStore", productNo);
+	public List<StoreDTO> getDetail(int storeNo) {
+		 return sqlSession.selectList("store.detailStore", storeNo);
 	
 	}
 
@@ -57,5 +57,11 @@ public class StoreDAOImpl implements StoreDAO{
 	@Override
 	public int getLastStoreNo(StoreDTO storeDto) {
 		 return sqlSession.selectOne("store.getLastStoreNo", storeDto);
+	}
+
+	@Override
+	public int getStoreNo(int productNo) {
+		
+		return sqlSession.selectOne("store.getStoreNo", productNo);
 	}
 }

@@ -72,7 +72,7 @@ tr.shown td.details-control {
 								<tr>
 									<th class="text-center">상품명</th>
 									<th class="text-center inOutInput">시리얼 번호</th>
-									<th class="text-center">수량</th>
+									<th class="text-center minQty">수량</th>
 									<th class="text-center">금액</th>
 									<th class="text-center">위치</th>
 									<th class="text-center">비고</th>
@@ -168,11 +168,11 @@ tr.shown td.details-control {
 
 
 									<td><input type="text" class="form-control form-control-sm" id="inSerialNo" ></input> 
-										<select id="outStoreNo" class="form-control form-control-sm" style="min-width: 80px; display: none">
+										<select id="outStoreNo" class="form-control form-control-sm" style="min-width: 80px; display: none" onchange="changeMinQty(this);">
 											<option></option>
 											<c:forEach var='row' items='${storeList}'>
 												<option class="storeOptions"
-													value='${row.productNo}-${row.storeNo}-${row.serialNo}'
+													value='${row.productNo}-${row.storeNo}-${row.serialNo}-${row.storeQty}'
 													style="display: none;">재고번호 :${row.storeNo},
 													시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
 											</c:forEach>
@@ -692,8 +692,6 @@ tr.shown td.details-control {
 			productNo = $("#productNo").val();
 			storeQty = $("#storeQty").val();
 			storeAmount = $("#storeAmount").val();
-			
-			
 			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
 			// 입고인 경우 재고 번호(시리얼 번호)와 위치번호 
 			if(storeType == "입고") {
@@ -703,7 +701,7 @@ tr.shown td.details-control {
 				locationNo = "";
 				locationName = "";
 			} else {
-				locationNo = location.split("^")[0];
+				locationNo = location.split("^")[0];   
 				locationName = location.split("^")[1];
 			}
 			// 출고인 경우 재고 번호와 거래처 번호 
@@ -734,12 +732,9 @@ tr.shown td.details-control {
 				} else {
 					html += "<td>" + storeNo + "</td>";		
 				}
-				
-				
 				html += "<td>" + storeQty + "</td>";
 				html += "<td>" + storeAmount + "</td>";
-				html += "<td data-no='"+locationNo+"'>" + locationName
-						+ "</td>";
+				html += "<td data-no='"+locationNo+"'>" + locationName + "</td>";
 				html += "<td>" + comment + "</td>";
 				html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
 				let target;
@@ -748,10 +743,9 @@ tr.shown td.details-control {
 					target = $(".itemIn")[$(".itemIn").length - 1];
 					tr.className = "itemIn";
 				} else {
-					target = $(".itemOut")[$(".itemOut").length - 1];
+					target = $(".itemOut")[$(".itemOut").length - 1];      
 					tr.className = "itemOut";
 				}
-
 				tr.innerHTML = html;
 				target.after(tr);
 				
@@ -766,6 +760,7 @@ tr.shown td.details-control {
 				$("#comment").val("");
 				$("#inSerialNo").val(""); 
 				$("#outStoreNo").val("");
+				$(".minQty").html("수량");
 				
 			}
 			
@@ -783,8 +778,8 @@ tr.shown td.details-control {
 				eachData = {};
 				eachData.inoutType = "IN";
 				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
+				eachData.serialNo = $(".itemIn")[i].children[2].innerHTML;
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemIn")[i].children[2].innerHTML;
 				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML.replaceAll(",","")*1;
 				eachData.locationNo = $(".itemIn")[i].children[5].dataset.no;
 				eachData.comment = $(".itemIn")[i].children[6].innerHTML;
@@ -844,7 +839,8 @@ tr.shown td.details-control {
 			$("#comment").val("");
 			$("#inSerialNo").val(""); 
 			$("#outStoreNo").val("");
-			
+
+		
 			if(obj.value =="IN") {
 				$("#inSerialNo").show();
 				$("#outStoreNo").hide();
@@ -866,6 +862,19 @@ tr.shown td.details-control {
 			}
 			
 		} 
+		
+		
+		
+		function changeMinQty(obj) {
+			
+			let min = obj.value; 
+			min = min.split("-")[3]; 
+			
+			$(".minQty").html("수량("+min+")");
+			
+			
+			
+		}
 			
 		
 		

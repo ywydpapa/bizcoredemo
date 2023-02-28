@@ -6,8 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 상품으로 조회시 -->
 	<select id="listStore" resultType="storeDto">
-		<!-- select * from swc_store where compNo = #{compNo} and attrib not like 
-			'XXX%' -->
+		<!--   select * from swc_store where compNo = #{compNo} and attrib not like 
+			'XXX%'-->
 		<!-- 23/02/09 수정 사항 -->
 		<!-- select a.*, b.productName from swc_store a left join swc_product b 
 			on a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not 
@@ -16,20 +16,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<!-- select a.productNo , sum(a.storeQty) as storeQty, b.productName, b.custNo, 
 			b.productCategoryNo, b.productCategoryName from swc_store a left join swc_product 
 			b on a.productNo = b.productNo group by productNo ; -->
-		select a.productNo , sum(a.storeQty) as storeQty, b.productName,
+		<!--  select a.productNo , sum(a.storeQty) as storeQty, b.productName,
 		b.custNo, b.productCategoryNo, b.productCategoryName, c.custName from
 		swc_store a
 		left join swc_product b on a.productNo = b.productNo
 		left join swc_cust c on b.custNo = c.custNo
-		group by productNo ;
+		group by productNo ;-->
+		select a.*, c.custName, b.productCategoryName, b.productName from swc_store a  
+		left join swc_product b on a.productNo = b.productNo 
+		left join swc_cust c on c.custNo  = b.custNo 
+		where a.compNo = #{compNo} and a.attrib not like '%XXX%' order by a.storeNo desc;    
 	</select>
 
 	<select id="storeList" resultType="storeDto">
-
 		select a.*, b.productName from swc_store a left join swc_product b on
 		a.productNo = b.productNo where a.compNo = #{compNo} and a.attrib not
 		like 'XXX%';
-
 	</select>
 
 
@@ -39,9 +41,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			on a.productNo = b.productNo where a.storeNo = #{storeNo} and a.attrib not 
 			like 'XXX%'; -->
 		<!-- 23/02/13 수정 -->
-		select a.*, b.productName from swc_store a left join swc_product b on
+		<!-- select a.*, b.productName from swc_store a left join swc_product b on
 		a.productNo = b.productNo where a.productNo = #{productNo} and
+		a.attrib not like 'XXX%'; -->
+		
+		select a.*, b.productName from swc_store a left join swc_product b on
+		a.productNo = b.productNo where a.storeNo = #{storeNo} and
 		a.attrib not like 'XXX%';
+		
+		
+		
 
 	</select>
 
@@ -100,6 +109,9 @@ and locationNo =#{locationNo} and userNo = #{userNo} ;
 	</select>
 	
 	<update id="serialUpdate">   
- update swc_store set serialNo = #{serialNo} where storeNo = #{storeNo}</update>
-
+ update swc_store set serialNo = #{serialNo} where storeNo = #{storeNo}</update> 
+ 
+ <select id="getStoreNo" resultType="Integer"> 
+SELECT storeNo from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
+ 
 </mapper>

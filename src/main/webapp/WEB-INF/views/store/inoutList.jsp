@@ -104,9 +104,6 @@
 				</button>
 				<button class="btn btn-sm btn-inverse" onclick="location.href='${path}/store/inOutList.do'"><i class="icofont icofont-spinner-alt-3"></i>초기화</button>
 			</div>
-
-
-
 		</div>
 	</div>
 	</br>
@@ -130,8 +127,6 @@
 								<col width="10%" />
 								<col width="10%" />
 								<col width="5%" />
-
-
 							</colgroup>
 							<thead>
 								<tr>
@@ -378,7 +373,6 @@
 		localStorage.clear();
 	});
 	
-
 
 	function dateChange(obj) {
 		let from, to;

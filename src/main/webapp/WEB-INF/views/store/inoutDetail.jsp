@@ -223,7 +223,7 @@ tr.shown td.details-control {
                        ></td>
                         </tr>
                         <tr>
-                           <th scope="row">상품설명</th>
+                           <th scope="row">비고</th>
                            <td><textarea name="comment" id="comment" rows="8"
                                  class="form-control">${detail.comment}</textarea></td>
                         </tr>

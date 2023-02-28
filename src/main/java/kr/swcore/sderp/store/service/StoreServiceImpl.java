@@ -45,8 +45,8 @@ public class StoreServiceImpl implements StoreService{
     }
 
 	@Override
-	public List<StoreDTO> storeDetail(int prodcutNo) {
-	    return storeDao.getDetail(prodcutNo);
+	public List<StoreDTO> storeDetail(int storeNo) {
+	    return storeDao.getDetail(storeNo);
 	
 	}
 
@@ -78,6 +78,14 @@ public class StoreServiceImpl implements StoreService{
 		 storeDto.setUserNo(userNo);
 		 
 		  return storeDao.getLastStoreNo(storeDto);
+	}
+
+
+	@Override
+	public int getStoreNo(HttpSession session, int productNo) {
+		
+		 
+		  return storeDao.getStoreNo(productNo);
 	}
 
 	

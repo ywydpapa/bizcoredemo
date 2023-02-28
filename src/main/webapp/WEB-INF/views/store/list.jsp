@@ -61,30 +61,36 @@
 						<table id="productTable"
 							class="table table-striped table-bordered nowrap dataTable">
 							<colgroup>
+								<col width="5%" />
 								<col width="10%" />
 								<col width="10%" />
 								<col width="10%" />
-								<col width="50%" />
-								<col width="20%" />
+								<col width="27.5%" />
+								<col width="27.5%" />
+								<col width="10%" />
 							</colgroup>
 							<thead>
 								<tr>
+								    <th class="text-center">재고 번호</th>
 									<th class="text-center">상품 번호</th>
 									<th class="text-center">공급사</th>
 									<th class="text-center">제품그룹</th>
 									<th class="text-center">상품명</th>
+									<th class="text-center">시리얼 번호</th>
 									<th class="text-center">수량</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach var="row" items="${store}">
 									<tr align="center"
-										onclick="location.href='${path}/store/detail/${row.productNo}'"
+										onclick="location.href='${path}/store/detail/${row.storeNo}'"
 										class="storeList">
+										<td>${row.storeNo}</td>
 										<td>${row.productNo}</td>
 										<td>${row.custName}</td>
 										<td>${row.productCategoryName}</td>
 										<td>${row.productName}</td>
+										<td>${row.serialNo}</td>
 										<td>${row.storeQty}</td>
 									</tr>
 								</c:forEach>

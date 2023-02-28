@@ -50,8 +50,8 @@ public class StoreInoutServiceImpl implements StoreInoutService{
 	}
 
 	@Override
-	public List<StoreInoutDTO> getInoutStoreList(int prodcutNo) {
-		return storeInoutDao.getInoutStoreList(prodcutNo);
+	public List<StoreInoutDTO> getInoutStoreList(int inoutNo) {
+		return storeInoutDao.getInoutStoreList(inoutNo);
 	
 	}
 
