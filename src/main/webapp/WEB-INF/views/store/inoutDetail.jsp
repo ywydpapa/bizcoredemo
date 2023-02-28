@@ -98,11 +98,11 @@ tr.shown td.details-control {
                         </tr>
                         <tr>
                            <th scope="row" class="requiredTextCss">시리얼 번호</th>
-                           <td><input type="text" id="serialNo"
-                              class="form-control form-control-sm" value="${detail.serialNo}" 
+                           <td><input type="text" id="serialNo" readonly=""
+                              class="form-control form-control-sm" value="${detail.serialNo}" ></td>
                               
-                              <c:if test="${detail.inoutType eq 'OUT' }"> readonly=""</c:if>
-                              ></td>
+                             <!-- <c:if test="${detail.inoutType eq 'OUT' }"> readonly=""</c:if>  -->
+                              
                         </tr>
                         <tr>
                            <th scope="row" class="requiredTextCss">위치</th>

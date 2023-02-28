@@ -171,6 +171,7 @@ public class StoreController {
 		int temp = 0;
 		int process1 = 0;
 		int lastStoreNo = 0;
+		int firstCount =  -1; 
 		org.json.JSONArray jarr = new org.json.JSONArray(data);
 		org.json.JSONObject json = null;
 		for (int i = 0; i < jarr.length(); i++) {
@@ -190,23 +191,33 @@ public class StoreController {
 				storeDto.setLocationNo(json.getString("locationNo"));
 				storeDto.setComment(json.getString("comment"));
 				storeDto.setSerialNo(json.getString("serialNo"));
-				// 시리얼 번호가 없는 재고가 있는 경우에 재고 개수만 추가함 
+				
 				String storeNo = "0"; 
-
+                  // CASE 1 : 시리얼 번호가 입력된 경우 
 			     if(!json.getString("serialNo").equals("")) {
-			    	// 재고가 0인 재고 생성함
+			    	// CASE 1 - 1 :  재고가 0인 재고 생성함
 			    	process1 = storeService.insertStore2(session, storeDto);
-			    	// 생성된 재고의 재고 번호를 구함
+			    	// CASE 1 - 2 :  생성된 재고의 재고 번호를 구함
 			    	lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 			    } else { 
+			    	firstCount = storeService.getCount(json.getInt("productNo"));  
+			    	// CASE 2 : 시리얼번호가 없는 재고가 이미 등록되어 있는 경우 (재고 생성할 필요 X)
+			    	if (firstCount != 0) {
+			    	// 기존에 등록 되어있던 재고 번호 구함 
 			    	storeNo =String.valueOf(storeService.getStoreNo(session, json.getInt("productNo")));
+			    	// 기존 재고 번호 대입 
 			    	lastStoreNo = Integer.valueOf(storeNo); 
 			    	process1  = 1; 
+			    	// CASE 3 : 시리얼번호가 없는 재고가 등록되어 있지 않은 경우 
+			    	} else {
+			    	process1 = storeService.insertStore2(session, storeDto);
+			    	// 생성한 재고 번호 대입 
+				    lastStoreNo = storeService.getLastStoreNo(session, storeDto);
+			    	}
 			    }
 				// 재고 생성에 성공한 경우
 				if (process1 > 0) {
 					// 생성된 재고의 재고 번호를 구함
-					//lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 					if (lastStoreNo != -1) {
 						dto.setStoreNo(lastStoreNo);
 						storeInoutInsert = storeInoutService.insertInoutStore(session, dto);
@@ -217,15 +228,13 @@ public class StoreController {
 				} else {
 					param.put("code", "20001");
 				}
-
 			} else {
 				dto.setStoreNo(Integer.valueOf(json.getString("storeNo")));
 				storeInoutInsert = storeInoutService.insertInoutStore(session, dto);
 				storeDto.setStoreQty(json.getInt("inoutQty") * -1);
 				storeDto.setStoreNo(dto.getStoreNo());
 			}
-
-			// 입출고 데이터 생성에 성공한 경우 재고 수량에 반영함
+			// 입출고 데이터 생성에 성공한 경우 재고 수량에 반영
 			if (storeInoutInsert > 0) {
 				sqlSession.update("store.plusStoreQty", storeDto);
 				param.put("code", "10001");
@@ -233,7 +242,6 @@ public class StoreController {
 				param.put("code", "20001");
 			}
 		}
-
 		return ResponseEntity.ok(param);
 	}
 
@@ -290,7 +298,6 @@ public class StoreController {
 
 	@RequestMapping("/inOutUpate.do")
 	   public ResponseEntity<?> storeInOutUpated(HttpSession session, StoreInoutDTO dto, StoreInoutDTO idto) {
-
 	      Map<String, Object> param = new HashMap<>();
 	      int process1 = 0;
 	   
@@ -313,11 +320,12 @@ public class StoreController {
 	      }
 
 	      process1 = sqlSession.update("store.plusStoreQty", sdto);
-	        process1 = storeInoutService.updateInoutStore(session, dto);
-	        param.put("code", "10001");
+	      process1 = storeInoutService.updateInoutStore(session, dto);
+	      param.put("code", "10001");
+	      
 	        if (idto.getLocationNo() !=null || idto.getComment() !=null || idto.getInoutAmount() !=null) {
 	              process1 = storeInoutService.updateEtc(session, dto);
-	              if(process1 >0) {
+	              if(process1 > 0) {
 	               param.put("code", "10001");
 	              } else {
 	                 param.put("code", "20001");
@@ -353,7 +361,6 @@ public class StoreController {
 		sdto.setRegDate(from);
 
 		mav.addObject("inOutAllList", storeInoutService.search(session, sdto));
-
 		mav.setViewName("store/inoutList");
 
 		return mav;
@@ -361,8 +368,7 @@ public class StoreController {
 	}
 
 	@RequestMapping("/inOutDetail/{inoutNo}")
-	public ModelAndView getInoutDetail(@PathVariable int inoutNo, ModelAndView mav, HttpSession session,
-			StoreInoutDTO dto) {
+	public ModelAndView getInoutDetail(@PathVariable int inoutNo, ModelAndView mav, HttpSession session, StoreInoutDTO dto) {
 		mav.addObject("custDataList", custService.getAllDataList(session));
 		mav.setViewName("store/inoutDetail");
 		mav.addObject("list1", codeService.listCode01(session));
@@ -372,11 +378,8 @@ public class StoreController {
 		dto.setCompNo(Integer.valueOf(inoutNo));
 		dto.setInoutNo(inoutNo);
 		mav.addObject("detail", storeInoutService.getInout(dto));
-
 		return mav;
 	}
-	
-	
 
 
 }

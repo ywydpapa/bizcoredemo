@@ -95,23 +95,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="setModQty">
 		update swc_store set storeQty = (storeQty + #{storeQty}) where storeNo = #{storNo}
 	</update>
-	
 
 <!--  2월 16일 수정사항 반영=================================================================================================== -->
-   <insert id = "insertStore2">Insert into swc_store (compNo,productNo,serialNo,storeQty,storeAmount,locationNo,userNo,comment,regDate,attrib)
+   <insert id = "insertStore2">INSERT INTO swc_store (compNo,productNo,serialNo,storeQty,storeAmount,locationNo,userNo,comment,regDate,attrib)
 	values
 	(#{compNo},#{productNo},#{serialNo},0,#{storeAmount},#{locationNo},#{userNo},#{comment},now(),'10000')</insert>
 	
 	<select id ="getLastStoreNo" resultType="Integer">
 	
-	select max(storeNo) from swc_store where compNo = #{compNo} and productNo = #{productNo} and serialNo =#{serialNo} and  storeAmount = #{storeAmount}
-and locationNo =#{locationNo} and userNo = #{userNo} ; 
+	SELECT max(storeNo) from swc_store where compNo = #{compNo} AND productNo = #{productNo} and serialNo =#{serialNo} AND storeAmount = #{storeAmount}
+AND locationNo =#{locationNo} AND userNo = #{userNo} ; 
 	</select>
 	
 	<update id="serialUpdate">   
- update swc_store set serialNo = #{serialNo} where storeNo = #{storeNo}</update> 
+UPDATE swc_store set serialNo = #{serialNo} WHERE storeNo = #{storeNo}</update> 
  
  <select id="getStoreNo" resultType="Integer"> 
 SELECT storeNo from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
+
+<select id="getCount" resultType="Integer"> 
+SELECT count(storeNo) from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
  
 </mapper>

@@ -33,8 +33,6 @@ SELECT (-inoutQty + #{inoutQty}) as inoutQty FROM swc_store_inout  WHERE inoutNo
 UPDATE swc_store_inout SET inoutQty = (inoutQty + #{inoutQty}) WHERE inoutNo = #{inoutNo};
 </update>
 
-
-
 <!-- 검색 관련 쿼리 -->
 <select id="search" resultType="storeInoutDto">
 SELECT a.* ,b.serialNo , b.productNo, c.productName as productName FROM swc_store_inout a 
@@ -65,14 +63,10 @@ left join swc_cust d on d.custNo = a.locationNo
 where c.desc02 like CONCAT('%', #{locationNo}, '%') or b.desc03 like CONCAT('%', #{locationNo}, '%') or
 d.custName like CONCAT('%', #{locationNo}, '%'))
 </if>
+order by a.inoutNo desc;
 </select>
 
-
-
-
 <select id="getInOut" resultType="storeInoutDto">
-
-
 SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
 left join swc_store b on a.storeNo = b.storeNo  
 left join swc_product c on b.productNo = c.productNo  WHERE a.inoutNo = #{inoutNo} 
@@ -81,7 +75,6 @@ left join swc_product c on b.productNo = c.productNo  WHERE a.inoutNo = #{inoutN
 <update id="updateEtc">
 UPDATE swc_store_inout SET locationNo = #{locationNo} , inoutAmount = #{inoutAmount},  comment =#{comment} WHERE inoutNo = #{inoutNo};
 </update>
-
 
 
 </mapper> 

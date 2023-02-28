@@ -24,6 +24,8 @@ public interface StoreService {
 
 	int getStoreNo(HttpSession session, int productNo);
 
+	int getCount(int productNo);
+
 
 }
  

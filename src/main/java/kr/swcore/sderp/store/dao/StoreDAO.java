@@ -22,6 +22,8 @@ public interface StoreDAO {
 
 	int getStoreNo(int productNo);
 
+	int getCount(int productNo);
+
 
 
 }

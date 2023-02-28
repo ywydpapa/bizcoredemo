@@ -40,19 +40,24 @@ tr.shown td.details-control {
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
-				
+
 					<div class="d-inline">입출고 등록</div>
 				</div>
 			</div>
 		</div>
-		
-	</div>
-	<div style="margin:10px 0; display:flex"><h6 class="cont_title" style="line-height: 2.5;margin-right:5px;"><i class="icofont icofont-square-right"></i> 입/출고 선택  :  </h6><select id="storeType" class="form-control form-control-sm" style="width: 80px;" onchange="inoutChange(this)">
-		<option value="IN">입고</option>
-		<option value="OUT">출고</option>
-									</select></div>
-	<!--Page-header end 페이지 타이틀 -->
 
+	</div>
+	<div style="margin: 10px 0; display: flex">
+		<h6 class="cont_title" style="line-height: 2.5; margin-right: 5px;">
+			<i class="icofont icofont-square-right"></i> 입/출고 선택 :
+		</h6>
+		<select id="storeType" class="form-control form-control-sm"
+			style="width: 80px;" onchange="inoutChange(this)">
+			<option value="IN">입고</option>
+			<option value="OUT">출고</option>
+		</select>
+	</div>
+	<!--Page-header end 페이지 타이틀 -->
 	<div class="cnt_wr">
 		<div class="row">
 			<div class="col-sm-12">
@@ -77,7 +82,8 @@ tr.shown td.details-control {
 									<th class="text-center">위치</th>
 									<th class="text-center">비고</th>
 									<td class="text-center" rowspan="2" colspan="1">
-									<button id="data01Addbtn" class="btn btn-success btn-sm" onclick="inoutTablePlus()">추가</button>
+										<button id="data01Addbtn" class="btn btn-success btn-sm"
+											onclick="inoutTablePlus()">추가</button>
 									</td>
 								</tr>
 								<tr>
@@ -165,50 +171,56 @@ tr.shown td.details-control {
 												</div>
 											</div>
 										</div></td>
-
-
-									<td><input type="text" class="form-control form-control-sm" id="inSerialNo" ></input> 
-										<select id="outStoreNo" class="form-control form-control-sm" style="min-width: 80px; display: none" onchange="changeMinQty(this);">
+									<td><input type="text"
+										class="form-control form-control-sm" id="inSerialNo"></input>
+										<select id="outStoreNo" class="form-control form-control-sm"
+										style="min-width: 80px; display: none"
+										onchange="changeMinQty(this);">
 											<option></option>
 											<c:forEach var='row' items='${storeList}'>
-												<option class="storeOptions"
-													value='${row.productNo}-${row.storeNo}-${row.serialNo}-${row.storeQty}'
-													style="display: none;">재고번호 :${row.storeNo},
-													시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
+												<c:if test="${row.storeQty > 0}">
+													<option class="storeOptions"
+														value='${row.productNo}-${row.storeNo}-${row.serialNo}-${row.storeQty}'
+														style="display: none;">재고번호 :${row.storeNo},
+														시리얼번호:${row.serialNo}(${row.storeQty}개)</option>
+												</c:if>
 											</c:forEach>
 									</select></td>
 									<td><input type="text" id="storeQty"
 										class="form-control form-control-sm" value="1"
 										style="min-width: 80px; text-align: right;"
-										onkeyup="setNum(this)">
-										</td>
-										<td><input type="text" id="storeAmount"
+										onkeyup="setNum(this)"></td>
+									<td><input type="text" id="storeAmount"
 										class="form-control form-control-sm" value="0"
 										style="min-width: 80px; text-align: right;"
-										onkeyup="setNum(this)">
-										</td>
+										onkeyup="setNum(this)"></td>
 									<td>
 										<!-- loct02 셀렉트 -->
-										<div class="inLocationSelect"> <select onchange="setlist3Options(this)"
-										id="storeLoc1">
-											<c:forEach var="list2" items="${list2}">
-												<c:if test="${list2.code01 eq 'LOCT01'}">
-													<option value="${list2.code02}">${list2.desc02}</option>
-												</c:if>
-											</c:forEach>
-									</select> <!-- loct03 셀렉트 --> <select id="storeLoc2">
-											<c:forEach var="list3" items="${list3}">
+										<div class="inLocationSelect">
+											<select onchange="setlist3Options(this)" id="storeLoc1">
 												<c:forEach var="list2" items="${list2}">
-													<c:if
-														test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
-														<option class="list3Options" <c:if test="${list2.code02 != 'LOC201'}" >style="display: none;"</c:if>
-															value="${list2.code01}-${list3.code02}-${list3.code03}^${list3.desc03}">${list3.desc03}</option>
+													<c:if test="${list2.code01 eq 'LOCT01'}">
+														<option value="${list2.code02}">${list2.desc02}</option>
 													</c:if>
 												</c:forEach>
-											</c:forEach>
-									</select></div>
+											</select>
+											<!-- loct03 셀렉트 -->
+											<select id="storeLoc2">
+												<c:forEach var="list3" items="${list3}">
+													<c:forEach var="list2" items="${list2}">
+														<c:if
+															test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
+															<option class="list3Options"
+																<c:if test="${list2.code02 != 'LOC201'}" >style="display: none;"</c:if>
+																value="${list2.code01}-${list3.code02}-${list3.code03}^${list3.desc03}">${list3.desc03}</option>
+														</c:if>
+													</c:forEach>
+												</c:forEach>
+											</select>
+										</div>
 
-										<div class="input-group input-group-sm mb-0 outLocationSelect" style="display:none;">
+										<div class="input-group input-group-sm mb-0 outLocationSelect"
+											style="display: none;">
 											<input type="text" class="form-control" name="custName"
 												id="custName" value="" readonly> <input
 												type="hidden" name="custNo" id="custNo" value="" /> <span
@@ -244,8 +256,6 @@ tr.shown td.details-control {
 											</div>
 										</div>
 									</td>
-
-
 									<td><input type="text" id="comment"
 										class="form-control form-control-sm" style="min-width: 80px;"></input></td>
 								</tr>
@@ -259,7 +269,7 @@ tr.shown td.details-control {
 								<col width="25%">
 								<col width="5%">
 								<col width="10%">
-								<col width="20%">	
+								<col width="20%">
 								<col width="10%">
 								<col width="5%">
 							</colgroup>
@@ -276,11 +286,11 @@ tr.shown td.details-control {
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="itemIn" style="display:none">
+								<tr class="itemIn" style="display: none">
 									<!--  <td colspan="8"
 										style="text-align: center; background: #80808030;">입고</td>-->
 								</tr>
-								<tr class="itemOut" style="display:none;text-align: right">
+								<tr class="itemOut" style="display: none; text-align: right">
 									<!-- <td colspan="8"
 										style="text-align: center; background: #80808030;">출고</td>-->
 								</tr>
@@ -434,10 +444,11 @@ tr.shown td.details-control {
 				alert("상품 수량을 1 이상으로 입력하세요");
 			} else if ($("#storeUnit").val() == 0) {
 				alert("재고 단위를 1 이상으로 입력하세요");
-			} else if ( $("#storeType").val() == "IN" &&$("#storeLoc2").val() == "") {
+			} else if ($("#storeType").val() == "IN"
+					&& $("#storeLoc2").val() == "") {
 				alert("상세 위치를 선택하세요")
-				
-			}else {
+
+			} else {
 				var storeData = {};
 				storeData.productNo = $("#productNo").val() * 1;
 				storeData.serialNo = $("#serialNo").val();
@@ -694,23 +705,23 @@ tr.shown td.details-control {
 			storeAmount = $("#storeAmount").val();
 			storeType = $("#storeType").val() == "IN" ? "입고" : "출고";
 			// 입고인 경우 재고 번호(시리얼 번호)와 위치번호 
-			if(storeType == "입고") {
+			if (storeType == "입고") {
 				storeNo = $("#inSerialNo").val();
-			    location = $("#storeLoc2").val();
-		    if (location == "" || location == null) {
-				locationNo = "";
-				locationName = "";
+				location = $("#storeLoc2").val();
+				if (location == "" || location == null) {
+					locationNo = "";
+					locationName = "";
+				} else {
+					locationNo = location.split("^")[0];
+					locationName = location.split("^")[1];
+				}
+				// 출고인 경우 재고 번호와 거래처 번호 
 			} else {
-				locationNo = location.split("^")[0];   
-				locationName = location.split("^")[1];
+				storeNo = $("#outStoreNo").val();
+				locationNo = $("#custNo").val();
+				locationName = $("#custName").val();
 			}
-			// 출고인 경우 재고 번호와 거래처 번호 
-			} else {
-			   storeNo = $("#outStoreNo").val();
-			   locationNo = $("#custNo").val(); 
-			   locationName = $("#custName").val(); 
-			} 
-			
+
 			comment = $("#comment").val();
 
 			if (productName == "") {
@@ -719,22 +730,27 @@ tr.shown td.details-control {
 				alert("재고 종류를 선택하세요");
 			} else if (storeQty <= 0) {
 				alert("입/출고 수량을 1개 이상으로 설정하세요");
-			} else if (storeType =="입고" && ($("#storeLoc2").val() == "" || $("#storeLoc2").val() == null)) {
+			} else if (storeType == "입고"
+					&& ($("#storeLoc2").val() == "" || $("#storeLoc2").val() == null)) {
 				alert("입고 상세 위치를 선택하세요");
-			} else if (storeType =="출고" &&   ($("#custName").val() == "" ||  $("#custName").val() == null)) {
+			} else if (storeType == "출고"
+					&& ($("#custName").val() == "" || $("#custName").val() == null)) {
 				alert("출고 위치를 선택하세요");
 			} else {
 				let html = "";
 				html += "<td>" + storeType + "</td>";
 				html += "<td data-no='"+productNo+"''>" + productName + "</td>";
-				if(storeType == "출고") {
-				html += "<td data-no='"+storeNo+"''>재고번호:" + storeNo.split("-")[1]+" / 시리얼번호:"+storeNo.split("-")[2]  + "</td>";		
+				if (storeType == "출고") {
+					html += "<td data-no='"+storeNo+"''>재고번호:"
+							+ storeNo.split("-")[1] + " / 시리얼번호:"
+							+ storeNo.split("-")[2] + "</td>";
 				} else {
-					html += "<td>" + storeNo + "</td>";		
+					html += "<td>" + storeNo + "</td>";
 				}
 				html += "<td>" + storeQty + "</td>";
 				html += "<td>" + storeAmount + "</td>";
-				html += "<td data-no='"+locationNo+"'>" + locationName + "</td>";
+				html += "<td data-no='"+locationNo+"'>" + locationName
+						+ "</td>";
 				html += "<td>" + comment + "</td>";
 				html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
 				let target;
@@ -743,27 +759,26 @@ tr.shown td.details-control {
 					target = $(".itemIn")[$(".itemIn").length - 1];
 					tr.className = "itemIn";
 				} else {
-					target = $(".itemOut")[$(".itemOut").length - 1];      
+					target = $(".itemOut")[$(".itemOut").length - 1];
 					tr.className = "itemOut";
 				}
 				tr.innerHTML = html;
 				target.after(tr);
-				
+
 				// 초기화 
 				$("#productNo").val("");
 				$("#data02Title").val("");
 				$(".storeOptions").hide();
 				$("#custName").val("");
-				$("#custNo").val(""); 
+				$("#custNo").val("");
 				$("#storeQty").val(1);
 				$("#storeAmount").val(0);
 				$("#comment").val("");
-				$("#inSerialNo").val(""); 
+				$("#inSerialNo").val("");
 				$("#outStoreNo").val("");
 				$(".minQty").html("수량");
-				
+
 			}
-			
 
 		}
 
@@ -772,6 +787,7 @@ tr.shown td.details-control {
 		}
 
 		function storeInOutInsert() {
+			let pass = 0;
 			let storeDatas = [];
 			let eachData;
 			for (let i = 1; i < $(".itemIn").length; i++) {
@@ -780,7 +796,8 @@ tr.shown td.details-control {
 				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
 				eachData.serialNo = $(".itemIn")[i].children[2].innerHTML;
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML.replaceAll(",","")*1;
+				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML
+						.replaceAll(",", "") * 1;
 				eachData.locationNo = $(".itemIn")[i].children[5].dataset.no;
 				eachData.comment = $(".itemIn")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
@@ -793,58 +810,120 @@ tr.shown td.details-control {
 				eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
 				// 재고번호 
-				eachData.storeNo = $(".itemOut")[i].children[2].dataset.no.split("-")[1];
-				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML.replaceAll(",","")*1;
+				eachData.storeNo = $(".itemOut")[i].children[2].dataset.no
+						.split("-")[1];
+				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML
+						.replaceAll(",", "") * 1;
 				eachData.locationNo = $(".itemOut")[i].children[5].dataset.no;
 				eachData.comment = $(".itemOut")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
 			}
 
-			storeDatas = JSON.stringify(storeDatas);
+			let itemOut = $(".itemOut");
 
-			$.ajax({
-				url : "${path}/store/inOutInsert.do",
-				method : "POST",
-				data : storeDatas,
-				dataType : "json",
-				traditional : true,
-				contentType : "text/plain",
-			}).done(function(result) {
-				if (result.code == 10001) {
-					alert("등록 성공");
-					location.href = "${path}/store/writeInout.do";
-				} else {
-					alert("등록 실패");
+			if (itemOut.length > 0) {
+				let array = [];
+
+				for (let j = 1; j < itemOut.length; j++) {
+					let no, max, sum;
+
+					no = itemOut[j].children[2].dataset.no.split("-")[1];
+					max = itemOut[j].children[2].dataset.no.split("-")[3];
+					sum = itemOut[j].children[3].innerHTML;
+
+					if (j == 1) {
+						array.push({
+							"no" : no,
+							"max" : max,
+							"sum" : sum,
+						})
+					} else {
+						for (let i = 0; i <= array.length - 1; i++) {
+							let check = 0;
+							let idx = -1;
+							let plus = 0;
+							let temp = {};
+							if (array[i].no == no) {
+								check = 1
+								idx = i;
+							}
+							if (check != 1) {
+								array.push({
+									"no" : no,
+									"max" : max,
+									"sum" : sum
+								})
+							} else {
+								plus = array[idx].sum;
+								plus = plus * 1 + sum * 1;
+								array[idx].sum = plus;
+							}
+						}
+					}
 				}
-			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-			.fail(function(xhr, status, errorThrown) {
-				alert("통신 실패");
-			});
+
+				for (let i = 0; i < array.length; i++) {
+					let msg = "";
+					if (array[i].max < array[i].sum) {
+						msg += "재고번호 " + array[i].no + " 현수량 " + array[i].max
+								+ "개 이상 출고할 수 없습니다";
+						pass = -1;
+					}
+					if (msg != "") {
+						alert(msg);
+					}
+				}
+
+			}
+
+			if (pass != -1) {
+
+				storeDatas = JSON.stringify(storeDatas);
+
+				$.ajax({
+					url : "${path}/store/inOutInsert.do",
+					method : "POST",
+					data : storeDatas,
+					dataType : "json",
+					traditional : true,
+					contentType : "text/plain",
+				}).done(function(result) {
+					if (result.code == 10001) {
+						alert("등록 성공");
+						location.href = "${path}/store/writeInout.do";
+					} else {
+						alert("등록 실패");
+					}
+				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				.fail(function(xhr, status, errorThrown) {
+					alert("통신 실패");
+				});
+
+			}
 
 		}
-		
+
 		// 입고 출고 셀렉트 온체인지 이벤트 
-		
-		function inoutChange(obj){
-			let inItem =$(".itemIn");
-			let outItem =$(".itemOut");
+
+		function inoutChange(obj) {
+			let inItem = $(".itemIn");
+			let outItem = $(".itemOut");
 			// 초기화 
 			$("#productNo").val("");
 			$("#data02Title").val("");
 			$(".storeOptions").hide();
 			$("#custName").val("");
-			$("#custNo").val(""); 
+			$("#custNo").val("");
 			$("#storeQty").val(1);
 			$("#storeAmount").val(0);
 			$("#comment").val("");
-			$("#inSerialNo").val(""); 
+			$("#inSerialNo").val("");
 			$("#outStoreNo").val("");
 
-		
-			if(obj.value =="IN") {
+			if (obj.value == "IN") {
 				$("#inSerialNo").show();
 				$("#outStoreNo").hide();
-				$(".inLocationSelect").show();	
+				$(".inLocationSelect").show();
 				$(".outLocationSelect").hide();
 				$(".inOutInput").html("시리얼 번호");
 			} else {
@@ -854,30 +933,79 @@ tr.shown td.details-control {
 				$("#outStoreNo").show();
 				$(".inOutInput").html("출고 재고");
 			}
-			for(let i = 1; i <inItem.length; i ++) {
-				$(inItem[i]).remove(); 
+			for (let i = 1; i < inItem.length; i++) {
+				$(inItem[i]).remove();
 			}
-			for(let i = 1; i < outItem.length; i ++) {
-				$(outItem[i]).remove(); 
+			for (let i = 1; i < outItem.length; i++) {
+				$(outItem[i]).remove();
 			}
-			
-		} 
-		
-		
-		
-		function changeMinQty(obj) {
-			
-			let min = obj.value; 
-			min = min.split("-")[3]; 
-			
-			$(".minQty").html("수량("+min+")");
-			
-			
-			
+
 		}
-			
-		
-		
+
+		function changeMinQty(obj) {
+
+			let min = obj.value;
+			min = min.split("-")[3];
+
+			$(".minQty").html("수량(" + min + ")");
+
+		}
+
+		function checkMaxQty() {
+
+			let itemOut = $(".itemOut");
+
+			let array = [];
+
+			for (let j = 1; j < itemOut.length; j++) {
+				let no, max, sum;
+
+				no = itemOut[j].children[2].dataset.no.split("-")[1];
+				max = itemOut[j].children[2].dataset.no.split("-")[3];
+				sum = itemOut[j].children[3].innerHTML;
+
+				if (j == 1) {
+					array.push({
+						"no" : no,
+						"max" : max,
+						"sum" : sum,
+					})
+				} else {
+					for (let i = 0; i <= array.length - 1; i++) {
+						let check = 0;
+						let idx = -1;
+						let plus = 0;
+						let temp = {};
+						if (array[i].no == no) {
+							check = 1
+							idx = i;
+						}
+						if (check != 1) {
+							array.push({
+								"no" : no,
+								"max" : max,
+								"sum" : sum
+							})
+						} else {
+							plus = array[idx].sum;
+							plus = plus * 1 + sum * 1;
+							array[idx].sum = plus;
+						}
+					}
+				}
+			}
+
+			for (let i = 0; i < array.length; i++) {
+				let msg = "";
+				if (array[i].max < array[i].sum) {
+					msg += "재고번호 " + array[i].no + " 현수량 " + array[i].max
+							+ "개 이상 출고할 수 없습니다";
+				}
+				if (msg != "") {
+					alert(msg);
+				}
+			}
+		}
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />

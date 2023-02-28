@@ -88,6 +88,13 @@ public class StoreServiceImpl implements StoreService{
 		  return storeDao.getStoreNo(productNo);
 	}
 
+
+	@Override
+	public int getCount(int productNo) {
+		// TODO Auto-generated method stub
+		return storeDao.getCount(productNo);
+	}
+
 	
 	
 }
