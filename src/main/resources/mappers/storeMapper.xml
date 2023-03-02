@@ -22,10 +22,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left join swc_product b on a.productNo = b.productNo
 		left join swc_cust c on b.custNo = c.custNo
 		group by productNo ;-->
+	<!--  	select a.*, c.custName, b.productCategoryName, b.productName from swc_store a  
+		left join swc_product b on a.productNo = b.productNo 
+		left join swc_cust c on c.custNo  = b.custNo 
+		where a.compNo = #{compNo} and a.attrib not like '%XXX%' order by a.storeNo desc;-->    
+		
 		select a.*, c.custName, b.productCategoryName, b.productName from swc_store a  
 		left join swc_product b on a.productNo = b.productNo 
 		left join swc_cust c on c.custNo  = b.custNo 
-		where a.compNo = #{compNo} and a.attrib not like '%XXX%' order by a.storeNo desc;    
+		where  a.attrib not like '%XXX%' 
+    <if test="storeNo != null and storeNo != '' "> and a.storeNo = #{storeNo} </if>
+	<if test="productNo != null and productNo != '' ">	and a.productNo = #{productNo}</if>
+	<if test="custName != null and custName != '' ">	and c.custName like CONCAT('%', #{custName}, '%')</if>
+	<if test="productCategoryName != null and productCategoryName != '' ">	and b.productCategoryName like CONCAT('%', #{productCategoryName}, '%')</if>
+	<if test="serialNo != null and serialNo != '' ">	and a.serialNo like CONCAT('%', #{serialNo}, '%')</if>
+	<if test="productName != null and productName != '' ">	and b.productName like  CONCAT('%', #{productName}, '%') </if>
+		order by a.storeNo desc;  	
 	</select>
 
 	<select id="storeList" resultType="storeDto">
@@ -36,7 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<select id="detailStore" resultType="storeDto">
-
 		<!-- select a.*, b.productName from swc_store a left join swc_product b 
 			on a.productNo = b.productNo where a.storeNo = #{storeNo} and a.attrib not 
 			like 'XXX%'; -->
@@ -48,10 +59,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select a.*, b.productName from swc_store a left join swc_product b on
 		a.productNo = b.productNo where a.storeNo = #{storeNo} and
 		a.attrib not like 'XXX%';
-		
-		
-		
-
 	</select>
 
 	<insert id="insertStore">
@@ -97,23 +104,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 
 <!--  2월 16일 수정사항 반영=================================================================================================== -->
-   <insert id = "insertStore2">INSERT INTO swc_store (compNo,productNo,serialNo,storeQty,storeAmount,locationNo,userNo,comment,regDate,attrib)
+   <insert id ="insertStore2">INSERT INTO swc_store (compNo,productNo,serialNo,storeQty,storeAmount,locationNo,userNo,comment,regDate,attrib)
 	values
 	(#{compNo},#{productNo},#{serialNo},0,#{storeAmount},#{locationNo},#{userNo},#{comment},now(),'10000')</insert>
 	
 	<select id ="getLastStoreNo" resultType="Integer">
-	
 	SELECT max(storeNo) from swc_store where compNo = #{compNo} AND productNo = #{productNo} and serialNo =#{serialNo} AND storeAmount = #{storeAmount}
-AND locationNo =#{locationNo} AND userNo = #{userNo} ; 
+    AND locationNo =#{locationNo} AND userNo = #{userNo} ; 
 	</select>
 	
-	<update id="serialUpdate">   
-UPDATE swc_store set serialNo = #{serialNo} WHERE storeNo = #{storeNo}</update> 
+	<update id="serialUpdate">  UPDATE swc_store set serialNo = #{serialNo} WHERE storeNo = #{storeNo}</update> 
  
- <select id="getStoreNo" resultType="Integer"> 
-SELECT storeNo from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
+	<select id="getStoreNo" resultType="Integer"> SELECT storeNo from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
 
-<select id="getCount" resultType="Integer"> 
-SELECT count(storeNo) from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
+	<select id="getCount" resultType="Integer"> SELECT count(storeNo) from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL); </select>
  
 </mapper>

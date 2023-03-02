@@ -22,7 +22,6 @@ public class StoreServiceImpl implements StoreService{
         dto.setCompNo(compNo);
         return storeDao.listStore(dto);
     }
-    
 
     @Override
     public int insertStore(HttpSession session, StoreDTO dto) {
@@ -33,7 +32,6 @@ public class StoreServiceImpl implements StoreService{
         return storeDao.insertStore(dto);
     }
 
-  
     @Override
     public int updateStore(HttpSession session,StoreDTO dto) {
         return storeDao.updateStore(dto);
@@ -58,9 +56,6 @@ public class StoreServiceImpl implements StoreService{
 	
 	}
 
-	
-	
-	
 	// ���� �� �ڵ� =============================================================================================================== 
 	@Override
 	public int insertStore2(HttpSession session, StoreDTO storeDto) {
@@ -70,8 +65,6 @@ public class StoreServiceImpl implements StoreService{
 		  return storeDao.insertStore2(storeDto);
 	}
 
-
-
 	@Override
 	public int getLastStoreNo(HttpSession session, StoreDTO storeDto) {
 		 Integer userNo = SessionInfoGet.getUserNo(session);
@@ -80,14 +73,12 @@ public class StoreServiceImpl implements StoreService{
 		  return storeDao.getLastStoreNo(storeDto);
 	}
 
-
 	@Override
 	public int getStoreNo(HttpSession session, int productNo) {
 		
 		 
 		  return storeDao.getStoreNo(productNo);
 	}
-
 
 	@Override
 	public int getCount(int productNo) {

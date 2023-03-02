@@ -36,7 +36,6 @@
 	</div>
 	<!--Page-header end 페이지 타이틀 -->
 	<!--재고 리스트  table-->
-
 	<div class="col-sm-12">
 		<div class="card_box sch_it">
 			<!--row-->
@@ -96,7 +95,6 @@
 							onchange="dateChange(this)">
 					</p>
 				</div>
-
 			</div>
 			<div style="text-align: right;">
 				<button class="btn btn-sm btn-primary" onclick="multiSearch()">
@@ -223,7 +221,6 @@
 								</c:forEach>
 							</tbody>
 						</table>
-
 					</div>
 				</div>
 			</div>

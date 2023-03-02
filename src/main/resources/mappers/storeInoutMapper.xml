@@ -54,7 +54,7 @@ AND a.storeNo = #{storeNo}
 <if test="from != null and from != ''">
 AND a.regDate between CONCAT(#{from},' ','00:00:00') AND CONCAT(#{to},' ', '23:59:59')
 </if>
-<if test="locationNo !=null and locationNo !=''">
+<if test="locationNo != null and locationNo !=''">
 AND a.locationNo in 
 (select distinct a.locationNo from swc_store_inout a 
 left join swc_code b on substring_index(a.locationNo,"-",-1) = b.code03

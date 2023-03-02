@@ -186,10 +186,15 @@ tr.shown td.details-control {
 												</c:if>
 											</c:forEach>
 									</select></td>
-									<td><input type="text" id="storeQty"
+									<td>
+									<div style="display:flex">
+									<input type="text" readonly="" id="maxQty" class="form-control form-control-sm" style="min-width: 80px; display:none;text-align: right;""/>
+									<input type="text" id="storeQty"
 										class="form-control form-control-sm" value="1"
 										style="min-width: 80px; text-align: right;"
-										onkeyup="setNum(this)"></td>
+										onkeyup="setNum(this)">
+									</div>
+									</td>
 									<td><input type="text" id="storeAmount"
 										class="form-control form-control-sm" value="0"
 										style="min-width: 80px; text-align: right;"
@@ -684,6 +689,8 @@ tr.shown td.details-control {
 					'click');
 			let option = $(".storeOptions");
 			$("#storeNo").val("")
+			$("#outStoreNo").val("");
+			$("#maxQty").val("");
 			$(".storeOptions").hide();
 			for (let i = 0; i < option.length; i++) {
 				if (option[i].value.split("-")[0] == a)
@@ -796,8 +803,7 @@ tr.shown td.details-control {
 				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
 				eachData.serialNo = $(".itemIn")[i].children[2].innerHTML;
 				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML
-						.replaceAll(",", "") * 1;
+				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML.replaceAll(",", "") * 1;
 				eachData.locationNo = $(".itemIn")[i].children[5].dataset.no;
 				eachData.comment = $(".itemIn")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
@@ -806,14 +812,10 @@ tr.shown td.details-control {
 			for (let i = 1; i < $(".itemOut").length; i++) {
 				eachData = {};
 				eachData.inoutType = "OUT"
-				// 상품번호
 				eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
 				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
-				// 재고번호 
-				eachData.storeNo = $(".itemOut")[i].children[2].dataset.no
-						.split("-")[1];
-				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML
-						.replaceAll(",", "") * 1;
+				eachData.storeNo = $(".itemOut")[i].children[2].dataset.no.split("-")[1];
+				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML.replaceAll(",", "") * 1;
 				eachData.locationNo = $(".itemOut")[i].children[5].dataset.no;
 				eachData.comment = $(".itemOut")[i].children[6].innerHTML;
 				storeDatas.push(eachData);
@@ -823,7 +825,7 @@ tr.shown td.details-control {
 
 			if (itemOut.length > 0) {
 				let array = [];
-
+				
 				for (let j = 1; j < itemOut.length; j++) {
 					let no, max, sum;
 
@@ -925,13 +927,18 @@ tr.shown td.details-control {
 				$("#outStoreNo").hide();
 				$(".inLocationSelect").show();
 				$(".outLocationSelect").hide();
+				$("#maxQty").val("");
+				$("#maxQty").hide();
 				$(".inOutInput").html("시리얼 번호");
+				$(".minQty").html("수량");
 			} else {
 				$(".inLocationSelect").hide();
 				$(".outLocationSelect").show();
 				$("#inSerialNo").hide();
 				$("#outStoreNo").show();
 				$(".inOutInput").html("출고 재고");
+				$(".minQty").html("재고수량 / 출고수량");
+				$("#maxQty").show();
 			}
 			for (let i = 1; i < inItem.length; i++) {
 				$(inItem[i]).remove();
@@ -943,11 +950,11 @@ tr.shown td.details-control {
 		}
 
 		function changeMinQty(obj) {
-
 			let min = obj.value;
-			min = min.split("-")[3];
-
-			$(".minQty").html("수량(" + min + ")");
+			let arr = min.split("-").length; 
+	 
+			min = min.split("-")[arr-1];
+			$("#maxQty").val(min);
 
 		}
 

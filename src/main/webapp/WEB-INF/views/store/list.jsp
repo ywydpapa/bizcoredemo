@@ -50,12 +50,61 @@
 	<div class="cnt_wr">
 		<div class="row">
 			<div class="col-sm-12">
+
 				<div class="btn_wr text-right">
 					<button class="btn btn-sm btn-primary f-right" type="button"
 						id="btnAdd">
 						<i class="icofont icofont-plus"></i>입출고 등록
 					</button>
 				</div>
+				<div class="col-sm-12" style="padding:20px 0">
+		    <div class="card_box sch_it">
+			<div class="form-group row">
+				<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="storeNo">재고번호</label>
+					<div class="input-group input-group-sm mb-0">
+					<input type="text"  class="form-control" id="storeNo"/>
+					</div>
+				</div>
+					<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="productNo">상품번호</label>
+					<div class="input-group input-group-sm mb-0">
+					<input type="text"  class="form-control" id="productNo"/>
+					</div>
+				</div>
+				<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="customer">공급사</label>
+					<div class="input-group input-group-sm mb-0">
+					<input type="text"  class="form-control" id="customer"/>
+					</div>
+				</div>
+				<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="productCategoryName">제품그룹</label>
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control" id="productCategoryName">
+					</div>
+				</div>
+				<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="productName">상품명</label>
+					<div class="input-group input-group-sm mb-0">
+						<input type="text" class="form-control" id="productName" >
+					</div>
+				</div>
+				<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="serialNo">시리얼번호</label>
+					<div class="input-group input-group-sm mb-0">
+						<input type="text" class="form-control" id="serialNo">
+					</div>
+				</div>
+			</div>
+			<div style="text-align: right; margin:10px 0">
+				<button class="btn btn-sm btn-primary" onclick="multiSearch()">
+					<i class="icofont icofont-search" id="search"></i>검색
+				</button>
+				<button class="btn btn-sm btn-inverse" onclick="location.href='${path}/store/listStore.do'"><i class="icofont icofont-spinner-alt-3"></i>초기화</button>
+			</div>
+		</div>
+	</div>
 				<div class="card-block table-border-style">
 					<div class="dt-responsive table-responsive">
 						<table id="productTable"
@@ -102,4 +151,80 @@
 		</div>
 	</div>
 </div>
+
+
+
+
 <jsp:include page="../body-bottom.jsp" />
+<script> 
+
+function multiSearch() {
+	let storeNo , productNo,  customer, productCategoryName, productName , serialNo; 
+	
+	storeNo = $("#storeNo").val(); 
+	productNo = $("#productNo").val();
+	customer = $("#customer").val(); 
+	productCategoryName = $("#productCategoryName").val();
+	productName = $("#productName").val(); 
+	serialNo = $("#serialNo").val(); 
+	
+	let storeData = {} ; 
+	
+	storeData.storeNo = storeNo == "" ? null : storeNo; 
+	storeData.productNo = productNo  == "" ? null : productNo ; 
+	storeData.customer = customer == "" ? null : customer; 
+	storeData.productCategoryName = productCategoryName  == "" ? null : productCategoryName;
+	storeData.productName = productName == "" ? null : productName;  
+    storeData.serialNo = serialNo == "" ? null : serialNo; 
+    
+     let param = "?"
+     let paramFirst = true; 
+     let x; 
+     for( x in storeData) {
+    	 if(storeData[x] != null) {
+    		 if(paramFirst) {
+    			 param = param + x + "=" + storeData[x]; 
+    			 paramFirst = false; 
+    		 } else {
+    			 param = param + "&" + x + "=" + storeData[x]
+    		 }
+    	 } 
+     }
+
+     if (param == "?") param = ""; 
+     
+     let url = '${path}/store/listStore.do' + param; 
+     location.href = url; 
+     
+} 
+
+
+$(document).ready(function() { 
+	let storeNo , productNo,  customer, productCategoryName, productName , serialNo; 
+	
+	storeNo = $("#storeNo").val(); 
+	productNo = $("#productNo").val();
+	customer = $("#customer").val(); 
+	productCategoryName = $("#productCategoryName").val();
+	productName = $("#productName").val(); 
+	serialNo = $("#serialNo").val(); 
+	
+	storeNo = '${param.storeNo}'; 
+	productNo = '${param.productNo}'; 
+	customer = '${param.customer}';
+	productCategoryName = '${param.productCategoryName}'; 
+	productName = '${param.productName}';
+	serialNo = '${param.serialNo}'; 
+	
+	$("#storeNo").val(storeNo); 
+	$("#productNo").val(productNo); 
+	$("#customer").val(customer); 
+	$("#productCategoryName").val(productCategoryName); 
+	$("#productName").val(productName); 
+	$("#serialNo").val(serialNo); 
+	
+	localStorage.clear(); 
+	
+})
+
+</script>

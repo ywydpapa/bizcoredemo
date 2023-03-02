@@ -66,15 +66,30 @@ public class StoreController {
 
 	// 占쏙옙占쏙옙트 占쏙옙占쏙옙占쏙옙 占쏙옙회
 	@RequestMapping("listStore.do")
-	public ModelAndView list(HttpSession session, StoreDTO dto, ModelAndView mav) {
+	public ModelAndView list(HttpSession session, StoreDTO dto, ModelAndView mav,
+			@RequestParam(value = "storeNo", required = false) Integer storeNo,
+			@RequestParam(value = "productNo", required = false) Integer productNo,
+			@RequestParam(value = "customer", required = false) String custName,
+			@RequestParam(value = "productCategoryName", required = false) String productCategoryName,
+			@RequestParam(value = "productName", required = false) String productName,
+			@RequestParam(value = "serialNo", required = false) String serialNo) {
+		
+			if(storeNo != null)     dto.setStoreNo(storeNo);
+			if(productNo != null)	dto.setProductNo(productNo);
+			if(custName != null)	dto.setCustName(custName);
+			if(productCategoryName != null)	dto.setProductCategoryName(productCategoryName);
+			if(productName != null)	dto.setProductName(productName);
+			if(serialNo != null)	dto.setSerialNo(serialNo);
+		
 		mav.addObject("store", storeService.listStore(session, dto));
 		mav.setViewName("store/list");
+	
 		return mav;
 	}
 
 	// 占쏙옙占� 占쏙옙占쏙옙占쏙옙 占쏙옙회
 	@RequestMapping("writeStore.do")
-	public ModelAndView write(HttpSession session, CodeDTO dto, ModelAndView mav) {
+	public ModelAndView write(HttpSession session, CodeDTO dto, ModelAndView mav) {  
 		mav.addObject("list1", codeService.listCode01(session));
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
