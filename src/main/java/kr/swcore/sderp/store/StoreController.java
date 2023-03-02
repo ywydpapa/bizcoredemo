@@ -391,18 +391,18 @@ public class StoreController {
 	
 	@RequestMapping("/checkSerial") 
 	@ResponseBody 
-	public String checkSerail(@RequestBody String requestbody, StoreDTO dto) {
-		int  productNo = 0;
-	    String serialNo = null; 
-		org.json.JSONObject json = null; 
-		json = new org.json.JSONObject(requestbody);
-		String result = null;
-		
-		productNo = json.getInt("productNo");
-		serialNo = json.getString("serialNo");
-		dto.setProductNo(productNo);
-		dto.setSerialNo(serialNo);
-		
+	public String checkSerail(@RequestBody StoreDTO dto) {
+//		int  productNo = 0;
+//	    String serialNo = null; 
+//		org.json.JSONObject json = null; 
+//		json = new org.json.JSONObject(requestbody);
+	String result = null;
+//		
+//		productNo = json.getInt("productNo");
+//		serialNo = json.getString("serialNo");
+//		dto.setProductNo(productNo);
+//		dto.setSerialNo(serialNo);
+//		
 		 if(storeService.checkSerial(dto) > 0) {
 			 result = "{\"result\": \"failure\"}"; 
 		 } else {

@@ -752,18 +752,18 @@ tr.shown td.details-control {
 					   let serialNo = $("#inSerialNo").val();
 					   let productNo = $("#productNo").val(); 
 					   
-					   let storeData = {}; 
+					   let StoreDTO = {}; 
 					   
-					   storeData.productNo = productNo ;
-					   storeData.serialNo = serialNo; 
+					   StoreDTO.productNo = productNo ;
+					   StoreDTO.serialNo = serialNo; 
 					   
-					   storeData = JSON.stringify(storeData);
+					   StoreDTO = JSON.stringify(StoreDTO);
 					   
 					   $.ajax({
 						   url :  "${path}/store/checkSerial",
 						   method : "post",
-						   data : storeData, 
-						   contentType : "text/plain",
+						   data : StoreDTO, 
+						   contentType : "application/json",
 						   dataType : "json",
 						   success : (result) => {
 							    if(result.result == "failure") {
@@ -772,10 +772,6 @@ tr.shown td.details-control {
 						   }
 					   })
 					} 
-				
-				
-				
-				
 				
 			} else {
 				let html = "";
@@ -912,8 +908,6 @@ tr.shown td.details-control {
 
 			}
 			
-			
-		
 
 			if (pass != -1) {
 
@@ -1062,14 +1056,13 @@ tr.shown td.details-control {
 		   
 		   storeData.productNo = productNo ;
 		   storeData.serialNo = serialNo; 
-		   
-		   storeData = JSON.stringify(storeData);
+		 //  storeData = JSON.stringify(storeData);
 		   
 		   $.ajax({
 			   url :  "${path}/store/checkSerial",
 			   method : "post",
 			   data : storeData, 
-			   contentType : "text/plain",
+			   contentType : "application/json; charset=UTF-8",
 			   dataType : "json",
 			   success : (result) => {
 				    if(result.result == "failure") {
