@@ -86,6 +86,12 @@ public class StoreServiceImpl implements StoreService{
 		return storeDao.getCount(productNo);
 	}
 
+	@Override
+	public int checkSerial(StoreDTO dto) {
+		// TODO Auto-generated method stub
+		return storeDao.checkSerial(dto);
+	}
+
 	
 	
 }

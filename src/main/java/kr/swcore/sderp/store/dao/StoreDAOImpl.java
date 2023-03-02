@@ -69,4 +69,9 @@ public class StoreDAOImpl implements StoreDAO{
 	public int getCount(int productNo) {
 		return sqlSession.selectOne("store.getCount", productNo);
 	}
+
+	@Override
+	public int checkSerial(StoreDTO dto) {
+		return sqlSession.selectOne("store.checkSerial", dto);
+	}
 }

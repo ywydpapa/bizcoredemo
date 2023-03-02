@@ -118,5 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getStoreNo" resultType="Integer"> SELECT storeNo from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL);  </select>
 
 	<select id="getCount" resultType="Integer"> SELECT count(storeNo) from swc_store where productNo = #{productNo}  AND attrib not like 'XXX%' AND (serialNo = "" OR serialNo IS NULL); </select>
+	
+	<select id="checkSerial" resultType="Integer"> select count(*) from swc_store where productNo = #{productNo} And serialNo = #{serialNo}</select>
  
 </mapper>

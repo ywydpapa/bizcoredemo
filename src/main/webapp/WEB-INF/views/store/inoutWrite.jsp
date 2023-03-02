@@ -187,13 +187,15 @@ tr.shown td.details-control {
 											</c:forEach>
 									</select></td>
 									<td>
-									<div style="display:flex">
-									<input type="text" readonly="" id="maxQty" class="form-control form-control-sm" style="min-width: 80px; display:none;text-align: right;""/>
-									<input type="text" id="storeQty"
-										class="form-control form-control-sm" value="1"
-										style="min-width: 80px; text-align: right;"
-										onkeyup="setNum(this)">
-									</div>
+										<div style="display: flex">
+											<input type="text" readonly="" id="maxQty"
+												class="form-control form-control-sm"
+												style="min-width: 80px; display: none; text-align: right;" "/>
+											<input type="text" id="storeQty"
+												class="form-control form-control-sm" value="1"
+												style="min-width: 80px; text-align: right;"
+												onkeyup="setNum(this)">
+										</div>
 									</td>
 									<td><input type="text" id="storeAmount"
 										class="form-control form-control-sm" value="0"
@@ -743,6 +745,38 @@ tr.shown td.details-control {
 			} else if (storeType == "출고"
 					&& ($("#custName").val() == "" || $("#custName").val() == null)) {
 				alert("출고 위치를 선택하세요");
+			} else if (storeType =="입고") { 
+				
+				if( $("#storeType").val() =="IN") {
+					
+					   let serialNo = $("#inSerialNo").val();
+					   let productNo = $("#productNo").val(); 
+					   
+					   let storeData = {}; 
+					   
+					   storeData.productNo = productNo ;
+					   storeData.serialNo = serialNo; 
+					   
+					   storeData = JSON.stringify(storeData);
+					   
+					   $.ajax({
+						   url :  "${path}/store/checkSerial",
+						   method : "post",
+						   data : storeData, 
+						   contentType : "text/plain",
+						   dataType : "json",
+						   success : (result) => {
+							    if(result.result == "failure") {
+							        alert("이미 등록된 시리얼번호입니다"); 
+							    } 
+						   }
+					   })
+					} 
+				
+				
+				
+				
+				
 			} else {
 				let html = "";
 				html += "<td>" + storeType + "</td>";
@@ -877,6 +911,9 @@ tr.shown td.details-control {
 				}
 
 			}
+			
+			
+		
 
 			if (pass != -1) {
 
@@ -1012,6 +1049,34 @@ tr.shown td.details-control {
 					alert(msg);
 				}
 			}
+		} 
+		
+		
+		
+		
+		function checkSerialNo(){
+		   let serialNo = $("#inSerialNo").val();
+		   let productNo = $("#productNo").val(); 
+		   
+		   let storeData = {}; 
+		   
+		   storeData.productNo = productNo ;
+		   storeData.serialNo = serialNo; 
+		   
+		   storeData = JSON.stringify(storeData);
+		   
+		   $.ajax({
+			   url :  "${path}/store/checkSerial",
+			   method : "post",
+			   data : storeData, 
+			   contentType : "text/plain",
+			   dataType : "json",
+			   success : (result) => {
+				    if(result.result == "failure") {
+				        alert("이미 등록된 시리얼번호입니다"); 
+				    }
+			   }
+		   })
 		}
 	</script>
 </div>

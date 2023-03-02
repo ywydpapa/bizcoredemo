@@ -39,7 +39,7 @@
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
-					<div class="d-inline">재고관리</div>
+					<div class="d-inline">재고 현황</div>
 				</div>
 			</div>
 		</div>
@@ -151,8 +151,6 @@
 		</div>
 	</div>
 </div>
-
-
 
 
 <jsp:include page="../body-bottom.jsp" />

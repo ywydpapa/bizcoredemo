@@ -24,6 +24,8 @@ public interface StoreDAO {
 
 	int getCount(int productNo);
 
+	int checkSerial(StoreDTO dto);
+
 
 
 }

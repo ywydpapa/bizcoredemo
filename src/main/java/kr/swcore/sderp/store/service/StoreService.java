@@ -26,6 +26,8 @@ public interface StoreService {
 
 	int getCount(int productNo);
 
+	int checkSerial(StoreDTO dto);
+
 
 }
  

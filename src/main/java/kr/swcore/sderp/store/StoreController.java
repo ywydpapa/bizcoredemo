@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -388,7 +389,29 @@ public class StoreController {
 		return mav;
 	}
 	
-	
+	@RequestMapping("/checkSerial") 
+	@ResponseBody 
+	public String checkSerail(@RequestBody String requestbody, StoreDTO dto) {
+		int  productNo = 0;
+	    String serialNo = null; 
+		org.json.JSONObject json = null; 
+		json = new org.json.JSONObject(requestbody);
+		String result = null;
+		
+		productNo = json.getInt("productNo");
+		serialNo = json.getString("serialNo");
+		dto.setProductNo(productNo);
+		dto.setSerialNo(serialNo);
+		
+		 if(storeService.checkSerial(dto) > 0) {
+			 result = "{\"result\": \"failure\"}"; 
+		 } else {
+			 result ="{\"result\": \"success\"}"; 
+		 }
+		
+		return result; 
+		
+	}
 
 
 }
