@@ -55,7 +55,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<!-- select a.*, b.productName from swc_store a left join swc_product b on
 		a.productNo = b.productNo where a.productNo = #{productNo} and
 		a.attrib not like 'XXX%'; -->
-		
 		select a.*, b.productName from swc_store a left join swc_product b on
 		a.productNo = b.productNo where a.storeNo = #{storeNo} and
 		a.attrib not like 'XXX%';

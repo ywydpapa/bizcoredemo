@@ -255,7 +255,7 @@
 		});
 
 
-    // 입고,출고 수량 수정 함수 
+    // 입고, 출고 수량 수정 함수 
 	function doChange(obj) {
 
 		let inoutType, placeholder, inoutQty, storeNo, inoutNo;
@@ -329,7 +329,6 @@
 		obj.value = obj.value.replace(/[^0-9.]/g, "");
 	}
 	
-	
 	 // 검색 시 입출고 일자 이벤트 
 	function dateChange(obj) {
 		let from, to;
@@ -350,7 +349,6 @@
 		}
 	}
 	
-
     // 다중 검색 함수 
 	function multiSearch() {
 		let soppTitle , inOutType, productName, storeNo, serialNo, locationNo, from, to;
@@ -395,9 +393,7 @@
 		let url = '${path}/store/inOutList.do' + param;
 		location.href = url;
 	
-	}
-	
-   
+	}  bbbbbbb
 	
 
 </script>

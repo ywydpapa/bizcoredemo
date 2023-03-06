@@ -47,7 +47,6 @@ tr.shown td.details-control {
 		</div>
 	</div>
 	<!--Page-header end 페이지 타이틀 -->
-
 	<div class="cnt_wr">
 		<div class="row">
 			<div class="col-sm-12">
@@ -71,7 +70,6 @@ tr.shown td.details-control {
 										class="form-control form-control-sm" value="${detail.regDate}"
 										readonly=""></td>
 								</tr>
-							
 								<tr>
 									<th scope="row" class="requiredTextCss">구분</th>
 									<td><input type="text" id="inoutType" style="background-color: white;border: none;"
@@ -142,7 +140,6 @@ tr.shown td.details-control {
 								</tr>
 								<tr>
 									<th scope="row" class="requiredTextCss">위치</th>
-
 									<c:choose>
 										<c:when test="${detail.inoutType eq 'IN'}">
 											<td>
@@ -261,9 +258,8 @@ tr.shown td.details-control {
 			</div>
 		</div>
 	</div>
-
 	<script>
-		// 이벤트 영역 시작
+		
 		$('#custModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
@@ -275,9 +271,7 @@ tr.shown td.details-control {
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
 		});
-		// 이벤트 영역 끝
-
-		// 페이지 특화 함수 시작
+	
 		function fnSetCategoryData(a, b) {
 			$("#productCategoryNo").val(a);
 			$("#productCategoryName").val(b);
@@ -305,7 +299,6 @@ tr.shown td.details-control {
 					}
 				}
 			}
-
 		}
 
 		function necessaryCheck() {
@@ -337,7 +330,6 @@ tr.shown td.details-control {
 				alert("기본정보 탭에 있는 필수값을 입력해주십시오.");
 				return false;
 			}
-
 			var productData = {};
 			productData.productName = $("#productName").val();
 			var productDefaultPrice = $("#productDefaultPrice").val();
@@ -424,7 +416,6 @@ tr.shown td.details-control {
 					alert("통신 실패");
 				});
 			}
-
 		}
 
 		$("#custRegSimple").on("click", function(event) {
@@ -676,7 +667,6 @@ tr.shown td.details-control {
 			}
 		}
 		
-		
 		$('#soppModal').on('show.bs.modal', function(e) {
 			var button = $(e.relatedTarget);
 			var modal = $(this);
@@ -690,6 +680,7 @@ tr.shown td.details-control {
 			$(".modal-backdrop").remove();
 			$("#soppModal").modal("hide");
 		}
+		
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />

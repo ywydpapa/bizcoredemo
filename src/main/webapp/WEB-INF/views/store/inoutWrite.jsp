@@ -32,7 +32,6 @@ tr.shown td.details-control {
 	text-decoration: underline;
 }
 
-
 </style>
 
 
@@ -42,7 +41,6 @@ tr.shown td.details-control {
 		<div class="row align-items-end">
 			<div class="col-lg-12">
 				<div class="page-header-title">
-
 					<div class="d-inline">입출고 등록</div>
 				</div>
 			</div>
@@ -788,8 +786,6 @@ tr.shown td.details-control {
 					&& ($("#custName").val() == "" || $("#custName").val() == null)) {
 				alert("출고 위치를 선택하세요");
 			} else if (storeType =="입고" && $("#inSerialNo").val() != "") { 
-				
-					
 					   let serialNo = $("#inSerialNo").val();
 					   let productNo = $("#productNo").val(); 
 					   
@@ -861,15 +857,11 @@ tr.shown td.details-control {
 								
 									$("#maxQty").val("");
 							    	
-							    	
-							    	
 							    }
 						   }
 					   })
 					
 			} else {
-				
-				
 				let html = "";
 				html += "<td data-no='"+soppNo+"'>" + soppTitle + "</td>";
 				html += "<td>" + storeType + "</td>";
@@ -964,9 +956,9 @@ tr.shown td.details-control {
 				for (let j = 1; j < itemOut.length; j++) {
 					let no, max, sum;
 
-					no = itemOut[j].children[2].dataset.no.split("-")[1];
-					max = itemOut[j].children[2].dataset.no.split("-")[3];
-					sum = itemOut[j].children[3].innerHTML;
+					no = itemOut[j].children[3].dataset.no.split("-")[1];
+					max = itemOut[j].children[3].dataset.no.split("-")[3];
+					sum = itemOut[j].children[4].innerHTML;
 
 					if (j == 1) {
 						array.push({
@@ -1032,7 +1024,7 @@ tr.shown td.details-control {
 					} else {
 						alert("등록 실패");
 					}
-				}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+				}) 
 				.fail(function(xhr, status, errorThrown) {
 					alert("통신 실패");
 				});
@@ -1180,27 +1172,6 @@ tr.shown td.details-control {
 			
 		}
 	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 	    
 	</script>
