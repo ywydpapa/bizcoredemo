@@ -809,11 +809,67 @@ tr.shown td.details-control {
 						   success : (result) => {
 							    if(result.result == "failure") {
 							        alert("이미 등록된 시리얼번호입니다"); 
-							    } 
+							    }  else {
+							    	
+							    	let html = "";
+									html += "<td data-no='"+soppNo+"'>" + soppTitle + "</td>";
+									html += "<td>" + storeType + "</td>";
+									html += "<td data-no='"+productNo+"''>" + productName + "</td>";
+									if (storeType == "출고") {
+										html += "<td data-no='"+storeNo+"''>재고번호:"
+												+ storeNo.split("-")[1] + " / 시리얼번호:"
+												+ storeNo.split("-")[2] + "</td>";
+									} else {
+										html += "<td>" + storeNo + "</td>";
+									}
+									html += "<td>" + storeQty + "</td>";
+									html += "<td>" + storeAmount + "</td>";
+									html += "<td data-no='"+locationNo+"'>" + locationName
+											+ "</td>";
+									html += "<td>" + comment + "</td>";
+									html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
+									let target;
+									let tr = document.createElement("tr");
+									if (storeType == "입고") {
+										target = $(".itemIn")[$(".itemIn").length - 1];
+										tr.className = "itemIn";
+									} else {
+										target = $(".itemOut")[$(".itemOut").length - 1];
+										tr.className = "itemOut";
+									}
+									tr.innerHTML = html;
+									target.after(tr);
+
+									// 초기화 
+									$("#soppNo").val("");
+									$("#soppTitle").val("");
+									$("#productNo").val("");
+									$("#data02Title").val("");
+									$(".storeOptions").hide();
+									$("#custName").val("");
+									$("#custNo").val("");
+									$("#storeQty").val(1);
+									$("#storeAmount").val(0);
+									$("#comment").val("");
+									$("#inSerialNo").val("");
+									$("#outStoreNo").val("");
+									if(storeType == "입고") {
+											$(".minQty").html("수량");
+									} else {
+										$(".minQty").html("재고수량/출고수량");
+									}
+								
+									$("#maxQty").val("");
+							    	
+							    	
+							    	
+							    }
 						   }
 					   })
 					
 			} else {
+				
+				
 				let html = "";
 				html += "<td data-no='"+soppNo+"'>" + soppTitle + "</td>";
 				html += "<td>" + storeType + "</td>";
@@ -863,7 +919,16 @@ tr.shown td.details-control {
 				}
 			
 				$("#maxQty").val("");
-
+		    	
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 
 		}
@@ -994,6 +1059,7 @@ tr.shown td.details-control {
 			let outItem = $(".itemOut");
 			// 초기화 
 			$("#soppNo").val("");
+			$("#soppTitle").val("");
 			$("#productNo").val("");
 			$("#data02Title").val("");
 			$(".storeOptions").hide();

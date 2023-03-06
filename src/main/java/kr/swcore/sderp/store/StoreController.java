@@ -185,6 +185,7 @@ public class StoreController {
 			dto.setComment(json.getString("comment"));
 			dto.setInoutType(json.getString("inoutType"));
 			dto.setLocationNo(json.getString("locationNo"));
+			
 			if (json.getString("inoutType").equals("IN")) {
 				storeDto.setCompNo(Integer.valueOf(compNo));
 				storeDto.setProductNo(json.getInt("productNo"));
