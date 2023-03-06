@@ -31,13 +31,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left join swc_product b on a.productNo = b.productNo 
 		left join swc_cust c on c.custNo  = b.custNo 
 		where  a.attrib not like '%XXX%' 
-    <if test="storeNo != null and storeNo != '' "> and a.storeNo = #{storeNo} </if>
-	<if test="productNo != null and productNo != '' ">	and a.productNo = #{productNo}</if>
+    <if test="storeNo != null and storeNo != '' "> and a.storeNo like CONCAT('%', #{storeNo}, '%') </if>
+	<if test="productNo != null and productNo != '' ">	and a.productNo like CONCAT('%', #{productNo}, '%')</if>
 	<if test="custName != null and custName != '' ">	and c.custName like CONCAT('%', #{custName}, '%')</if>
 	<if test="productCategoryName != null and productCategoryName != '' ">	and b.productCategoryName like CONCAT('%', #{productCategoryName}, '%')</if>
 	<if test="serialNo != null and serialNo != '' ">	and a.serialNo like CONCAT('%', #{serialNo}, '%')</if>
 	<if test="productName != null and productName != '' ">	and b.productName like  CONCAT('%', #{productName}, '%') </if>
-		order by a.storeNo desc;  	
+		order by a.storeNo desc; 
 	</select>
 
 	<select id="storeList" resultType="storeDto">
