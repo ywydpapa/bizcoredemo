@@ -29,6 +29,8 @@ public class StoreInoutDTO {
     private BigDecimal inoutAmount;
     private String from;
     private String to;
+    private int soppNo;
+    private String soppTitle;
     
   
     public StoreInoutDTO(){

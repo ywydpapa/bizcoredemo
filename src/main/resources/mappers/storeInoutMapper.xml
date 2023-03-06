@@ -5,24 +5,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="storeInout">
 
 <select id="inoutList" resultType="storeInoutDto"> 
-<!--  select a.* from swc_store_inout a  left join  swc_store b on a.storeNo = b.storeNo 
-where b.productNo = #{productNo}; -->
-<!--  select a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
-left join  swc_store b on a.storeNo = b.storeNo  
-left join swc_product c on b.productNo = c.productNo  where b.productNo = #{productNo} order by a.regDate desc;-->
 
-select a.*, b.serialNo, c.productName  from swc_store_inout a 
+select a.*, b.serialNo, c.productName, d.soppTitle as soppTitle  from swc_store_inout a 
 left join swc_store b on a.storeNo = b.storeNo 
-left join swc_product c on c.productNo = b.productNo 
+left join swc_product c on c.productNo = b.productNo
+left join swc_sopp d on d.soppNo = a.soppNo
 where a.storeNo = #{inoutNo} and a.attrib not like "%XXX%" order by regDate Desc; 
+
 </select>
 
 <select id="inoutAllList" resultType="storeInoutDto"> 
-<!--  select a.* from swc_store_inout a  left join  swc_store b on a.storeNo = b.storeNo 
-where b.productNo = #{productNo}; -->
-SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
-left join swc_store b on a.storeNo = b.storeNo  
-left join swc_product c on b.productNo = c.productNo  WHERE a.compNo = #{compNo} order by a.regDate desc;
+
+SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName, d.soppTitle as soppTitle from swc_store_inout a  
+	left join swc_store b on a.storeNo = b.storeNo  
+	left join swc_product c on b.productNo = c.productNo  
+	left join swc_sopp d on d.soppNo = a.soppNo 
+	WHERE a.compNo = #{compNo}
+    order by a.regDate desc; 
+
 </select>
 
 <select id="calcStoreQty">
@@ -35,12 +35,16 @@ UPDATE swc_store_inout SET inoutQty = (inoutQty + #{inoutQty}) WHERE inoutNo = #
 
 <!-- 검색 관련 쿼리 -->
 <select id="search" resultType="storeInoutDto">
-SELECT a.* ,b.serialNo , b.productNo, c.productName as productName FROM swc_store_inout a 
+SELECT a.* ,b.serialNo , b.productNo, c.productName as productName, d.soppTitle as soppTitle FROM swc_store_inout a 
 left join swc_store b on a.storeNo = b.storeNo 
 left join swc_product c on c.productNo = b.productNo 
+left join swc_sopp d on d.soppNo = a.soppNo 
 WHERE b.compNo = #{compNo}
 <if test="inoutType != null and inoutType != ''">
 AND a.inoutType = #{inoutType}
+</if>
+<if test="soppTitle != null and soppTitle != ''">
+AND d.soppTitle like CONCAT('%', #{soppTitle}, '%')
 </if>
 <if test="productName != null and productName != ''">
 AND c.productName like CONCAT('%', #{productName}, '%')
@@ -67,13 +71,15 @@ order by a.inoutNo desc;
 </select>
 
 <select id="getInOut" resultType="storeInoutDto">
-SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName from swc_store_inout a  
+SELECT a.*,b.serialNo as serialNo, b.productNo as productNo, c.productName as productName, d.soppTitle as soppTitle from swc_store_inout a  
 left join swc_store b on a.storeNo = b.storeNo  
-left join swc_product c on b.productNo = c.productNo  WHERE a.inoutNo = #{inoutNo} 
+left join swc_product c on b.productNo = c.productNo
+left join swc_sopp d on d.soppNo = a.soppNo
+WHERE a.inoutNo = #{inoutNo} 
 </select>
 
 <update id="updateEtc">
-UPDATE swc_store_inout SET locationNo = #{locationNo} , inoutAmount = #{inoutAmount},  comment =#{comment} WHERE inoutNo = #{inoutNo};
+UPDATE swc_store_inout SET soppNo = #{soppNo}, locationNo = #{locationNo} , inoutAmount = #{inoutAmount},  comment =#{comment} WHERE inoutNo = #{inoutNo};
 </update>
 
 

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +64,7 @@ public class StoreController {
 
 	@Inject
 	CodeService codeService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
 
 	// 占쏙옙占쏙옙트 占쏙옙占쏙옙占쏙옙 占쏙옙회
@@ -160,21 +162,6 @@ public class StoreController {
 		return ResponseEntity.ok(param);
 	}
 
-//    @RequestMapping("/inOutInsert.do")
-//    public ResponseEntity<?> storeInOutInsert (HttpSession session, @ModelAttribute StoreInoutDTO dto){
-//    	
-//    	Map<String, Object> param = new HashMap<>();
-//    	int storeInsert = 0;
-//    	storeInsert =storeInoutService.insertInoutStore(dto);
-//    	if(storeInsert > 0) {
-//	        param.put("code","10001");
-//	    	}
-//	    	else {
-//	        param.put("code","20001");
-//	        }
-//    	
-//        return ResponseEntity.ok(param);
-//    } 
 
 	@RequestMapping("/inOutInsert.do")
 	public ResponseEntity<?> storeInOutInsert(HttpSession session, StoreDTO sdto, @RequestBody String requestbody) {
@@ -184,16 +171,15 @@ public class StoreController {
 		StoreInoutDTO dto = new StoreInoutDTO();
 		StoreDTO storeDto = new StoreDTO();
 		int storeInoutInsert = 0;
-		int temp = 0;
 		int process1 = 0;
 		int lastStoreNo = 0;
 		int firstCount =  -1; 
 		org.json.JSONArray jarr = new org.json.JSONArray(data);
 		org.json.JSONObject json = null;
 		for (int i = 0; i < jarr.length(); i++) {
-			temp = 0;
 			lastStoreNo = -1;
 			json = jarr.getJSONObject(i);
+			dto.setSoppNo(json.getInt("soppNo"));
 			dto.setInoutQty(json.getInt("inoutQty"));
 			dto.setInoutAmount(BigDecimal.valueOf(json.getInt("inoutAmount")));
 			dto.setComment(json.getString("comment"));
@@ -207,38 +193,28 @@ public class StoreController {
 				storeDto.setComment(json.getString("comment"));
 				storeDto.setSerialNo(json.getString("serialNo"));
 				String storeNo = "0"; 
-                  // CASE 1 : 시리얼 번호가 입력된 경우 
+                 
 			     if(!json.getString("serialNo").equals("")) {
-			    	// CASE 1 - 1 :  재고가 0인 재고 생성함
 			    	process1 = storeService.insertStore2(session, storeDto);
-			    	// CASE 1 - 2 :  생성된 재고의 재고 번호를 구함
 			    	lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 			    } else { 
 			    	firstCount = storeService.getCount(json.getInt("productNo"));  
-			    	// CASE 2 : 시리얼번호가 없는 재고가 이미 등록되어 있는 경우 (재고 생성할 필요 X)
 			    	if (firstCount != 0) {
-			    	// 기존에 등록 되어있던 재고 번호 구함 
 			    	storeNo =String.valueOf(storeService.getStoreNo(session, json.getInt("productNo")));
-			    	// 기존 재고 번호 대입 
 			    	lastStoreNo = Integer.valueOf(storeNo); 
 			    	process1  = 1; 
-			    	// CASE 3 : 시리얼번호가 없는 재고가 등록되어 있지 않은 경우 
 			    	} else {
 			    	process1 = storeService.insertStore2(session, storeDto);
-			    	// 생성한 재고 번호 대입 
 				    lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 			    	}
 			    }
-				// 재고 생성에 성공한 경우
 				if (process1 > 0) {
-					// 생성된 재고의 재고 번호를 구함
 					if (lastStoreNo != -1) {
 						dto.setStoreNo(lastStoreNo);
-						storeInoutInsert = storeInoutService.insertInoutStore(session, dto);
+						storeInoutInsert = storeInoutService.insertInoutStore(session, dto); 
 						storeDto.setStoreQty(json.getInt("inoutQty"));
 						storeDto.setStoreNo(lastStoreNo);
 					}
-					// 재고 생성에 실패한 경우
 				} else {
 					param.put("code", "20001");
 				}
@@ -248,7 +224,6 @@ public class StoreController {
 				storeDto.setStoreQty(json.getInt("inoutQty") * -1);
 				storeDto.setStoreNo(dto.getStoreNo());
 			}
-			// 입출고 데이터 생성에 성공한 경우 재고 수량에 반영
 			if (storeInoutInsert > 0) {
 				sqlSession.update("store.plusStoreQty", storeDto);
 				param.put("code", "10001");
@@ -261,6 +236,7 @@ public class StoreController {
 
 	@RequestMapping("/inOutList.do")
 	public ModelAndView storeInOutList(HttpSession session, StoreInoutDTO dto, ModelAndView mav,
+			@RequestParam(value = "soppTitle", required = false) String soppTitle,
 			@RequestParam(value = "inoutType", required = false) String inoutType,
 			@RequestParam(value = "productName", required = false) String productName,
 			@RequestParam(value = "storeNo", required = false) Integer storeNo,
@@ -273,7 +249,10 @@ public class StoreController {
 		dto.setCompNo(Integer.valueOf(compNo));
 
 		if (inoutType != null || productName != null || storeNo != null || serialNo != null || locationNo != null
-				|| from != null || to != null) {
+				|| from != null || to != null || soppTitle != null ) {
+			if(soppTitle != null) {
+				dto.setSoppTitle(soppTitle);
+			}
 			if (inoutType != null) {
 				dto.setInoutType(inoutType);
 			}
@@ -296,7 +275,7 @@ public class StoreController {
 				dto.setTo(to);
 			}
 			mav.addObject("inOutAllList", storeInoutService.search(session, dto));
-		} else {
+		} else {  
 
 			mav.addObject("inOutAllList", storeInoutService.getAllList(session, dto));
 		}
@@ -306,7 +285,9 @@ public class StoreController {
 		mav.addObject("list3", codeService.listCode03(session));
 		mav.setViewName("store/inoutList");
 		return mav;
-	}
+	} 
+	
+	
 
 	@RequestMapping("/inOutUpate.do")
 	   public ResponseEntity<?> storeInOutUpated(HttpSession session, StoreInoutDTO dto, StoreInoutDTO idto) {
@@ -343,37 +324,7 @@ public class StoreController {
 	         return ResponseEntity.ok(param);
 	   }
 
-	@RequestMapping("/inoutSearch")
-	public ModelAndView getSearchResult(@RequestBody String reqeuestBody, ModelAndView mav, HttpSession session)
-			throws SQLException {
-		String data = null, inOutType = null, productName = null, storeNo = null, serialNo = null, locationNo = null,
-				from = null, to = null;
-		data = reqeuestBody;
-		// JSON 문자열 > JSON 오브젝트
-		org.json.JSONObject json = new org.json.JSONObject(data);
-		StoreInoutDTO sdto = new StoreInoutDTO();
 
-		inOutType = json.isNull("inOutType") ? null : json.getString("inOutType");
-		productName = json.isNull("productName") ? null : json.getString("productName");
-		storeNo = json.isNull("storeNo") ? null : json.getString("storeNo");
-		serialNo = json.isNull("serialNo") ? null : json.getString("serialNo");
-		locationNo = json.isNull("locationNo") ? null : json.getString("locationNo");
-		from = json.isNull("from") ? null : json.getString("from");
-		to = json.isNull("to") ? null : json.getString("to");
-
-		sdto.setInoutType(inOutType);
-		sdto.setProductName(productName);
-		if (storeNo != null) {
-			sdto.setStoreNo(Integer.valueOf(storeNo));
-		}
-		sdto.setSerialNo(serialNo);
-		sdto.setRegDate(from);
-		mav.addObject("inOutAllList", storeInoutService.search(session, sdto));
-		mav.setViewName("store/inoutList");
-
-		return mav;
-
-	}
 
 	@RequestMapping("/inOutDetail/{inoutNo}")
 	public ModelAndView getInoutDetail(@PathVariable int inoutNo, ModelAndView mav, HttpSession session, StoreInoutDTO dto) {
@@ -383,35 +334,22 @@ public class StoreController {
 		mav.addObject("list2", codeService.listCode02(session));
 		mav.addObject("list3", codeService.listCode03(session));
 		String compNo = (String) session.getAttribute("compNo");
-		dto.setCompNo(Integer.valueOf(inoutNo));
-		dto.setInoutNo(inoutNo);
+		dto.setCompNo(Integer.valueOf(compNo));
+		//dto.setInoutNo(inoutNo);
 		mav.addObject("detail", storeInoutService.getInout(dto));
 		return mav;
 	}
 	
 	@RequestMapping("/checkSerial") 
 	@ResponseBody 
-	public String checkSerail(@RequestBody StoreDTO dto) {
-//		int  productNo = 0;
-//	    String serialNo = null; 
-//		org.json.JSONObject json = null; 
-//		json = new org.json.JSONObject(requestbody);
-	String result = null;
-//		
-//		productNo = json.getInt("productNo");
-//		serialNo = json.getString("serialNo");
-//		dto.setProductNo(productNo);
-//		dto.setSerialNo(serialNo);
-//		
+	public String checkSerial(@RequestBody StoreDTO dto) {
+	    String result = null;
 		 if(storeService.checkSerial(dto) > 0) {
 			 result = "{\"result\": \"failure\"}"; 
 		 } else {
 			 result ="{\"result\": \"success\"}"; 
 		 }
-		
 		return result; 
-		
 	}
-
 
 }

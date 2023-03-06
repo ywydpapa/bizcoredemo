@@ -38,9 +38,13 @@
 	<!--재고 리스트  table-->
 	<div class="col-sm-12">
 		<div class="card_box sch_it">
-			<!--row-->
 			<div class="form-group row">
-				<!--구분-->
+			<div class="col-sm-12 col-xl-2">
+					<label class="col-form-label" for="soppTitle_Sch">영업기회명</label>
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control" id="soppTitle_Sch">
+					</div>
+				</div>
 				<div class="col-sm-12 col-xl-2">
 					<label class="col-form-label" for="inOutType_Sch">구분</label>
 					<div class="input-group input-group-sm mb-0">
@@ -51,17 +55,13 @@
 						</select>
 					</div>
 				</div>
-				<!--//구분-->
-				<!--상품명-->
 				<div class="col-sm-12 col-xl-2">
 					<label class="col-form-label" for="productName_Sch">상품명</label>
 					<div class="input-group input-group-sm">
 						<input type="text" class="form-control" id="productName_Sch">
 						<input type="hidden" id="productNo" value="">
-
 					</div>
 				</div>
-				<!--//상품명-->
 				<div class="col-sm-12 col-xl-2">
 					<label class="col-form-label" for="storeNo_Sch">재고번호</label>
 					<div class="input-group input-group-sm mb-0">
@@ -75,7 +75,7 @@
 					</div>
 				</div>
 			</div>
-			<!--//row-->
+		
 			<div class="form-group row">
 				<div class="col-sm-12 col-xl-3">
 					<label class="col-form-label">위치</label>
@@ -113,10 +113,10 @@
 						<table id="inoutListTable"
 							class="table table-striped table-bordered nowrap dataTable">
 							<colgroup>
-								<col width="5%" />
+								<col width="10%" />
 								<col width="10%" />
 								<col width="5%" />
-								<col width="20%" />
+								<col width="15%" />
 								<col width="5%" />
 								<col width="10%" />
 								<col width="10%" />
@@ -128,7 +128,7 @@
 							</colgroup>
 							<thead>
 								<tr>
-									<th class="text-center">입출고번호</th>
+									<th class="text-center">영업기회명</th>
 									<th class="text-center">일자</th>
 									<th class="text-center">구분</th>
 									<th class="text-center">상품명</th>
@@ -149,7 +149,7 @@
 										<c:when test="${item.inoutType eq 'IN'}"> style="background-color:#f0f8ff2e;"</c:when>
 										</c:choose>
 										>
-										<td style="text-align: center">${item.inoutNo}</td>
+										<td style="text-align: center">${item.soppTitle}</td>
 										<td style="text-align: center">${item.regDate}</td>
 										<c:choose>
 											<c:when test="${item.inoutType eq 'IN'}">
@@ -229,12 +229,38 @@
 </div>
 
 <script>
+
+		// 검색한 경우 검색 INPUT 창에 검색 키워드 세팅 
+		$(document).ready(function() {
+			let soppTitle, inOutType, productName, storeNo, serialNo, locationNo, from, to;
+			
+			soppTitle = '${param.soppTitle}';
+			inOutType = '${param.inoutType}';
+			productName = '${param.productName}';
+			storeNo = '${param.storeNo}';
+			serialNo = '${param.serialNo}';
+			locationNo ='${param.locationNo}';
+			from = '${param.from}';
+			to = '${param.to}';
+			if(soppTitle != '') $("#soppTitle_Sch").val(soppTitle); 
+			if(inOutType != '') $("#inOutType_Sch").val(inOutType);
+			if(productName != '')$("#productName_Sch").val(productName);
+			if(storeNo != '') $("#storeNo_Sch").val(storeNo);
+			if(serialNo != '') 	$("#serialNo_Sch").val(serialNo);
+			if(locationNo != '')$("#locationNo_Sch").val(locationNo);
+			if(from != '') $("#targetDatefrom_Sch").val(from);
+			if(to != '') $("#targetDateto_Sch").val(to);
+			
+			localStorage.clear();
+		});
+
+
+    // 입고,출고 수량 수정 함수 
 	function doChange(obj) {
 
 		let inoutType, placeholder, inoutQty, storeNo, inoutNo;
 		// 입출고 구분 
-		inoutType = $(obj).parent().prev().prev().prev().prev().prev().prev().prev()
-				.prev().prev().html();
+		inoutType = $(obj).parent().prev().prev().prev().prev().prev().prev().prev().prev().prev().html();
 	
 		if (inoutType == "입고") {
 			// 입고수량
@@ -273,8 +299,6 @@
 				inoutData.inoutQty = ((placeholder * 1) + (inoutQty * -1)) * -1;
 			}
 			
-			console.log(inoutData); 
-
 			$.ajax({
 				url : "${path}/store/inOutUpate.do",
 				data : inoutData,
@@ -292,20 +316,46 @@
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
-
 		}
-
 	}
 
+    // 정규표현식으로 숫자만 입력하게 제한
 	function setNum(obj) {
 		obj.value = obj.value.replace(/[^0-9.]/g, "");
 		$(obj).prop('style', 'color:red;text-align:right;width:50px;');
-
 	}
+    
+	function setNum2(obj) {
+		obj.value = obj.value.replace(/[^0-9.]/g, "");
+	}
+	
+	
+	 // 검색 시 입출고 일자 이벤트 
+	function dateChange(obj) {
+		let from, to;
+		if (obj.id == "targetDatefrom_Sch") {
+			from = obj;
+			to = $(obj).next();
+			
+			if($(to).val() == "" || $(to).val() < from.value ) {
+				$(to).val(from.value); 
+			} 
+			
+		} else {
+			to = obj;
+			from = $(obj).prev();
+			if($(from).val() == "" || $(from).val() > to.value ) {
+				$(from).val(to.value); 
+			}
+		}
+	}
+	
 
+    // 다중 검색 함수 
 	function multiSearch() {
-		let inOutType, productName, storeNo, serialNo, locationNo, from, to;
-
+		let soppTitle , inOutType, productName, storeNo, serialNo, locationNo, from, to;
+		
+        soppTitle = $("#soppTitle_Sch").val();
 		inOutType = $("#inOutType_Sch").val();
 		productName = $("#productName_Sch").val();
 		storeNo = $("#storeNo_Sch").val();
@@ -315,7 +365,8 @@
 		to = $("#targetDateto_Sch").val();
 
 		let inOutData = {};
-
+		
+		inOutData.soppTitle = soppTitle == "" ? null : soppTitle;
 		inOutData.inoutType = inOutType == "" ? null : inOutType;
 		inOutData.productName = productName == "" ? null : productName;
 		inOutData.storeNo = storeNo == "" ? null : storeNo;
@@ -344,58 +395,10 @@
 		let url = '${path}/store/inOutList.do' + param;
 		location.href = url;
 	
-
 	}
 	
+   
 	
-	$(document).ready(function() {
-		let inOutType, productName, storeNo, serialNo, locationNo, from, to;
-		
-		inOutType = '${param.inoutType}';
-		productName = '${param.productName}';
-		storeNo = '${param.storeNo}';
-		serialNo = '${param.serialNo}';
-		locationNo ='${param.locationNo}';
-		from = '${param.from}';
-		to = '${param.to}';
-		
-		if(inOutType != '') $("#inOutType_Sch").val(inOutType);
-		if(productName != '')$("#productName_Sch").val(productName);
-		if(storeNo != '') $("#storeNo_Sch").val(storeNo);
-		if(serialNo != '') 	$("#serialNo_Sch").val(serialNo);
-		if(locationNo != '')$("#locationNo_Sch").val(locationNo);
-		if(from != '') $("#targetDatefrom_Sch").val(from);
-		if(to != '') $("#targetDateto_Sch").val(to);
-		
-		localStorage.clear();
-	});
-	
-
-	function dateChange(obj) {
-		let from, to;
-		if (obj.id == "targetDatefrom_Sch") {
-			from = obj;
-			to = $(obj).next();
-			
-			if($(to).val() == "" || $(to).val() < from.value ) {
-				$(to).val(from.value); 
-			} 
-			
-		} else {
-			to = obj;
-			from = $(obj).prev();
-			if($(from).val() == "" || $(from).val() > to.value ) {
-				$(from).val(to.value); 
-			}
-		}
-
-	}
-	
-	
-	function setNum2(obj) {
-		obj.value = obj.value.replace(/[^0-9.]/g, "");
-		
-	}
 
 </script>
 <jsp:include page="../body-bottom.jsp" />

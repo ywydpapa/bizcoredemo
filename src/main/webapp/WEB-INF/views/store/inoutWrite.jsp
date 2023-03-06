@@ -31,6 +31,8 @@ tr.shown td.details-control {
 #productdataTable2>tbody>tr>td>a {
 	text-decoration: underline;
 }
+
+
 </style>
 
 
@@ -65,8 +67,9 @@ tr.shown td.details-control {
 					<div class="table-responsive">
 						<table class="table table-sm bst02">
 							<colgroup>
+							    <col width="20%" />
 								<col width="20%" />
-								<col width="35%" />
+								<col width="15%" />
 								<col width="5%" />
 								<col width="10%" />
 								<col width="15%" />
@@ -75,6 +78,7 @@ tr.shown td.details-control {
 							</colgroup>
 							<tbody>
 								<tr>
+								    <th class="text-center">영업기회명</th>
 									<th class="text-center">상품명</th>
 									<th class="text-center inOutInput">시리얼 번호</th>
 									<th class="text-center minQty">수량</th>
@@ -87,6 +91,42 @@ tr.shown td.details-control {
 									</td>
 								</tr>
 								<tr>
+								<td>
+								<div class="input-group input-group-sm mb-0">
+									<input type="text" class="form-control" name="soppTitle"
+										id="soppTitle" value="" readonly /> <input type="hidden"
+										name="soppNo" id="soppNo" value="" /> <span
+										class="input-group-btn">
+										<button class="btn btn-primary sch-opportunity2"
+											data-remote="${path}/modal/popup.do?popId=sopp" type="button"
+											data-toggle="modal" data-target="#soppModal">
+											<i class="icofont icofont-search"></i>
+										</button>
+									</span>
+									<div class="modal fade " id="soppModal" tabindex="-1"
+										role="dialog">
+										<div class="modal-dialog modal-80size" role="document">
+											<div class="modal-content modal-80size">
+												<div class="modal-header">
+													<h4 class="modal-title"></h4>
+													<button type="button" class="close" data-dismiss="modal"
+														aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<h5>영업기회목록</h5>
+													<p>Loading!!!</p>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default waves-effect "
+														data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
 									<td><div id="select1" style="width: 100%;">
 											<div class="input-group input-group-sm mb-0">
 												<input type="hidden" id="productNo" value=""> <input
@@ -271,9 +311,10 @@ tr.shown td.details-control {
 						<br />
 						<table class="table table-sm bst02" id="inoutlist">
 							<colgroup>
-								<col width="5%">
 								<col width="20%">
-								<col width="25%">
+								<col width="5%">
+								<col width="10%">
+								<col width="15%">
 								<col width="5%">
 								<col width="10%">
 								<col width="20%">
@@ -282,6 +323,7 @@ tr.shown td.details-control {
 							</colgroup>
 							<thead>
 								<tr>
+								    <th class="text-center">영업기회명</th>
 									<th class="text-center">구분</th>
 									<th class="text-center">상품명</th>
 									<th class="text-center inOutInput">시리얼번호</th>
@@ -294,12 +336,8 @@ tr.shown td.details-control {
 							</thead>
 							<tbody>
 								<tr class="itemIn" style="display: none">
-									<!--  <td colspan="8"
-										style="text-align: center; background: #80808030;">입고</td>-->
 								</tr>
 								<tr class="itemOut" style="display: none; text-align: right">
-									<!-- <td colspan="8"
-										style="text-align: center; background: #80808030;">출고</td>-->
 								</tr>
 							</tbody>
 						</table>
@@ -707,7 +745,9 @@ tr.shown td.details-control {
 		}
 
 		function inoutTablePlus() {
-			let productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, storeAmount, productNo;
+			let soppNo, soppTitle, productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, storeAmount, productNo;
+			soppNo = $("#soppNo").val();
+			soppTitle = $("#soppTitle").val();
 			productName = $("#data02Title").val();
 			productNo = $("#productNo").val();
 			storeQty = $("#storeQty").val();
@@ -732,8 +772,10 @@ tr.shown td.details-control {
 			}
 
 			comment = $("#comment").val();
-
-			if (productName == "") {
+   			if(soppNo == "") {
+	 		alert("영업기회를 선택하세요");
+   			}
+			else if (productName == "") {
 				alert("상품명을 선택하세요");
 			} else if (storeType == "출고" && storeNo == "") {
 				alert("재고 종류를 선택하세요");
@@ -745,9 +787,8 @@ tr.shown td.details-control {
 			} else if (storeType == "출고"
 					&& ($("#custName").val() == "" || $("#custName").val() == null)) {
 				alert("출고 위치를 선택하세요");
-			} else if (storeType =="입고") { 
+			} else if (storeType =="입고" && $("#inSerialNo").val() != "") { 
 				
-				if( $("#storeType").val() =="IN") {
 					
 					   let serialNo = $("#inSerialNo").val();
 					   let productNo = $("#productNo").val(); 
@@ -771,10 +812,10 @@ tr.shown td.details-control {
 							    } 
 						   }
 					   })
-					} 
-				
+					
 			} else {
 				let html = "";
+				html += "<td data-no='"+soppNo+"'>" + soppTitle + "</td>";
 				html += "<td>" + storeType + "</td>";
 				html += "<td data-no='"+productNo+"''>" + productName + "</td>";
 				if (storeType == "출고") {
@@ -803,6 +844,8 @@ tr.shown td.details-control {
 				target.after(tr);
 
 				// 초기화 
+				$("#soppNo").val("");
+				$("#soppTitle").val("");
 				$("#productNo").val("");
 				$("#data02Title").val("");
 				$(".storeOptions").hide();
@@ -813,7 +856,13 @@ tr.shown td.details-control {
 				$("#comment").val("");
 				$("#inSerialNo").val("");
 				$("#outStoreNo").val("");
-				$(".minQty").html("수량");
+				if(storeType == "입고") {
+						$(".minQty").html("수량");
+				} else {
+					$(".minQty").html("재고수량/출고수량");
+				}
+			
+				$("#maxQty").val("");
 
 			}
 
@@ -830,24 +879,26 @@ tr.shown td.details-control {
 			for (let i = 1; i < $(".itemIn").length; i++) {
 				eachData = {};
 				eachData.inoutType = "IN";
-				eachData.productNo = $(".itemIn")[i].children[1].dataset.no;
-				eachData.serialNo = $(".itemIn")[i].children[2].innerHTML;
-				eachData.inoutQty = $(".itemIn")[i].children[3].innerHTML;
-				eachData.inoutAmount = $(".itemIn")[i].children[4].innerHTML.replaceAll(",", "") * 1;
-				eachData.locationNo = $(".itemIn")[i].children[5].dataset.no;
-				eachData.comment = $(".itemIn")[i].children[6].innerHTML;
+				eachData.soppNo = $(".itemIn")[i].children[0].dataset.no;
+				eachData.productNo = $(".itemIn")[i].children[2].dataset.no;
+				eachData.serialNo = $(".itemIn")[i].children[3].innerHTML;
+				eachData.inoutQty = $(".itemIn")[i].children[4].innerHTML;
+				eachData.inoutAmount = $(".itemIn")[i].children[5].innerHTML.replaceAll(",", "") * 1;
+				eachData.locationNo = $(".itemIn")[i].children[6].dataset.no;
+				eachData.comment = $(".itemIn")[i].children[7].innerHTML;
 				storeDatas.push(eachData);
 			}
 
 			for (let i = 1; i < $(".itemOut").length; i++) {
 				eachData = {};
 				eachData.inoutType = "OUT"
-				eachData.productNo = $(".itemOut")[i].children[1].dataset.no;
-				eachData.inoutQty = $(".itemOut")[i].children[3].innerHTML;
-				eachData.storeNo = $(".itemOut")[i].children[2].dataset.no.split("-")[1];
-				eachData.inoutAmount = $(".itemOut")[i].children[4].innerHTML.replaceAll(",", "") * 1;
-				eachData.locationNo = $(".itemOut")[i].children[5].dataset.no;
-				eachData.comment = $(".itemOut")[i].children[6].innerHTML;
+				eachData.soppNo = $(".itemOut")[i].children[0].dataset.no;
+				eachData.productNo = $(".itemOut")[i].children[2].dataset.no;
+				eachData.storeNo = $(".itemOut")[i].children[3].dataset.no.split("-")[1];
+				eachData.inoutQty = $(".itemOut")[i].children[4].innerHTML;
+				eachData.inoutAmount = $(".itemOut")[i].children[5].innerHTML.replaceAll(",", "") * 1;
+				eachData.locationNo = $(".itemOut")[i].children[6].dataset.no;
+				eachData.comment = $(".itemOut")[i].children[7].innerHTML;
 				storeDatas.push(eachData);
 			}
 
@@ -910,9 +961,9 @@ tr.shown td.details-control {
 			
 
 			if (pass != -1) {
-
+				
 				storeDatas = JSON.stringify(storeDatas);
-
+				
 				$.ajax({
 					url : "${path}/store/inOutInsert.do",
 					method : "POST",
@@ -942,6 +993,7 @@ tr.shown td.details-control {
 			let inItem = $(".itemIn");
 			let outItem = $(".itemOut");
 			// 초기화 
+			$("#soppNo").val("");
 			$("#productNo").val("");
 			$("#data02Title").val("");
 			$(".storeOptions").hide();
@@ -1020,7 +1072,6 @@ tr.shown td.details-control {
 						}
 						if (check != 1) {
 							array.push({
-								"no" : no,
 								"max" : max,
 								"sum" : sum
 							})
@@ -1044,32 +1095,19 @@ tr.shown td.details-control {
 				}
 			}
 		} 
+
+		$('#soppModal').on('show.bs.modal', function(e) {
+			var button = $(e.relatedTarget);
+			var modal = $(this);
+			modal.find('.modal-body').load(button.data("remote"));
+			
+		});
 		
-		
-		
-		
-		function checkSerialNo(){
-		   let serialNo = $("#inSerialNo").val();
-		   let productNo = $("#productNo").val(); 
-		   
-		   let storeData = {}; 
-		   
-		   storeData.productNo = productNo ;
-		   storeData.serialNo = serialNo; 
-		 //  storeData = JSON.stringify(storeData);
-		   
-		   $.ajax({
-			   url :  "${path}/store/checkSerial",
-			   method : "post",
-			   data : storeData, 
-			   contentType : "application/json; charset=UTF-8",
-			   dataType : "json",
-			   success : (result) => {
-				    if(result.result == "failure") {
-				        alert("이미 등록된 시리얼번호입니다"); 
-				    }
-			   }
-		   })
+		function fnSetSoppData(a, b) {
+			$("#soppNo").val(b);
+			$("#soppTitle").val(a);
+			$(".modal-backdrop").remove();
+			$("#soppModal").modal("hide");
 		}
 	</script>
 </div>

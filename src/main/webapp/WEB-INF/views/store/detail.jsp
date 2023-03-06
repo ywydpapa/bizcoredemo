@@ -128,69 +128,7 @@ th {
 							</div>
 						</div>
 					</div>
-					<!-- 		<div class="tab-pane " id="tab02" role="tabpanel">
-						<div class="card-block table-border-style">
-							<div class="table-responsive" style="overflow-x: hidden;">
-								<table id="storeDataTable" class="table table-sm bst02">
-									<colgroup>
-										<col width="10%" />
-										<col width="10%" />
-										<col width="10%" />
-										<col width="20%" />
-										<col width="20%" />
-										<col width="30%" />
-									</colgroup>
-									<thead>
-										<tr>
-											<th class="text-center">재고 번호</th>
-										
-											<th class="text-center">상품명</th>
-											<th class="text-center">시리얼번호</th>
-											<th class="text-center">상품위치</th>
-											<th class="text-center">상품수량</th>
-											<th class="text-center">상품설명</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach var="row" items="${dtoList}">
-										
-											<c:if test="${row.storeQty != 0 }"><tr align="center" class="storeList">
-												<td>${row.storeNo}</td>
-												<td>${row.productName}</td>
-												<td>${row.serialNo}</td>
-												<c:choose>
-													<c:when
-														test="${row.locationNo eq '' || row.locationNo eq '-'}">
-														<td></td>
-													</c:when>
-													<c:otherwise>
-														<c:forEach var="list2" items="${list2}">
-															<c:if
-																test="${fn:split(row.locationNo,'-')[1] eq list2.code02}">
-																<td>${list2.desc02}- <c:forEach var="list3"
-																		items="${list3}">
-																		<c:if
-																			test="${fn:split(row.locationNo,'-')[2] eq list3.code03}">
-												${list3.desc03} 
-												</c:if>
-																	</c:forEach>
-																</td>
-															</c:if>
-														</c:forEach>
-													</c:otherwise>
-												</c:choose>
-												<td>${row.storeQty}</td>
-												<td>${row.comment}</td>
-											</tr>
-											</c:if>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div> -->
-
-
+				
 					<div style="margin: 10px 0; display: flex">
 						<h6 class="cont_title"
 							style="line-height: 2.5; margin-right: 5px;">
@@ -202,11 +140,13 @@ th {
 							<div class="table-responsive" style="overflow-x: hidden;">
 								<table id="inoutDataTable" class="table table-sm bst02">
 									<colgroup>
+									
+									   <col width="15%" />
 										<col width="5%" />
 										<col width="10%" />
-										<col width="20%" />
+										<col width="10%" />
 										<col width="5%" />
-										<col width="15%" />
+										<col width="10%" />
 										<col width="15%" />
 										<col width="5%" />
 										<col width="5%" />
@@ -215,6 +155,7 @@ th {
 									</colgroup>
 									<thead>
 										<tr>
+											<th class="text-center">영업기회명</th>
 											<th class="text-center">구분</th>
 											<th class="text-center">일자</th>
 											<th class="text-center">상품명</th>
@@ -231,6 +172,7 @@ th {
 										<c:forEach var="row" items="${inoutList}">
 											<tr align="center" class="storeList"
 												<c:if test="${row.inoutType eq 'OUT'}"> style="background-color:#f6d3cb38;"</c:if>>
+												<td>${row.soppTitle}</td>
 												<c:choose>
 													<c:when test="${row.inoutType eq 'IN'}">
 														<td style="color: blue; font-weight: 600;">입고</td>
@@ -289,7 +231,7 @@ th {
 										</c:forEach>
 										<tr align="center" class="storeList"
 											style="background-color: cornsilk; font-weight: 600;">
-											<td colspan="6">재고 수량</td>
+											<td colspan="7">재고 수량</td>
 											<td colspan="2">${total}</td>
 											<td colspan="2"></td>
 										</tr>
