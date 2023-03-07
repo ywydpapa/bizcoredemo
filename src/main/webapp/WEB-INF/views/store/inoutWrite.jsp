@@ -227,7 +227,7 @@ tr.shown td.details-control {
 										<div style="display: flex">
 											<input type="text" readonly="" id="maxQty"
 												class="form-control form-control-sm"
-												style="min-width: 80px; display: none; text-align: right;" "/>
+												style="min-width: 80px; display: none; text-align: right;"/>
 											<input type="text" id="storeQty"
 												class="form-control form-control-sm" value="1"
 												style="min-width: 80px; text-align: right;"
@@ -252,8 +252,7 @@ tr.shown td.details-control {
 											<select id="storeLoc2">
 												<c:forEach var="list3" items="${list3}">
 													<c:forEach var="list2" items="${list2}">
-														<c:if
-															test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
+														<c:if test="${list3.code02 eq list2.code02 && list2.code01 eq 'LOCT01'}">
 															<option class="list3Options"
 																<c:if test="${list2.code02 != 'LOC201'}" >style="display: none;"</c:if>
 																value="${list2.code01}-${list3.code02}-${list3.code03}^${list3.desc03}">${list3.desc03}</option>
@@ -496,8 +495,7 @@ tr.shown td.details-control {
 				storeData.serialNo = $("#serialNo").val();
 				storeData.storeType = $("#storeType").val();
 				storeData.storeQty = $("#storeQty").val() * 1;
-				storeData.storeAmount = $("#storeAmount").val().replaceAll(",",
-						"") * 1;
+				storeData.storeAmount = $("#storeAmount").val().replaceAll(",","") * 1;
 				storeData.locationNo = $("#storeLoc2").val();
 				storeData.comment = tinymce.get("comment").getContent();
 				storeData.storeUnit = $("#storeUnit").val() * 1;
@@ -538,8 +536,7 @@ tr.shown td.details-control {
 			}
 		});
 
-		$("#custRegSimple_custName_check")
-				.on(
+		$("#custRegSimple_custName_check").on(
 						"click",
 						function(event) {
 							var custRegSimple_custName = $(
@@ -695,9 +692,7 @@ tr.shown td.details-control {
 
 		var productdataJson;
 		function fn_productdataTableReload2() {
-			$
-					.ajax(
-							{
+			$.ajax({
 								type : "get",
 								contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 								url : '${path}/product/listAjax'
@@ -834,7 +829,7 @@ tr.shown td.details-control {
 									}
 									tr.innerHTML = html;
 									target.after(tr);
-
+									
 									// 초기화 
 									$("#soppNo").val("");
 									$("#soppTitle").val("");
@@ -875,10 +870,10 @@ tr.shown td.details-control {
 				}
 				html += "<td>" + storeQty + "</td>";
 				html += "<td>" + storeAmount + "</td>";
-				html += "<td data-no='"+locationNo+"'>" + locationName
-						+ "</td>";
+				html += "<td data-no='"+locationNo+"'>" + locationName + "</td>";
 				html += "<td>" + comment + "</td>";
 				html += "<td><button onclick='deltedData(this)'>삭제</button></td>";
+				
 				let target;
 				let tr = document.createElement("tr");
 				if (storeType == "입고") {
@@ -1174,7 +1169,6 @@ tr.shown td.details-control {
 			$(".modal-backdrop").remove();
 			$("#soppModal").modal("hide");
 		}
-		
 		
 		// 시리얼 번호 온 체인지 이벤트 
 		function serialChange(obj) {
