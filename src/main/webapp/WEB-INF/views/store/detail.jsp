@@ -57,15 +57,6 @@ th {
 		<!-- Row start -->
 		<div class="row">
 			<div class="col-lg-12 col-xl-12">
-				<!-- Nav tabs
-				<ul class="nav nav-tabs  tabs" role="tablist" id="tablist">
-					<li class="nav-item"><a class="nav-link active"
-						data-toggle="tab" href="#tab01" role="tab">기본정보</a></li>
-			
-					<li class="nav-item"><a class="nav-link" data-toggle="tab"
-						href="#tab03" role="tab" id="dataType01_tab03">입출고 내역</a></li>
-				</ul> -->
-				<!-- Tab panes -->
 				<div class="tab-content tabs m-t-20">
 					<div class="tab-pane active" id="tab01" role="tabpanel">
 						<div class="card-block table-border-style">
@@ -81,7 +72,6 @@ th {
 									</colgroup>
 									<tbody>
 										<tr>
-
 											<th scope="row" class="requiredTextCss">재고 번호</th>
 											<td colspan=5><input type="text" name="netprice"
 												id="storeAmount" class="form-control form-control-sm"
@@ -140,7 +130,6 @@ th {
 							<div class="table-responsive" style="overflow-x: hidden;">
 								<table id="inoutDataTable" class="table table-sm bst02">
 									<colgroup>
-									
 									   <col width="15%" />
 										<col width="5%" />
 										<col width="10%" />
@@ -293,7 +282,6 @@ th {
 					}
 				}
 			}
-
 		}
 
 		function necessaryCheck() {

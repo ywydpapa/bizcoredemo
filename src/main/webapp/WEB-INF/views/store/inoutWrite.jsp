@@ -853,7 +853,8 @@ tr.shown td.details-control {
 									} else {
 										$(".minQty").html("재고수량/출고수량");
 									}
-								
+									$("#storeQty").prop("disabled",false);
+									$("#storeQty").val(1);
 									$("#maxQty").val("");
 							    	
 							    }
