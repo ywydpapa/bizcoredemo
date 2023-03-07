@@ -35,13 +35,6 @@
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                        <!--  <li class="pcoded-hasmenu">
-                                            <a href="${path}/store/writeStore.do">
-                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                <span class="pcoded-mtext" data-i18n="nav.menu-levels.menu-level-22">재고 등록</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>-->
                                          <li class="pcoded-hasmenu">
                                             <a href="${path}/store/writeInout.do">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>

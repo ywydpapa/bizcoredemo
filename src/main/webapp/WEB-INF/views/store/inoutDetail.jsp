@@ -177,7 +177,7 @@ tr.shown td.details-control {
 														id="custName"
 														<c:forEach var="item" items="${custDataList}">
                                     <c:if test="${detail.locationNo eq item.custNo}">
-                                    value="${item.custName}" 
+                                     value="${item.custName}" 
                                     </c:if>
                                     </c:forEach>
 														readonly> <input type="hidden" name="custNo"
@@ -282,7 +282,6 @@ tr.shown td.details-control {
 			obj.value = Number(obj.value).toLocaleString();
 		}
 
-		
 		// 입고시 위치 관련 코드 
 		function setlist3Options(obj) {
 			// list 2 코드 

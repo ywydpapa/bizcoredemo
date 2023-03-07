@@ -264,19 +264,19 @@
 	
 		if (inoutType == "입고") {
 			// 입고수량
-			inoutQty = $(obj).parent().prev().prev().prev().prev().children()[0].value;
-			placeholder = $(obj).parent().prev().prev().prev().prev().children()[0].placeholder
+			inoutQty = $(obj).parent().prev().prev().prev().children()[0].value;
+			placeholder = $(obj).parent().prev().prev().prev().children()[0].placeholder
 		} else {
 			//출고수량
-			inoutQty = $(obj).parent().prev().prev().prev().children()[0].value;
-			placeholder = $(obj).parent().prev().prev().prev().children()[0]
+			inoutQty = $(obj).parent().prev().prev().children()[0].value;
+			placeholder = $(obj).parent().prev().prev().children()[0]
 					.getAttribute("placeholder");
 		}
 		// 입출고 번호 
 		inoutNo = obj.getAttribute("data-inoutNo");
 
 		// 재고 번호 
-		storeNo = $(obj).parent().prev().prev().prev().prev().prev().prev().prev()
+		storeNo = $(obj).parent().prev().prev().prev().prev().prev().prev()
 				.html();
 
 		if (placeholder == inoutQty) {
@@ -298,7 +298,10 @@
 				inoutData.inoutQty = ((placeholder * 1) + (inoutQty * -1)) * -1;
 			}
 			
-			$.ajax({
+			
+			console.log(inoutData);
+			
+		$.ajax({
 				url : "${path}/store/inOutUpate.do",
 				data : inoutData,
 				method : "POST",
@@ -311,7 +314,7 @@
 				} else {
 					alert("수정 실패");
 				}
-			}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
+			}) 
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
@@ -348,7 +351,7 @@
 		}
 	}
 	
-    // 다중 검색 함수 
+    // 검색 함수 
 	function multiSearch() {
 		let soppTitle , inOutType, productName, storeNo, serialNo, locationNo, from, to;
 		

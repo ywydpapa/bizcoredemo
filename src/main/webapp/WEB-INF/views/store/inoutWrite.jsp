@@ -44,7 +44,6 @@ tr.shown td.details-control {
 				</div>
 			</div>
 		</div>
-
 	</div>
 	<div style="margin: 10px 0; display: flex">
 		<h6 class="cont_title" style="line-height: 2.5; margin-right: 5px;">
@@ -92,8 +91,7 @@ tr.shown td.details-control {
 								<div class="input-group input-group-sm mb-0">
 									<input type="text" class="form-control" name="soppTitle"
 										id="soppTitle" value="" readonly /> <input type="hidden"
-										name="soppNo" id="soppNo" value="" /> <span
-										class="input-group-btn">
+										name="soppNo" id="soppNo" value="" /> <span class="input-group-btn">
 										<button class="btn btn-primary sch-opportunity2"
 											data-remote="${path}/modal/popup.do?popId=sopp" type="button"
 											data-toggle="modal" data-target="#soppModal">
