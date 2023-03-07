@@ -991,17 +991,41 @@ tr.shown td.details-control {
 					}
 				}
 
-				for (let i = 0; i < array.length; i++) {
+				/*for (let i = 0; i < array.length; i++) {
 					let msg = "";
 					if (array[i].max < array[i].sum) {
 						msg += "재고번호 " + array[i].no + " 현수량 " + array[i].max
 								+ "개 이상 출고할 수 없습니다";
 						pass = -1;
-					}
-					if (msg != "") {
+						
 						alert(msg);
+						
+						console.log(array[i].max + "// " + array[i].sum);
+					} else {
+						storeDatas = JSON.stringify(storeDatas);
+						
+						$.ajax({
+							url : "${path}/store/inOutInsert.do",
+							method : "POST",
+							data : storeDatas,
+							dataType : "json",
+							traditional : true,
+							contentType : "text/plain",
+						}).done(function(result) {
+							if (result.code == 10001) {
+								alert("등록 성공");
+								location.href = "${path}/store/writeInout.do";
+							} else {
+								alert("등록 실패");
+							}
+						}) 
+						.fail(function(xhr, status, errorThrown) {
+							alert("통신 실패");
+						});
+						
 					}
-				}
+					
+				}*/
 
 			}
 			
