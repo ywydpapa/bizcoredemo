@@ -351,6 +351,29 @@
 </div>
 <!--//table-->
 <script>
+
+
+$(document).ready(()=>{
+
+	let org_code = $(".fancytree-title")[1].innerHTML; 
+		org_code = org_code.split("(")[1].split(")")[0];
+		let url; 
+		if (location.href.includes("local")) {
+			url = "/sderp/api/organiz/"+org_code;
+		} else {
+			url = "/api/organiz/"+org_code;
+		}
+		$.ajax({
+			url : url ,
+			method : "get",
+			dataType : "json",
+			success : (result) => {
+				setOrgData(result); 
+				$(".orgModifyDiv").children()[1].style = "display:none";
+			}
+		}); 
+});
+
 	var userNoSelected = {
 			<c:forEach var="i" begin="0" end="${fn:length(organizationArrList[0].children)-1}" varStatus="status" step="1">
 				<c:set var="item" value="${organizationArrList[0].children[i]}"/>
@@ -368,6 +391,8 @@
 				</c:forEach>
 			</c:forEach>
 		}
+	
+	
 	function userNoSelected_ElementCreate(){
 		var html = "";
 		for (const key in userNoSelected){

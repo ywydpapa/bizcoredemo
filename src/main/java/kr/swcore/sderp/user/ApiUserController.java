@@ -22,7 +22,7 @@ public class ApiUserController {
 	UserService service;
 	
 	@RequestMapping(value = "/api/user/{userNo}", method = RequestMethod.GET, produces = "application/text; charset=UTF-8" )
-	public String getEachUserData(HttpServletRequest request, @PathVariable("userNo") String userNo) throws JsonProcessingException{
+	public String getEachUserData(@PathVariable("userNo") String userNo) throws JsonProcessingException{
 		String result = null, data = null;
 		UserDTO user = null; 
 		ObjectMapper mapper = new ObjectMapper();
@@ -33,6 +33,6 @@ public class ApiUserController {
 		
 		return result; 
 	}
-	//	@GetMapping("/api/user/{userNo}",produces = "application/text; charset=UTF-8") 
+	
 	
 }

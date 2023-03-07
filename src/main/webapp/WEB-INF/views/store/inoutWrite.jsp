@@ -34,7 +34,6 @@ tr.shown td.details-control {
 
 </style>
 
-
 <div id="main_content">
 	<!-- Page-header start 페이지 타이틀-->
 	<div class="page-header2">
@@ -1031,9 +1030,7 @@ tr.shown td.details-control {
 			
 
 			if (pass != -1) {
-				
 				storeDatas = JSON.stringify(storeDatas);
-				
 				$.ajax({
 					url : "${path}/store/inOutInsert.do",
 					method : "POST",
@@ -1052,9 +1049,7 @@ tr.shown td.details-control {
 				.fail(function(xhr, status, errorThrown) {
 					alert("통신 실패");
 				});
-
 			}
-
 		}
 
 		// 입고 출고 셀렉트 온체인지 이벤트 
@@ -1113,9 +1108,7 @@ tr.shown td.details-control {
 		}
 
 		function checkMaxQty() {
-
 			let itemOut = $(".itemOut");
-
 			let array = [];
 
 			for (let j = 1; j < itemOut.length; j++) {
@@ -1184,7 +1177,6 @@ tr.shown td.details-control {
 		
 		// 시리얼 번호 온 체인지 이벤트 
 		function serialChange(obj) {
-			
 		 let serialNo = obj.value; 
 		 if(serialNo != "") {
 			 $("#storeQty").val("1"); 
@@ -1193,7 +1185,6 @@ tr.shown td.details-control {
 		 } else {
 			 $("#storeQty").prop("disabled",false);
 		 }
-			
 		}
 	
 		

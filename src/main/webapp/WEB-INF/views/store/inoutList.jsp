@@ -12,7 +12,8 @@
 .storeList:hover {
 	font-weight: 600;
 	cursor: pointer;
-}
+} 
+
 </style>
 <div id="main_content">
 	<script>
@@ -75,7 +76,6 @@
 					</div>
 				</div>
 			</div>
-		
 			<div class="form-group row">
 				<div class="col-sm-12 col-xl-3">
 					<label class="col-form-label">위치</label>
@@ -114,23 +114,22 @@
 							class="table table-striped table-bordered nowrap dataTable">
 							<colgroup>
 								<col width="10%" />
-								<col width="10%" />
 								<col width="5%" />
 								<col width="15%" />
+								<col width="20%" />
 								<col width="5%" />
 								<col width="10%" />
 								<col width="10%" />
 								<col width="5%" />
 								<col width="5%" />
-								<col width="10%" />
 								<col width="10%" />
 								<col width="5%" />
 							</colgroup>
 							<thead>
 								<tr>
-									<th class="text-center">영업기회명</th>
 									<th class="text-center">일자</th>
 									<th class="text-center">구분</th>
+									<th class="text-center">영업기회명</th>
 									<th class="text-center">상품명</th>
 									<th class="text-center">재고번호</th>
 									<th class="text-center">시리얼 번호</th>
@@ -138,7 +137,7 @@
 									<th class="text-center">입고</th>
 									<th class="text-center">출고</th>
 									<th class="text-center">금액</th>
-									<th class="text-center">비고</th>
+									<!--<th class="text-center">비고</th>-->
 									<th class="text-center">-</th>
 								</tr>
 							</thead>
@@ -149,7 +148,7 @@
 										<c:when test="${item.inoutType eq 'IN'}"> style="background-color:#f0f8ff2e;"</c:when>
 										</c:choose>
 										>
-										<td style="text-align: center">${item.soppTitle}</td>
+									
 										<td style="text-align: center">${item.regDate}</td>
 										<c:choose>
 											<c:when test="${item.inoutType eq 'IN'}">
@@ -161,6 +160,7 @@
 													style="text-align: center; color: red; font-weight: 600;">출고</td>
 											</c:otherwise>
 										</c:choose>
+										<td style="text-align: center">${item.soppTitle}</td>
 										<td>
 										<a style="text-decoration: underline;"href="${path}/store/inOutDetail/${item.inoutNo}" >${item.productName}</a>
 										</td>
@@ -214,7 +214,7 @@
 										</c:choose>
 										<td style="text-align: right;"><fmt:formatNumber
 												value="${item.inoutAmount}" pattern="#,###" /></td>
-										<td>${item.comment}</td>
+										<!--<td>${item.comment}</td>-->
 										<td style="display: flex; justify-content: center;"><button
 												data-inoutno="${item.inoutNo}" onclick="doChange(this)">수정</button></td>
 									</tr>
@@ -272,7 +272,6 @@
 			placeholder = $(obj).parent().prev().prev().prev().children()[0]
 					.getAttribute("placeholder");
 		}
-
 		// 입출고 번호 
 		inoutNo = obj.getAttribute("data-inoutNo");
 
@@ -393,7 +392,7 @@
 		let url = '${path}/store/inOutList.do' + param;
 		location.href = url;
 	
-	}  bbbbbbb
+	}  
 	
 
 </script>

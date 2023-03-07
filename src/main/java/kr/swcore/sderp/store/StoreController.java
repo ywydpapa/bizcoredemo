@@ -86,7 +86,7 @@ public class StoreController {
 		
 		mav.addObject("store", storeService.listStore(session, dto));
 		mav.setViewName("store/list");
-	
+
 		return mav;
 	}
 
@@ -136,8 +136,6 @@ public class StoreController {
 		return mav;
 	}
 	
-	
-
 	@RequestMapping("/update.do")
 	public ResponseEntity<?> storeUpdate(HttpSession session, @ModelAttribute StoreDTO dto) {
 		Map<String, Object> param = new HashMap<>();
@@ -185,7 +183,8 @@ public class StoreController {
 			dto.setComment(json.getString("comment"));
 			dto.setInoutType(json.getString("inoutType"));
 			dto.setLocationNo(json.getString("locationNo"));
-			
+			 
+			//입고인 경우 
 			if (json.getString("inoutType").equals("IN")) {
 				storeDto.setCompNo(Integer.valueOf(compNo));
 				storeDto.setProductNo(json.getInt("productNo"));
@@ -195,20 +194,32 @@ public class StoreController {
 				storeDto.setSerialNo(json.getString("serialNo"));
 				String storeNo = "0"; 
                  
+				
+				// 입력된 시리얼 번호가 있는경우 
 			     if(!json.getString("serialNo").equals("")) {
+			    	// 해당 시리얼 번호로 재고 수량이 0인 재고 생성 
 			    	process1 = storeService.insertStore2(session, storeDto);
+			    	// 그 재고 번호를 구함 
 			    	lastStoreNo = storeService.getLastStoreNo(session, storeDto);
-			    } else { 
+			    
+			     
+			     // 입력된 시리얼 번호가 없는 경우 
+			     } else { 
+			    	 // 해당 상품 + 시리얼 번호 없음으로 등록된 재고가 있는지 확인함 
 			    	firstCount = storeService.getCount(json.getInt("productNo"));  
+			    	// 시리얼 번호 없는 것으로 등록된 재고가 있는 경우 
 			    	if (firstCount != 0) {
 			    	storeNo =String.valueOf(storeService.getStoreNo(session, json.getInt("productNo")));
 			    	lastStoreNo = Integer.valueOf(storeNo); 
 			    	process1  = 1; 
 			    	} else {
+			    		// 시리얼 번호 없는 것으로 등록된 재고가 없는경우 > 재고 수량이 0 이고 시리얼 번호 없는 재고 생성 
 			    	process1 = storeService.insertStore2(session, storeDto);
 				    lastStoreNo = storeService.getLastStoreNo(session, storeDto);
 			    	}
 			    }
+			     
+			     // 해당하는 재고 번호로 입고 데이터 insert 
 				if (process1 > 0) {
 					if (lastStoreNo != -1) {
 						dto.setStoreNo(lastStoreNo);
@@ -219,12 +230,16 @@ public class StoreController {
 				} else {
 					param.put("code", "20001");
 				}
+				
+				// 출고인 경우  데이터 insert 함 
 			} else {
 				dto.setStoreNo(Integer.valueOf(json.getString("storeNo")));
 				storeInoutInsert = storeInoutService.insertInoutStore(session, dto);
 				storeDto.setStoreQty(json.getInt("inoutQty") * -1);
 				storeDto.setStoreNo(dto.getStoreNo());
 			}
+			
+			// 기존 재고에 입고, 출고 재고 계산해서 업데이트
 			if (storeInoutInsert > 0) {
 				sqlSession.update("store.plusStoreQty", storeDto);
 				param.put("code", "10001");

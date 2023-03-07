@@ -88,9 +88,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   
  <insert id="insertUser">
  	insert into swc_user 
- 	(compNo,userId,userName,userPasswd,userRole,org_id,attrib) 
+ 	(compNo,userId,userName,userKey,userPasswd,userRole,org_id,attrib) 
  	values 
- 	(#{compId},#{userId},#{userName},PASSWORD(#{userPasswd}),#{userRole},#{org_id},'10000');
+ 	(#{compId},#{userId},#{userName},#{userKey},PASSWORD(#{userPasswd}),#{userRole},#{org_id},'10000');
  </insert>
  
  <insert id="insertUserdata">

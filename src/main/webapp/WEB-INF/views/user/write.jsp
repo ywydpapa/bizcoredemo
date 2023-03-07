@@ -170,12 +170,13 @@
 		} else {
 		var userData = {};
 		userData.userId 		= $("#userId").val();
-		userData.userPasswd 	= $("#userPasswd").val();
+		userData.userPasswd 	= $("#userPasswd1").val();
 		userData.userName 		= $("#userName").val();
 		userData.compId		 	= $("#compId").val();
 		userData.userRole		= $("#userRole").val();
 		userData.userRank		= $("#userRank").val();
 		userData.org_id 		= $("#userDept").val();
+		userData.userKey = "AA7BB7CC7DD7EE7FF7GG7HH7II7JJ7KK7LL7MM7NN7"; 
 		$.ajax({ url: "${path}/user/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 					data: userData , // HTTP 요청과 함께 서버로 보낼 데이터
 					method: "POST", // HTTP 요청 메소드(GET, POST 등)
