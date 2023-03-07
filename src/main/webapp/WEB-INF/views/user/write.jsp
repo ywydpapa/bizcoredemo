@@ -50,6 +50,12 @@
 					</td>
 				</tr>
 				<tr>
+					<td>전화번호</td>
+					<td>
+						<input type="email" class="form-control" style="width: 80%;"name="userTel" id="userTel" value="" required autocomplete="off" placeholder="000-0000-0000">
+					</td>
+				</tr>
+				<tr>
 					<td>이메일</td>
 					<td>
 						<input type="email" class="form-control" style="width: 80%;"name="userEmail" id="userEmail" value="" required autocomplete="off">
@@ -155,7 +161,8 @@
    }
 
 	function fn_userInsert() {
-		let emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+		let emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i; 
+		let telRule = /^\d{3}-\d{3,4}-\d{4}$/;
 		if ($("#userId").val() == "") {
 			alert("아이디를 입력해주세요"); 
 		} else if (	$("#idCheckText").html() != "아이디 사용가능<br>") {
@@ -167,6 +174,8 @@
 			alert("이름을 입력하세요");
 		}else if($("#userEmail").val() !="" && !emailRule.test($("#userEmail").val())){
 			alert("이메일 형식을 확인하세요")
+		} else if ($("#userTel").val() !="" && ! telRule.test($("#userTel").val())) {
+			alert("전화 번호 형식을 확인하세요 ex)000-0000-0000")
 		} else {
 		var userData = {};
 		userData.userId 		= $("#userId").val();
@@ -177,6 +186,9 @@
 		userData.userRank		= $("#userRank").val();
 		userData.org_id 		= $("#userDept").val();
 		userData.userKey = "AA7BB7CC7DD7EE7FF7GG7HH7II7JJ7KK7LL7MM7NN7"; 
+		userData.userEmail = $("#userEmail").val() == "" ? null : $("#userEmail").val();
+		userData.userTel = $("#userTel").val() == "" ? null : $("#userTel").val();
+		
 		$.ajax({ url: "${path}/user/insert.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 					data: userData , // HTTP 요청과 함께 서버로 보낼 데이터
 					method: "POST", // HTTP 요청 메소드(GET, POST 등)

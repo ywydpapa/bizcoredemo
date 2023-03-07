@@ -352,7 +352,7 @@
 <!--//table-->
 <script>
 
-
+// 최초에 첫번째 부서 정보 선택되어 보여지게 함  
 $(document).ready(()=>{
 
 	let org_code = $(".fancytree-title")[1].innerHTML; 
@@ -414,11 +414,9 @@ $(document).ready(()=>{
 	
 	
 	$("#tree").fancytree({
-		//checkbox: true,
 		quicksearch: true,
 		selectMode: 3,
 		select: function(event, data) {
-			// console.dir(data.node);
 			var html = "";
 			
 			if(data.node.children == null) {
@@ -450,7 +448,7 @@ $(document).ready(()=>{
 		},
 		
 		click : function(event, data) {
-			//부서가 클릭된 경우의 이벤트 처리 
+			// 사용자가 선택된 경우의 이벤트 처리 
 			if(!data.node.isFolder()) {
 			let userNo = data.node.title;
 			userNo = userNo.split("("); 
@@ -473,6 +471,7 @@ $(document).ready(()=>{
 				    }
 			}); 
 			}
+			// 부서가 선택된 경우의 이벤트 처리 
 			} else {
 				let org_code = data.node.title;
 			data.node.children != null
@@ -530,6 +529,7 @@ $(document).ready(()=>{
 	});
 	
 	
+	// 선택된 사용자 데이터 
 	function setEachData(user){
 		let userId, userName, org_id, userTel,userRole, userEmail, regDateTime, userKey, attrib; 
 		userNo = user.userNo;
@@ -565,6 +565,8 @@ $(document).ready(()=>{
 		
 		
 	}
+	
+	// 선택된 부서 데이터 
 	function setOrgData(org){
 		  let org_title, org_code, org_level, org_salesTarget, org_color, org_desc;  
 		  org_title = org.org_title ; 
@@ -585,8 +587,8 @@ $(document).ready(()=>{
 		}
 		
 	
+	//부서 수정 함수 
 	function toModifyOrg(){
-		
 		 let orgData = {};
 		 orgData.org_id = $("#hiddenCode").val();
 		 orgData.org_title = $("#org_title").val(); 
@@ -617,7 +619,7 @@ $(document).ready(()=>{
 	}
 	
 	
-	
+	// 사용자 수정 함수 
 	function fn_userUpdate(obj) {
 		
 		var userData = {};
@@ -679,7 +681,7 @@ $(document).ready(()=>{
 		}
 	
 	
-
+    // 부서 삭제 함수 
 	function todeleteOrg(){
 		 let orgData = {};
 		 orgData.org_id = $("#hiddenCode").val();
