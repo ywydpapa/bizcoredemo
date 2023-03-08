@@ -298,9 +298,6 @@
 				inoutData.inoutQty = ((placeholder * 1) + (inoutQty * -1)) * -1;
 			}
 			
-			
-			console.log(inoutData);
-			
 		$.ajax({
 				url : "${path}/store/inOutUpate.do",
 				data : inoutData,

@@ -10,6 +10,7 @@
 <jsp:include page="../head.jsp" />
 <jsp:include page="../body-top.jsp" />
 
+
 <div id="main_content">
 	<link href="${path}/fancytree/skin-win8/ui.fancytree.css"
 		rel="stylesheet">
@@ -36,8 +37,8 @@
 	</div>
 
 	<!--회원리스트 Tree -->
-	<div class="cnt_wr"
-		style="display: grid; grid-template-columns: 20% 80%; column-gap: 10px;">
+	<div class="cnt_wr orgContainer"
+		style="display: flex; column-gap: 10px;flex-wrap:wrap;" >
 		<div id="tree" style="display: inline-block;">
 			<ul>
 				<li class="folder expanded topElement"
@@ -63,7 +64,7 @@
 
 		<div class="cnt_wr ">
 			<div class="row userDetailDiv" style="display: none">
-				<div class="col-sm-12">
+				<div class="col-sm-12 userCnt">
 					<div class="card-block table-border-style">
 						<div class="table-responsive">
 							<table class="table table-sm bst02">
@@ -290,7 +291,7 @@
 			</div>
 
 			<div class="row orgDetailDiv">
-				<div class="col-sm-12">
+				<div class="col-sm-12 userCnt">
 					<div class="card-block table-border-style">
 						<div class="table-responsive">
 							<table class="table table-sm bst02">
@@ -352,9 +353,11 @@
 <!--//table-->
 <script>
 
-// 최초에 첫번째 부서 정보 선택되어 보여지게 함  
-$(document).ready(()=>{
 
+$(document).ready(()=>{
+	// width 설정 
+	setSize(); 
+	// 최초에 첫번째 부서 정보 선택되어 보여지게 함  
 	let org_code = $(".fancytree-title")[1].innerHTML; 
 		org_code = org_code.split("(")[1].split(")")[0];
 		let url; 
@@ -372,7 +375,45 @@ $(document).ready(()=>{
 				$(".orgModifyDiv").children()[1].style = "display:none";
 			}
 		}); 
+		
+		
+		
 });
+
+
+
+$(window).resize(function (){  
+
+	if(window.innerWidth > 995 ) { 
+		console.log("dd");
+		let tree = $("#tree").css("width"); 
+		let width = (window.innerWidth*1 - tree.split("px")[0]*1 - 260) + "px"; 
+		document.getElementsByClassName("userCnt")[1].style.width=width;
+		document.getElementsByClassName("userCnt")[0].style.width=width;
+	} else { 
+		let width = window.innerWidth*1 - 10 + "px";
+		document.getElementsByClassName("userCnt")[1].style.width=width;
+		document.getElementsByClassName("userCnt")[0].style.width=width;
+	}         
+	
+	})
+	
+	
+	function setSize() { 
+	if(window.innerWidth > 995 ) { 
+		let tree = $("#tree").css("width"); 
+		let width = (window.innerWidth*1 - tree.split("px")[0]*1 - 260) + "px"; 
+		document.getElementsByClassName("userCnt")[1].style.width=width;
+		document.getElementsByClassName("userCnt")[0].style.width=width;
+	} else { 
+		let width = (window.innerWidth*1 - 10) + "px";
+		document.getElementsByClassName("userCnt")[1].style.width=width;
+		document.getElementsByClassName("userCnt")[0].style.width=width;
+	}
+
+}
+
+
 
 	var userNoSelected = {
 			<c:forEach var="i" begin="0" end="${fn:length(organizationArrList[0].children)-1}" varStatus="status" step="1">
@@ -702,8 +743,6 @@ $(document).ready(()=>{
 			.fail(function(xhr, status, errorThrown) {
 				alert("통신 실패");
 			});
-		
-		
 		
 	}
 	
