@@ -24,7 +24,7 @@
 		<table class="table table-sm bst02">
 			<tr>
 				<th class="requiredTextCss" scope="row">아이디 *</th>
-				<td style="display: flex;"><input class="form-control"
+				<td style="display: flex;"><input class="form-control" placeholder="4-12자의 영문 숫자 조합을 입력하세요"
 					style="width: 80%;" name="userId" id="userId" required>
 					<button onclick="fn_IdCheck();">중복확인</button>
 					<div id="idCheckText" style="line-height: 28px; margin-left: 5px;">ID
@@ -236,7 +236,16 @@
 			if (usercheckData.userId == '') {
 				alert("아이디를 입력해 중복체크를 해주세요.");
 				return;
+			} else {
+				let idRule = /^[A-Za-z0-9]{4,12}$/;
+				
+				if(!idRule.test($("#userId").val())) {
+					alert("아이디는 4-12자의 영문,숫자만 입력 가능합니다");
+					 $("#userId").val("");
+					return;
+				}
 			}
+			
 			$.ajax({
 				url : "${path}/user/userCheck.do", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
 				data : usercheckData, // HTTP 요청과 함께 서버로 보낼 데이터
@@ -339,6 +348,8 @@
 			}
 
 		}
+		
+		
 	</script>
 </div>
 <jsp:include page="../body-bottom.jsp" />

@@ -360,6 +360,14 @@ tr.shown td.details-control {
 			var modal = $(this);
 			modal.find('.modal-body').load(button.data("remote"));
 		});
+		
+		$('#soppModal').on('show.bs.modal', function(e) {
+			var button = $(e.relatedTarget);
+			var modal = $(this);
+			modal.find('.modal-body').load(button.data("remote"));
+			
+		});
+		
 		// 이벤트 영역 끝
 
 		// 페이지 특화 함수 시작
@@ -376,23 +384,17 @@ tr.shown td.details-control {
 			$(".modal-backdrop").remove();
 			$("#custModal").modal("hide");
 		}
-
-		function setlist3Options(obj) {
-			// list 2 코드 
-			let list2_code = obj.value;
-			let list3List = $(".list3Options");
-			$(".list3Options").hide();
-			if (list2_code != "") {
-				for (let i = 0; i < list3List.length; i++) {
-					if (list3List[i].value.includes(list2_code)) {
-						obj.nextElementSibling.value = "-";
-						$(list3List[i]).show();
-					}
-				}
-			} else {
-				obj.nextElementSibling.value = "";
-			}
+		
+		
+		function fnSetSoppData(a, b) {
+			$("#soppNo").val(b);
+			$("#soppTitle").val(a);
+			$(".modal-backdrop").remove();
+			$("#soppModal").modal("hide");
 		}
+		
+
+	
 
 		function necessaryCheck() {
 			var rtn = false;
@@ -425,11 +427,6 @@ tr.shown td.details-control {
 			}
 
 			var productData = {};
-			//var productCategoryNo = $("#productCategoryNo").val(); // 상품 카테고리 번호
-			//if (productCategoryNo != "") {
-			//	productData.productCategoryNo = productCategoryNo;
-			//}
-			//productData.productCategoryName = $("#productCategoryName").val(); // 상품 카테고리 명
 			productData.productName = $("#productName").val(); // 상품 명
 			var productDefaultPrice = $("#productDefaultPrice").val();
 			if (productDefaultPrice.indexOf(',') != -1) {
@@ -523,117 +520,6 @@ tr.shown td.details-control {
 			}
 
 		}
-
-		$("#custRegSimple").on("click", function(event) {
-			if ($("#custRegSimple_div").is(':visible') == false) {
-				$("#custRegSimple_div").show();
-				$("#custRegSimple").html("간편등록 취소");
-			} else {
-				$("#custRegSimple_div").hide();
-				$("#custRegSimple").html("간편등록");
-			}
-		});
-
-		$("#custRegSimple_custName_check").on(
-						"click",
-						function(event) {
-							var custRegSimple_custName = $(
-									"#custRegSimple_custName").val();
-							var obj = new Object();
-							obj.custName = custRegSimple_custName;
-							$
-									.ajax({
-										url : "${path}/cust/custNameCheck", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
-										data : obj, // HTTP 요청과 함께 서버로 보낼 데이터
-										method : "POST", // HTTP 요청 메소드(GET, POST 등)
-										dataType : "json" // 서버에서 보내줄 데이터의 타입
-									})
-									// HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
-									.done(
-											function(data) {
-												console.dir(data);
-												if (data.code == 10001) {
-													console.log("응답 성공");
-													var html = "";
-													if (data.result1.length > 0) {
-														var tempArr = data.result1;
-														html += "같은 결과) \n";
-														for (var i = 0; i < tempArr.length; i++) {
-															html += "번호 : "
-																	+ tempArr[i].custNo
-																	+ " / 매출처 : "
-																	+ tempArr[i].custName
-																	+ "\n";
-														}
-													}
-
-													if (data.result2.length > 0) {
-														var tempArr = data.result2;
-														html += "\n유사 결과) \n";
-														for (var i = 0; i < tempArr.length; i++) {
-															html += "번호 : "
-																	+ tempArr[i].custNo
-																	+ " / 매출처 : "
-																	+ tempArr[i].custName
-																	+ "\n";
-														}
-													}
-
-													if (data.result1.length == 0
-															&& data.result2.length == 0) {
-														html += "일치검색, 유사검색결과가 존재하지 않습니다.\n";
-													}
-
-													html += "\n등록하시겠습니까?";
-													var result = confirm(html);
-
-													if (result) {
-														console.log("등록진행");
-													} else {
-														console.log("등록거부");
-													}
-												} else {
-													alert("응답 실패");
-												}
-											}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-									.fail(function(xhr, status, errorThrown) {
-										alert("통신 실패");
-									});
-						});
-
-		$("#custRegSimple_custName_register").on(
-				"click",
-				function(event) {
-					var custRegSimple_custName = $("#custRegSimple_custName")
-							.val();
-					var custRegSimple_custMemerName = $(
-							"#custRegSimple_custMemerName").val();
-
-					var obj = new Object();
-					obj.custName = custRegSimple_custName;
-					obj.custMemberName = custRegSimple_custMemerName;
-
-					$.ajax({
-						url : "${path}/cust/simpleRegister", // 클라이언트가 HTTP 요청을 보낼 서버의 URL 주소
-						data : obj, // HTTP 요청과 함께 서버로 보낼 데이터
-						method : "POST", // HTTP 요청 메소드(GET, POST 등)
-						dataType : "json" // 서버에서 보내줄 데이터의 타입
-					}) // HTTP 요청이 성공하면 요청한 데이터가 done() 메소드로 전달됨. .
-					.done(function(result) {
-						console.dir(result);
-						if (result.code == 10001) {
-							alert("저장 성공");
-							$('#custModal').modal('hide');
-							$("#custName").val(result.data.custName);
-							$("#custNo").val(result.data.custNo);
-						} else {
-							alert("저장 실패");
-						}
-					}) // HTTP 요청이 실패하면 오류와 상태에 관한 정보가 fail() 메소드로 전달됨.
-					.fail(function(xhr, status, errorThrown) {
-						alert("통신 실패");
-					});
-				});
 
 		var productdataTable2 = $('#productdataTable2')
 				.DataTable(
@@ -729,11 +615,29 @@ tr.shown td.details-control {
 
 		}
 
-		function setNum(obj) {
-			obj.value = obj.value.replace(/[^0-9.]/g, "");
-			obj.value = Number(obj.value).toLocaleString();
+		
+		
+		//  입고시 위치 관련 select에 option 코드 
+		function setlist3Options(obj) {
+			// list 2 코드 
+			let list2_code = obj.value;
+			let list3List = $(".list3Options");
+			$(".list3Options").hide();
+			if (list2_code != "") {
+				for (let i = 0; i < list3List.length; i++) {
+					if (list3List[i].value.includes(list2_code)) {
+						obj.nextElementSibling.value = "-";
+						$(list3List[i]).show();
+					}
+				}
+			} else {
+				obj.nextElementSibling.value = "";
+			}
 		}
+		
+		
 
+		// 입고 출고 데이터 추가버튼 이벤트 
 		function inoutTablePlus() {
 			let soppNo, soppTitle, productName, storeNo, storeType, storeQty, location, locationNo, comment, locationName, storeAmount, productNo;
 			soppNo = $("#soppNo").val();
@@ -911,6 +815,8 @@ tr.shown td.details-control {
 			obj.parentElement.parentElement.remove();
 		}
 
+		
+		// 입고 출고 따로 등록하게 되어 있는데 한번에 입력하는 경우에 itemOut itemIn div가 구분선으로 들어감 지금은 display none 해놨지만 후에 한번에 입출고 하는 경우 수정해서 쓰면 됨 
 		function storeInOutInsert() {
 			let pass = 0;
 			let storeDatas = [];
@@ -940,88 +846,6 @@ tr.shown td.details-control {
 				eachData.comment = $(".itemOut")[i].children[7].innerHTML;
 				storeDatas.push(eachData);
 			}
-
-			let itemOut = $(".itemOut");
-
-			if (itemOut.length > 0) {
-				let array = [];
-				
-				for (let j = 1; j < itemOut.length; j++) {
-					let no, max, sum;
-
-					no = itemOut[j].children[3].dataset.no.split("-")[1];
-					max = itemOut[j].children[3].dataset.no.split("-")[3];
-					sum = itemOut[j].children[4].innerHTML;
-
-					if (j == 1) {
-						array.push({
-							"no" : no,
-							"max" : max,
-							"sum" : sum,
-						})
-					} else {
-						for (let i = 0; i <= array.length - 1; i++) {
-							let check = 0;
-							let idx = -1;
-							let plus = 0;
-							let temp = {};
-							if (array[i].no == no) {
-								check = 1
-								idx = i;
-							}
-							if (check != 1) {
-								array.push({
-									"no" : no,
-									"max" : max,
-									"sum" : sum
-								})
-							} else {
-								plus = array[idx].sum;
-								plus = plus * 1 + sum * 1;
-								array[idx].sum = plus;
-							}
-						}
-					}
-				}
-
-				/*for (let i = 0; i < array.length; i++) {
-					let msg = "";
-					if (array[i].max < array[i].sum) {
-						msg += "재고번호 " + array[i].no + " 현수량 " + array[i].max
-								+ "개 이상 출고할 수 없습니다";
-						pass = -1;
-						
-						alert(msg);
-						
-						console.log(array[i].max + "// " + array[i].sum);
-					} else {
-						storeDatas = JSON.stringify(storeDatas);
-						
-						$.ajax({
-							url : "${path}/store/inOutInsert.do",
-							method : "POST",
-							data : storeDatas,
-							dataType : "json",
-							traditional : true,
-							contentType : "text/plain",
-						}).done(function(result) {
-							if (result.code == 10001) {
-								alert("등록 성공");
-								location.href = "${path}/store/writeInout.do";
-							} else {
-								alert("등록 실패");
-							}
-						}) 
-						.fail(function(xhr, status, errorThrown) {
-							alert("통신 실패");
-						});
-						
-					}
-					
-				}*/
-
-			}
-			
 
 			if (pass != -1) {
 				storeDatas = JSON.stringify(storeDatas);
@@ -1091,82 +915,16 @@ tr.shown td.details-control {
 			}
 
 		}
-
+		
+		//선택된 재고의 현재수량 보여줌 
 		function changeMinQty(obj) {
 			let min = obj.value;
 			let arr = min.split("-").length; 
-	 
 			min = min.split("-")[arr-1];
 			$("#maxQty").val(min);
 
 		}
 
-		function checkMaxQty() {
-			let itemOut = $(".itemOut");
-			let array = [];
-
-			for (let j = 1; j < itemOut.length; j++) {
-				let no, max, sum;
-
-				no = itemOut[j].children[2].dataset.no.split("-")[1];
-				max = itemOut[j].children[2].dataset.no.split("-")[3];
-				sum = itemOut[j].children[3].innerHTML;
-
-				if (j == 1) {
-					array.push({
-						"no" : no,
-						"max" : max,
-						"sum" : sum,
-					})
-				} else {
-					for (let i = 0; i <= array.length - 1; i++) {
-						let check = 0;
-						let idx = -1;
-						let plus = 0;
-						let temp = {};
-						if (array[i].no == no) {
-							check = 1
-							idx = i;
-						}
-						if (check != 1) {
-							array.push({
-								"max" : max,
-								"sum" : sum
-							})
-						} else {
-							plus = array[idx].sum;
-							plus = plus * 1 + sum * 1;
-							array[idx].sum = plus;
-						}
-					}
-				}
-			}
-
-			for (let i = 0; i < array.length; i++) {
-				let msg = "";
-				if (array[i].max < array[i].sum) {
-					msg += "재고번호 " + array[i].no + " 현수량 " + array[i].max
-							+ "개 이상 출고할 수 없습니다";
-				}
-				if (msg != "") {
-					alert(msg);
-				}
-			}
-		} 
-
-		$('#soppModal').on('show.bs.modal', function(e) {
-			var button = $(e.relatedTarget);
-			var modal = $(this);
-			modal.find('.modal-body').load(button.data("remote"));
-			
-		});
-		
-		function fnSetSoppData(a, b) {
-			$("#soppNo").val(b);
-			$("#soppTitle").val(a);
-			$(".modal-backdrop").remove();
-			$("#soppModal").modal("hide");
-		}
 		
 		// 시리얼 번호 온 체인지 이벤트 
 		function serialChange(obj) {
@@ -1174,12 +932,17 @@ tr.shown td.details-control {
 		 if(serialNo != "") {
 			 $("#storeQty").val("1"); 
 			 $("#storeQty").prop("disabled",true);
-			 
 		 } else {
 			 $("#storeQty").prop("disabled",false);
 		 }
 		}
-	
+	   
+		// 정규표현으로 숫자만 입력되게 제한함
+		function setNum(obj) {
+			obj.value = obj.value.replace(/[^0-9.]/g, "");
+			obj.value = Number(obj.value).toLocaleString();
+		} 
+		
 		
 	    
 	</script>

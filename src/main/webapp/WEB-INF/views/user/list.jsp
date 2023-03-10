@@ -385,7 +385,6 @@ $(document).ready(()=>{
 $(window).resize(function (){  
 
 	if(window.innerWidth > 995 ) { 
-		console.log("dd");
 		let tree = $("#tree").css("width"); 
 		let width = (window.innerWidth*1 - tree.split("px")[0]*1 - 260) + "px"; 
 		document.getElementsByClassName("userCnt")[1].style.width=width;
@@ -396,7 +395,7 @@ $(window).resize(function (){
 		document.getElementsByClassName("userCnt")[0].style.width=width;
 	}         
 	
-	})
+	});
 	
 	
 	function setSize() { 
